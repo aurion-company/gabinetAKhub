@@ -1,17 +1,54 @@
-import React, { useState } from 'react';
-import { FileSignature, Search, Plus, Sparkles, Filter, MoreVertical, FileText, UploadCloud, ArrowLeft, Save, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { FileSignature, Search, Plus, Sparkles, Filter, MoreVertical, FileText, UploadCloud, ArrowLeft, Save, X, Loader2 } from 'lucide-react';
 
 export default function DocumentosOficios() {
   const [view, setView] = useState('list'); // 'list' ou 'create'
   const [searchTerm, setSearchTerm] = useState('');
+  const [oficios, setOficios] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Dados Mockados para a Listagem de Ofícios
-  const [oficios] = useState([
-    { id: 1, numero: 'OF-0142/2026', data: '14/08/2026', assunto: 'Solicitação de Recapeamento Asfáltico', destinatario: 'Secretaria de Obras', status: 'Enviado' },
-    { id: 2, numero: 'OF-0141/2026', data: '12/08/2026', assunto: 'Requerimento de Informações Básicas', destinatario: 'Prefeitura Municipal', status: 'Aguardando' },
-    { id: 3, numero: 'OF-0140/2026', data: '10/08/2026', assunto: 'Indicação para Poda de Árvores', destinatario: 'Secretaria de Meio Ambiente', status: 'Respondido' },
-    { id: 4, numero: 'OF-0139/2026', data: '05/08/2026', assunto: 'Apoio a Projeto Cultural', destinatario: 'Fundação de Cultura', status: 'Enviado' },
-  ]);
+  const [formData, setFormData] = useState({
+    type: 'OFICIO',
+    recipient: '',
+    subject: '',
+    content: '',
+    status: 'RASCUNHO'
+  });
+
+  const fetchDocs = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/docs');
+      if (res.ok) {
+        const data = await res.json();
+        setOficios(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar ofícios', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocs();
+  }, []);
+
+  const handleCreate = async () => {
+    try {
+      const res = await fetch('/api/docs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        fetchDocs();
+        setView('list');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar ofício', error);
+    }
+  };
 
   if (view === 'create') {
     return (
@@ -31,7 +68,7 @@ export default function DocumentosOficios() {
             <button className="btn-primary outline" onClick={() => setView('list')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
               <X size={16} /> Cancelar
             </button>
-            <button className="btn-primary" onClick={() => setView('list')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.5rem' }}>
+            <button className="btn-primary" onClick={handleCreate} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.5rem' }}>
               <Save size={16} /> Criar Ofício
             </button>
           </div>
@@ -50,7 +87,7 @@ export default function DocumentosOficios() {
               </div>
               <div>
                 <label style={labelStyle}>Nome do Destinatário *</label>
-                <input type="text" placeholder="Ex: João da Silva" style={inputStyle} />
+                <input type="text" placeholder="Ex: João da Silva" style={inputStyle} value={formData.recipient} onChange={(e) => setFormData({...formData, recipient: e.target.value})} />
               </div>
             </div>
 
@@ -61,7 +98,7 @@ export default function DocumentosOficios() {
               </div>
               <div>
                 <label style={labelStyle}>Assunto *</label>
-                <input type="text" placeholder="Ex: Solicitação de Manutenção" style={inputStyle} />
+                <input type="text" placeholder="Ex: Solicitação de Manutenção" style={inputStyle} value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} />
               </div>
             </div>
 
@@ -77,6 +114,8 @@ export default function DocumentosOficios() {
               </div>
               <textarea 
                 placeholder="Escreva o conteúdo do ofício aqui..." 
+                value={formData.content}
+                onChange={(e) => setFormData({...formData, content: e.target.value})}
                 style={{ flex: 1, padding: '1rem', background: 'transparent', border: 'none', color: '#fff', resize: 'none', minHeight: '300px', fontSize: '0.9rem', lineHeight: '1.6' }}
               />
             </div>
@@ -174,6 +213,11 @@ export default function DocumentosOficios() {
       </div>
 
       {/* TABELA DE OFÍCIOS */}
+      {isLoading ? (
+        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+          <Loader2 className="spinner" size={32} color="var(--accent)" />
+        </div>
+      ) : (
       <div style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
           <thead>
@@ -187,12 +231,12 @@ export default function DocumentosOficios() {
             </tr>
           </thead>
           <tbody>
-            {oficios.filter(o => o.assunto.toLowerCase().includes(searchTerm.toLowerCase()) || o.numero.toLowerCase().includes(searchTerm.toLowerCase())).map((oficio) => (
+            {oficios.filter(o => o.subject.toLowerCase().includes(searchTerm.toLowerCase()) || o.code.toLowerCase().includes(searchTerm.toLowerCase())).map((oficio) => (
               <tr key={oficio.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', transition: 'background 0.2s' }}>
-                <td style={{ padding: '1rem 1.5rem', fontWeight: '700', color: 'var(--accent)' }}>{oficio.numero}</td>
-                <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{oficio.data}</td>
-                <td style={{ padding: '1rem', fontWeight: '600' }}>{oficio.assunto}</td>
-                <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{oficio.destinatario}</td>
+                <td style={{ padding: '1rem 1.5rem', fontWeight: '700', color: 'var(--accent)' }}>{oficio.code}</td>
+                <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{new Date(oficio.createdAt).toLocaleDateString()}</td>
+                <td style={{ padding: '1rem', fontWeight: '600' }}>{oficio.subject}</td>
+                <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{oficio.recipient}</td>
                 <td style={{ padding: '1rem' }}>
                   <span style={{ 
                     padding: '0.2rem 0.6rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700',
@@ -216,6 +260,7 @@ export default function DocumentosOficios() {
           </tbody>
         </table>
       </div>
+      )}
       
       {/* Paginação Mockada */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', padding: '0 1rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>

@@ -59,6 +59,8 @@ model Cabinet {
   settings             SystemSetting[]
   lgpdConsents         LgpdConsentLog[]
   auditLogs            AuditLog[]
+  links                Link[]
+  bioPages             BioPage[]
 }
 
 model User {
@@ -199,4 +201,31 @@ model AuditLog {
   ipAddress  String?
   hashData   String   // HASH HMAC-SHA256 da operação para prova criptográfica
   timestamp  DateTime @default(now())
+}
+
+model Link {
+  id          String   @id @default(uuid())
+  cabinetId   String
+  cabinet     Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  originalUrl String
+  shortSlug   String   @unique
+  clicks      Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BioPage {
+  id          String   @id @default(uuid())
+  cabinetId   String
+  cabinet     Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String
+  bio         String?
+  avatarUrl   String?
+  theme       String   @default("dark")
+  active      Boolean  @default(true)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

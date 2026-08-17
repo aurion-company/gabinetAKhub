@@ -118,6 +118,12 @@ Realizada a auditoria item a item do menu lateral para resolver acessos que apre
 - **`prod_tarefas`**: Vinculado ao fluxo de quadros (`KanbanDinamico`).
 - **`mkt_digital`, `mkt_trafego`, `mkt_gestao`, `mkt_fluxos`, `mkt_n8n`**: Mapeados para as centrais de disparo e automação (`CentralWhatsApp` e `CampanhasEmail`).
 
+### 3.2. Desacoplamento de Cadastros e Atendimento/Protocolo (Nova Modularização)
+
+Realizado o refinamento da arquitetura modular para separar as funções de cadastro e atendimento:
+- **Separação de Componentes**: O menu **Atendimento/Protocolo** (`atendimento`) foi desconectado do componente `GestaoCadastros.js` e agora renderiza exclusivamente o novo `AtendimentoProtocolo.js`, que cuida da emissão de recibos, triagem e acompanhamento das demandas por protocolo.
+- **Eliminação Completa de Banners de Construção**: Revisamos o switch de renderização e a verificação de fallback de `app/page.js`, incluindo todas as chaves de navegação mapeadas na lista de bypass. Isso garante que nenhum módulo ativo apresente o aviso de "Módulo em Construção" (🚧) abaixo ou em cima do conteúdo principal.
+
 ---
 
 ## 📌 4. Próximos Passos (Integração Backend & Produção)
@@ -132,4 +138,4 @@ Para a fase final de entrada em produção:
    - Configuração das variáveis de ambiente (`NEXT_PUBLIC_SUPABASE_URL`, `ASAAS_API_KEY`, `GEMINI_API_KEY`).
 
 ---
-*Documento atualizado em 16/08/2026. Auditoria de menu 100% resolvida e validada.*
+*Documento atualizado em 16/08/2026 às 23:35. Separação de atendimento/cadastro e limpeza de banners concluída com sucesso.*

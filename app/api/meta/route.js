@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
     const { action, pixelId, capiToken, adAccountId, eventName, eventData } = await request.json();
 
-    const currentPixelId = pixelId || process.env.META_PIXEL_ID || '123456789012345';
-    const currentCapiToken = capiToken || process.env.META_CAPI_TOKEN;
+    const cabinetId = 'cab_01';
+    const settings = await prisma.systemSetting.findMany({
+      where: { cabinetId }
+    });
+    
+    const settingsMap = {};
+    settings.forEach(s => {
+      settingsMap[s.key] = s.value;
+    });
+
+    const currentPixelId = pixelId || settingsMap['META_PIXEL_ID'] || process.env.META_PIXEL_ID || '123456789012345';
+    const currentCapiToken = capiToken || settingsMap['META_CAPI_TOKEN'] || process.env.META_CAPI_TOKEN;
+    const currentAdAccountId = adAccountId || settingsMap['META_AD_ACCOUNT_ID'] || process.env.META_AD_ACCOUNT_ID || 'act_987654321';
 
     // Disparo de Evento Meta Conversions API (CAPI) do Lado do Servidor (Server-to-Server)
     if (action === 'trigger_event') {
@@ -41,10 +55,10 @@ export async function POST(request) {
       return NextResponse.json({
         success: true,
         metaStatus: {
-          pixelConnected: !!currentPixelId,
-          pixelId: currentPixelId ? `${currentPixelId.slice(0, 4)}...${currentPixelId.slice(-4)}` : 'Não configurado',
-          adAccountConnected: !!(adAccountId || process.env.META_AD_ACCOUNT_ID),
-          adAccountId: adAccountId || process.env.META_AD_ACCOUNT_ID || 'act_987654321',
+          pixelConnected: !!currentPixelId && currentPixelId !== '123456789012345',
+          pixelId: currentPixelId && currentPixelId !== '123456789012345' ? `${currentPixelId.slice(0, 4)}...${currentPixelId.slice(-4)}` : 'Não configurado',
+          adAccountConnected: !!(currentAdAccountId && currentAdAccountId !== 'act_987654321'),
+          adAccountId: currentAdAccountId && currentAdAccountId !== 'act_987654321' ? currentAdAccountId : 'Não configurado',
           activeCampaigns: 3,
           monthlyReach: '45.800 eleitores impactados'
         }

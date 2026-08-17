@@ -1,22 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Map as MapIcon, Sparkles, RefreshCw, Filter, Maximize2, MapPin, Users, Star, Phone, Mail, Navigation } from 'lucide-react';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const defaultCenter = {
+  lat: -15.793889,
+  lng: -47.882778
+};
 
 export default function Geomapeamento() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [activePin, setActivePin] = useState(null);
 
-  // Mock data para simular pinos e clusters
-  const clusters = [
-    { id: 'c1', x: '30%', y: '40%', count: 7048, color: 'var(--danger)', size: 80 },
-    { id: 'c2', x: '60%', y: '35%', count: 437, color: 'var(--warning)', size: 60 },
-    { id: 'c3', x: '45%', y: '65%', count: 80, color: 'var(--success)', size: 45 },
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
+  });
+
+  const [map, setMap] = useState(null);
+
+  const onLoad = useCallback(function callback(map) {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
+  const defaultPins = [
+    { id: 'p1', lat: -15.803, lng: -47.883, name: 'Safira Gomes de Moura', address: 'Brasília - Asa Sul', phone: '(61) 99999-1111', email: 'safira@email.com', group: 'Lideranças', influence: 24 },
+    { id: 'p2', lat: -15.793, lng: -47.882, name: 'Carlos Andrade', address: 'Brasília - Centro', phone: '(61) 98888-2222', email: 'carlos@email.com', group: 'Apoiadores', influence: 5 },
   ];
 
-  const pins = [
-    { id: 'p1', x: '55%', y: '50%', name: 'Safira Gomes de Moura', address: 'Brasília - Asa Sul', phone: '(61) 99999-1111', email: 'safira@email.com', group: 'Lideranças', influence: 24 },
-    { id: 'p2', x: '52%', y: '55%', name: 'Carlos Andrade', address: 'Brasília - Centro', phone: '(61) 98888-2222', email: 'carlos@email.com', group: 'Apoiadores', influence: 5 },
-  ];
+  const [pins, setPins] = useState(defaultPins);
+
+  const fetchVotersAsPins = async () => {
+    try {
+      const res = await fetch('/api/voters');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          const mapped = data
+            .filter(v => v.lat !== null && v.lng !== null)
+            .map(v => ({
+              id: v.id,
+              lat: v.lat,
+              lng: v.lng,
+              name: v.name,
+              address: v.address || 'Endereço não informado',
+              phone: v.phone || 'Sem telefone',
+              email: v.email || 'Sem e-mail',
+              group: v.tags && v.tags.length > 0 ? v.tags[0] : 'Geral',
+              influence: Math.floor(Math.random() * 30)
+            }));
+          if (mapped.length > 0) {
+            setPins(mapped);
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao buscar eleitores para geomapeamento:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchVotersAsPins();
+  }, []);
+
 
   const handleUpdate = () => {
     setIsUpdating(true);
@@ -54,20 +109,79 @@ export default function Geomapeamento() {
         </div>
       </div>
 
-      {/* ÁREA DO MAPA (Simulação Visual) */}
-      <div style={{ flex: 1, position: 'relative', background: 'radial-gradient(circle at center, #1a1f35 0%, #0a0c10 100%)', overflow: 'hidden' }}>
+      {/* ÁREA DO MAPA REAL */}
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         
-        {/* Grid de fundo para simular mapa */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={defaultCenter}
+            zoom={13}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            options={{
+              styles: mapDarkStyles,
+              disableDefaultUI: true,
+              zoomControl: true,
+            }}
+          >
+            {pins.map((p) => (
+              <Marker
+                key={p.id}
+                position={{ lat: p.lat, lng: p.lng }}
+                onClick={() => setActivePin(p.id === activePin ? null : p.id)}
+                icon={{
+                  path: typeof window !== 'undefined' && window.google ? window.google.maps.SymbolPath.CIRCLE : 0,
+                  scale: 8,
+                  fillColor: 'var(--accent)',
+                  fillOpacity: 1,
+                  strokeWeight: 2,
+                  strokeColor: '#ffffff',
+                }}
+              >
+                {activePin === p.id && (
+                  <InfoWindow
+                    position={{ lat: p.lat, lng: p.lng }}
+                    onCloseClick={() => setActivePin(null)}
+                  >
+                    <div style={{ padding: '0.5rem', color: '#000', maxWidth: '280px' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '0.2rem' }}>{p.name}</h4>
+                      <div style={{ fontSize: '0.75rem', color: '#666', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <MapPin size={12} /> {p.address}
+                      </div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.8rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={14} color="#10b981" /> {p.phone}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={14} color="#3b82f6" /> {p.email}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={14} color="#f59e0b" /> {p.group}</div>
+                      </div>
+
+                      <div style={{ background: '#f1f5f9', padding: '0.5rem', borderRadius: '6px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.3rem' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Star size={12} color="#f59e0b" /> Influência</span>
+                          <span style={{ fontWeight: 'bold' }}>{p.influence} indicações</span>
+                        </div>
+                      </div>
+                    </div>
+                  </InfoWindow>
+                )}
+              </Marker>
+            ))}
+          </GoogleMap>
+        ) : (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0c10', color: 'var(--text-muted)' }}>
+            Carregando mapa... (Verifique se a chave da API está configurada em NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
+          </div>
+        )}
 
         {/* CONTROLES FLUTUANTES DO MAPA */}
-        <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', zIndex: 10 }}>
           <button style={mapBtnStyle} title="Filtros">
             <Filter size={18} />
           </button>
         </div>
         
-        <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', zIndex: 10 }}>
           <button style={mapBtnStyle} title="Tela Cheia">
             <Maximize2 size={18} />
           </button>
@@ -76,61 +190,6 @@ export default function Geomapeamento() {
           </button>
         </div>
 
-        {/* CLUSTERS MOCKADOS */}
-        {clusters.map((c) => (
-          <div key={c.id} style={{ 
-            position: 'absolute', left: c.x, top: c.y, transform: 'translate(-50%, -50%)',
-            width: c.size, height: c.size, background: `radial-gradient(circle at center, ${c.color} 0%, rgba(0,0,0,0.8) 100%)`,
-            border: `2px solid ${c.color}`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: `0 0 20px ${c.color}40`, color: '#fff', fontWeight: '800', fontSize: c.size > 50 ? '1.2rem' : '0.9rem', cursor: 'pointer',
-            transition: 'transform 0.2s', zIndex: 10
-          }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1)'}>
-            {c.count}
-          </div>
-        ))}
-
-        {/* PINOS INDIVIDUAIS MOCKADOS */}
-        {pins.map((p) => (
-          <div key={p.id} onClick={() => setActivePin(p.id === activePin ? null : p.id)} style={{ position: 'absolute', left: p.x, top: p.y, transform: 'translate(-50%, -100%)', cursor: 'pointer', zIndex: activePin === p.id ? 50 : 20 }}>
-            {/* Pino Customizado */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', filter: activePin === p.id ? 'drop-shadow(0 0 10px var(--accent))' : 'none', transition: 'all 0.2s' }}>
-              <div style={{ background: 'var(--accent)', borderRadius: '50% 50% 50% 0', width: '30px', height: '30px', transform: 'rotate(-45deg)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #fff' }}>
-                <span style={{ transform: 'rotate(45deg)', color: '#000', fontWeight: 'bold', fontSize: '12px' }}>e</span>
-              </div>
-              <div style={{ width: '6px', height: '6px', background: 'rgba(0,0,0,0.5)', borderRadius: '50%', marginTop: '2px' }}></div>
-            </div>
-
-            {/* POPUP DE CONTATO (Card Flutuante) */}
-            {activePin === p.id && (
-              <div className="liquid-glass" style={{ position: 'absolute', bottom: '45px', left: '50%', transform: 'translateX(-50%)', width: '280px', padding: '1rem', border: '1px solid var(--accent)', borderRadius: '12px', zIndex: 100, cursor: 'default' }} onClick={(e) => e.stopPropagation()}>
-                <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#fff', marginBottom: '0.2rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</h4>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <MapPin size={12} /> {p.address}
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.8rem', marginBottom: '1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={14} color="var(--success)" /> {p.phone}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={14} color="var(--accent)" /> {p.email}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={14} color="var(--warning)" /> {p.group}</div>
-                </div>
-
-                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.5rem', borderRadius: '6px', marginBottom: '0.8rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.3rem' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Star size={12} color="var(--warning)" /> Influência</span>
-                    <span style={{ fontWeight: 'bold' }}>{p.influence} indicações</span>
-                  </div>
-                  <div className="fund-progress-bar" style={{ height: '4px' }}>
-                    <div className="fund-progress-fill" style={{ width: '60%', background: 'var(--warning)', boxShadow: 'none' }}></div>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textAlign: 'center', fontStyle: 'italic', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '0.5rem' }}>
-                  Arraste o marcador no mapa para corrigir a posição
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
       </div>
 
       {/* MODAL DE ATUALIZAÇÃO */}
@@ -176,3 +235,74 @@ const mapBtnStyle = {
   justifyContent: 'center',
   transition: 'background 0.2s'
 };
+
+const mapDarkStyles = [
+  { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ color: '#263c3f' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#6b9a76' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{ color: '#38414e' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#212a37' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#9ca5b3' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: '#746855' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#1f2835' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#f3d19c' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#17263c' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#515c6d' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#17263c' }],
+  },
+];

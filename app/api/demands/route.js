@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // Função auxiliar para gerar protocolo
 const generateProtocol = () => {
@@ -38,9 +36,8 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const cabinetId = 'cab_01';
+    const cabinetId = body.cabinetId || 'cab_01';
     
-    // Seed automático se não existir
     await prisma.cabinet.upsert({
       where: { id: cabinetId },
       update: {},
@@ -70,5 +67,26 @@ export async function POST(request) {
   } catch (error) {
     console.error('Erro ao criar demanda:', error);
     return NextResponse.json({ error: 'Falha ao salvar no banco.' }, { status: 500 });
+  }
+}
+
+export async function PATCH(request) {
+  try {
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id || !status) {
+      return NextResponse.json({ error: 'ID e Status são obrigatórios' }, { status: 400 });
+    }
+
+    const updatedDemand = await prisma.demand.update({
+      where: { id },
+      data: { status }
+    });
+
+    return NextResponse.json(updatedDemand);
+  } catch (error) {
+    console.error('Erro ao atualizar demanda:', error);
+    return NextResponse.json({ error: 'Falha ao atualizar no banco.' }, { status: 500 });
   }
 }

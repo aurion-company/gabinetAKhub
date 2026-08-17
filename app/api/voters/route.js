@@ -1,18 +1,15 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
+import { prepareVoterForSave, prepareVoterForResponse } from '@/lib/security';
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const cabinetId = searchParams.get('cabinetId') || 'cab_01'; // Mock para auth, futuramente ler do JWT HttpOnly
+    const cabinetId = searchParams.get('cabinetId') || 'cab_01';
     const tag = searchParams.get('tag');
 
-    // Busca eleitores do gabinete atual
     let whereClause = { cabinetId };
     
-    // Se passar tag (ex: para separar leads de cadastros efetivos)
     if (tag) {
       whereClause.tags = { has: tag };
     }
@@ -22,7 +19,9 @@ export async function GET(request) {
       orderBy: { createdAt: 'desc' }
     });
 
-    return NextResponse.json(voters);
+    const decryptedVoters = voters.map(v => prepareVoterForResponse(v));
+
+    return NextResponse.json(decryptedVoters);
   } catch (error) {
     console.error('Erro ao buscar eleitores:', error);
     return NextResponse.json({ error: 'Erro ao buscar dados.' }, { status: 500 });
@@ -32,9 +31,9 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const cabinetId = 'cab_01'; // Mock até integrar 100% o middleware JWT
+    const cabinetId = body.cabinetId || 'cab_01';
     
-    // Assegura que o gabinete existe antes de salvar (Seed automático se não existir)
+    // Assegura que o gabinete existe antes de salvar
     await prisma.cabinet.upsert({
       where: { id: cabinetId },
       update: {},
@@ -47,21 +46,26 @@ export async function POST(request) {
       }
     });
 
+    const rawData = {
+      cabinetId,
+      name: body.name || body.nome || 'Sem Nome',
+      cpf: body.cpf || null,
+      phone: body.phone || body.celular || '',
+      email: body.email || null,
+      address: body.address || body.endereco || null,
+      neighborhood: body.neighborhood || body.bairro || null,
+      city: body.city || body.cidade || null,
+      state: body.state || body.uf || null,
+      tags: body.tags || (body.grupo ? [body.grupo] : []),
+    };
+
+    const secureData = prepareVoterForSave(rawData);
+
     const newVoter = await prisma.voter.create({
-      data: {
-        cabinetId,
-        name: body.name || 'Sem Nome',
-        phone: body.phone || '',
-        email: body.email,
-        address: body.address,
-        neighborhood: body.neighborhood,
-        city: body.city,
-        state: body.state,
-        tags: body.tags || [],
-      }
+      data: secureData
     });
 
-    return NextResponse.json(newVoter, { status: 201 });
+    return NextResponse.json(prepareVoterForResponse(newVoter), { status: 201 });
   } catch (error) {
     console.error('Erro ao criar eleitor:', error);
     return NextResponse.json({ error: 'Falha ao salvar no banco.' }, { status: 500 });

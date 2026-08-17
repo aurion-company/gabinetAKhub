@@ -4,7 +4,7 @@ import { Cpu, Send, Plus, Sparkles, MessageSquare, Bot, User, RefreshCw, Papercl
 export default function AssistenteIA() {
   const [inputMessage, setInputMessage] = useState('');
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'ai', text: 'Olá! Sou o Assistente IA do Elegis. Como posso ajudar seu mandato hoje?', timestamp: 'Agora mesmo' }
+    { id: 1, sender: 'ai', text: 'Olá! Sou o Assistente IA do Elegiv Gestão 360. Como posso ajudar seu mandato hoje?', timestamp: 'Agora mesmo' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -54,7 +54,7 @@ export default function AssistenteIA() {
           </div>
           <div>
             <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              Assistente de IA Elegis <Sparkles size={14} color="var(--accent)" />
+              Assistente de IA Elegiv Gestão 360 <Sparkles size={14} color="var(--accent)" />
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Inteligência artificial alimentada pela base do CRM e OpenAI.</p>
           </div>

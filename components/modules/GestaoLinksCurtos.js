@@ -1,15 +1,52 @@
-import React, { useState } from 'react';
-import { Link as LinkIcon, Plus, Copy, QrCode, BarChart2, Edit, Trash2, Settings, Shield, Smartphone, Activity, Target, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link as LinkIcon, Plus, Copy, QrCode, BarChart2, Edit, Trash2, Settings, Shield, Smartphone, Activity, Target, Download, Loader2 } from 'lucide-react';
 
 export default function LinksCurtos() {
   const [view, setView] = useState('list'); // 'list' | 'create'
   const [activeTab, setActiveTab] = useState('detalhes'); // 'detalhes', 'seguranca', 'app', 'rastreamento', 'marketing', 'qrcode'
 
-  const [links] = useState([
-    { id: 1, url: 'elegis.com.br/s/AK', destino: 'https://wa.me/5561999991111?text=Olá', cliques: 9, unicos: 4, qr: 0, criacao: '16 Ago 2026', status: 'Ativo', tipo: '302' },
-    { id: 2, url: 'elegis.com.br/s/PLEN', destino: 'https://camara.leg.br/sessao-aovivo', cliques: 142, unicos: 98, qr: 15, criacao: '14 Ago 2026', status: 'Ativo', tipo: '302' },
-    { id: 3, url: 'elegis.com.br/s/PESQ', destino: 'https://forms.google.com/exemplo', cliques: 45, unicos: 40, qr: 5, criacao: '10 Ago 2026', status: 'Expirado', tipo: '302' },
-  ]);
+  const [links, setLinks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [formData, setFormData] = useState({
+    originalUrl: '',
+    shortSlug: ''
+  });
+
+  const fetchLinks = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/links');
+      if (res.ok) {
+        const data = await res.json();
+        setLinks(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar links', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLinks();
+  }, []);
+
+  const handleCreate = async () => {
+    try {
+      const res = await fetch('/api/links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        fetchLinks();
+        setView('list');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar link', error);
+    }
+  };
 
   const renderContent = () => {
     switch (view) {
@@ -44,6 +81,11 @@ export default function LinksCurtos() {
               </div>
 
               <div style={{ flex: 1, overflowY: 'auto' }}>
+                {isLoading ? (
+                  <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+                    <Loader2 className="spinner" size={32} color="var(--accent)" />
+                  </div>
+                ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>
@@ -58,23 +100,23 @@ export default function LinksCurtos() {
                       <tr key={l.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer' }} className="table-row-hover">
                         <td style={{ padding: '1rem' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                            <strong style={{ color: 'var(--accent)', fontSize: '1.05rem' }}>{l.url}</strong>
+                            <strong style={{ color: 'var(--accent)', fontSize: '1.05rem' }}>elegis.com.br/s/{l.shortSlug}</strong>
                             <button style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }} title="Copiar"><Copy size={14}/></button>
                           </div>
                           <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
-                            ↳ {l.destino}
+                            ↳ {l.originalUrl}
                           </div>
                         </td>
                         <td style={{ padding: '1rem' }}>
                           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                            <span style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>{l.cliques} Cliques</span>
-                            <span style={{ background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>{l.unicos} Únicos</span>
-                            <span style={{ background: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-secondary)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>{l.qr} Leitura QR</span>
+                            <span style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>{l.clicks || 0} Cliques</span>
+                            <span style={{ background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>0 Únicos</span>
+                            <span style={{ background: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-secondary)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>0 Leitura QR</span>
                           </div>
                         </td>
                         <td style={{ padding: '1rem' }}>
-                          <div style={{ fontSize: '0.85rem', color: '#fff' }}>{l.criacao}</div>
-                          <div style={{ fontSize: '0.8rem', color: l.status === 'Ativo' ? 'var(--success)' : 'var(--text-muted)' }}>{l.status} • {l.tipo}</div>
+                          <div style={{ fontSize: '0.85rem', color: '#fff' }}>{new Date(l.createdAt).toLocaleDateString()}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--success)' }}>Ativo • 302</div>
                         </td>
                         <td style={{ padding: '1rem', textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                           <button style={{ ...iconBtnStyle, padding: '0.5rem' }} title="Estatísticas Avançadas"><BarChart2 size={14} /></button>
@@ -86,6 +128,7 @@ export default function LinksCurtos() {
                     ))}
                   </tbody>
                 </table>
+                )}
               </div>
             </div>
           </div>
@@ -114,7 +157,7 @@ export default function LinksCurtos() {
 
                   <div>
                     <label style={labelStyle}>URL de Destino Original *</label>
-                    <input type="text" placeholder="https://..." style={inputStyle} />
+                    <input type="text" placeholder="https://..." style={inputStyle} value={formData.originalUrl} onChange={(e) => setFormData({...formData, originalUrl: e.target.value})} />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
@@ -122,7 +165,7 @@ export default function LinksCurtos() {
                       <label style={labelStyle}>Chave Curta Personalizada</label>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRight: 'none', borderRadius: '8px 0 0 8px', color: 'var(--text-muted)' }}>elegis.com.br/s/</span>
-                        <input type="text" placeholder="minha-campanha" style={{ ...inputStyle, borderRadius: '0 8px 8px 0' }} />
+                        <input type="text" placeholder="minha-campanha" style={{ ...inputStyle, borderRadius: '0 8px 8px 0' }} value={formData.shortSlug} onChange={(e) => setFormData({...formData, shortSlug: e.target.value})} />
                       </div>
                     </div>
                     <div>
@@ -258,10 +301,9 @@ export default function LinksCurtos() {
               )}
             </div>
 
-            {/* Rodapé Form */}
             <div style={{ padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '1rem', justifyContent: 'flex-end', background: 'rgba(0,0,0,0.2)' }}>
               <button className="btn-primary outline" onClick={() => setView('list')} style={{ borderColor: 'transparent', color: 'var(--text-muted)' }}>Cancelar</button>
-              <button className="btn-primary" onClick={() => setView('list')} style={{ padding: '0.8rem 2rem' }}>Criar Link Curto</button>
+              <button className="btn-primary" onClick={handleCreate} style={{ padding: '0.8rem 2rem' }}>Criar Link Curto</button>
             </div>
           </div>
         );

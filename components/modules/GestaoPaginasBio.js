@@ -1,16 +1,59 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutTemplate, Plus, Search, Filter, Globe, Image as ImageIcon, 
   MapPin, Eye, Edit3, Trash2, Copy, Sparkles, Check, Link as LinkIcon, 
-  Smartphone, Share2, Palette, ArrowUpRight, ToggleLeft, ToggleRight
+  Smartphone, Share2, Palette, ArrowUpRight, ToggleLeft, ToggleRight, Loader2
 } from 'lucide-react';
 
 export default function GestaoPaginasBio() {
   const [activeTab, setActiveTab] = useState('list'); // 'list' | 'editor'
   const [search, setSearch] = useState('');
   const [selectedBio, setSelectedBio] = useState(null);
+
+  const [bioPages, setBioPages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchBioPages = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/bio-pages');
+      if (res.ok) {
+        const data = await res.json();
+        setBioPages(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar páginas bio', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBioPages();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch('/api/bio-pages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          slug: urlSlug,
+          bio: bioText,
+          theme: bgColor
+        })
+      });
+      if (res.ok) {
+        fetchBioPages();
+        setActiveTab('list');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar página bio', error);
+    }
+  };
 
   // Form State
   const [title, setTitle] = useState('Carlos Eduardo - Vereador');
@@ -35,31 +78,7 @@ export default function GestaoPaginasBio() {
     { id: '4', label: '📸 Siga meu perfil no Instagram', url: 'https://instagram.com/carlos', active: true, icon: 'Instagram' }
   ]);
 
-  // Mocked Pages List
-  const [bioPages, setBioPages] = useState([
-    {
-      id: '1',
-      title: 'Carlos Eduardo - Bio Oficial',
-      url: 'https://elegis.app/bio/carlos-eduardo-2024',
-      layout: 'Modo Card Glass',
-      active: true,
-      updatedAt: '16/08/2026 18:30',
-      views: 4520,
-      clicks: 1890,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-    },
-    {
-      id: '2',
-      title: 'Campanha de Saúde nos Bairros',
-      url: 'https://elegis.app/bio/saude-nos-bairros',
-      layout: 'Minimalista Sólido',
-      active: true,
-      updatedAt: '14/08/2026 11:15',
-      views: 1280,
-      clicks: 640,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
-    }
-  ]);
+
 
   const [copiedId, setCopiedId] = useState(null);
 
@@ -142,6 +161,11 @@ export default function GestaoPaginasBio() {
           </div>
 
           <div style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+            {isLoading ? (
+              <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+                <Loader2 className="spinner" size={32} color="var(--accent)" />
+              </div>
+            ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
@@ -159,32 +183,32 @@ export default function GestaoPaginasBio() {
                   <tr key={page.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s' }}>
                     <td style={{ padding: '0.8rem 1rem' }}>
                       <img 
-                        src={page.avatar} 
+                        src={avatarUrl} 
                         alt="Avatar" 
                         style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} 
                       />
                     </td>
                     <td style={{ padding: '0.8rem 1rem', fontWeight: '700', color: '#fff' }}>
                       {page.title}
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{page.layout}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>Modo Padrão</div>
                     </td>
                     <td style={{ padding: '0.8rem 1rem' }}>
                       <span style={{ color: 'var(--accent)', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <Globe size={14} /> {page.url}
+                        <Globe size={14} /> https://elegis.app/bio/{page.slug}
                       </span>
                     </td>
                     <td style={{ padding: '0.8rem 1rem' }}>
                       <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '600' }}>
-                        👁️ {page.views.toLocaleString()} <span style={{ color: 'var(--text-muted)', margin: '0 0.3rem' }}>|</span> 🖱️ {page.clicks.toLocaleString()}
+                        👁️ 0 <span style={{ color: 'var(--text-muted)', margin: '0 0.3rem' }}>|</span> 🖱️ 0
                       </div>
                     </td>
                     <td style={{ padding: '0.8rem 1rem' }}>
-                      <span style={{ padding: '0.2rem 0.6rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '700', background: page.active ? 'rgba(0,230,118,0.15)' : 'rgba(255,255,255,0.1)', color: page.active ? 'var(--success)' : 'var(--text-muted)', border: `1px solid ${page.active ? 'var(--success)' : 'var(--border)'}` }}>
-                        {page.active ? '🟢 Ativa Online' : '⚪ Rascunho'}
+                      <span style={{ padding: '0.2rem 0.6rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '700', background: 'rgba(0,230,118,0.15)', color: 'var(--success)', border: '1px solid var(--success)' }}>
+                        🟢 Ativa Online
                       </span>
                     </td>
                     <td style={{ padding: '0.8rem 1rem', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
-                      {page.updatedAt}
+                      {new Date(page.createdAt).toLocaleDateString()}
                     </td>
                     <td style={{ padding: '0.8rem 1rem', textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
@@ -208,6 +232,7 @@ export default function GestaoPaginasBio() {
                 ))}
               </tbody>
             </table>
+            )}
           </div>
         </div>
       )}
@@ -339,7 +364,7 @@ export default function GestaoPaginasBio() {
               </div>
             </div>
 
-            <button className="btn-primary" style={{ padding: '0.9rem', fontSize: '1rem', fontWeight: '700' }}>
+            <button className="btn-primary" onClick={handleSave} style={{ padding: '0.9rem', fontSize: '1rem', fontWeight: '700' }}>
               💾 Salvar e Publicar Página Bio
             </button>
           </div>
@@ -385,7 +410,7 @@ export default function GestaoPaginasBio() {
                 </div>
 
                 <div style={{ marginTop: 'auto', paddingTop: '1.5rem', fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)' }}>
-                  Desenvolvido por Elegis CRM
+                  Desenvolvido por Elegiv Gestão 360
                 </div>
               </div>
             </div>

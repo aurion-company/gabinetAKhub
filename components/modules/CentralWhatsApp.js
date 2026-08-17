@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MessageCircle, QrCode, Smartphone, Users, Inbox, RefreshCw, Plus, Calendar, Sparkles, Image as ImageIcon, Send, Search, CheckCircle2, AlertTriangle, ArrowRightLeft, Tag } from 'lucide-react';
+import { MessageCircle, QrCode, Smartphone, Users, Inbox, RefreshCw, Plus, Calendar, Sparkles, Image as ImageIcon, Send, Search, CheckCircle2, AlertTriangle, ArrowRightLeft, Tag, Mic, Trash2, ChevronDown, ChevronUp, Network, PlusCircle } from 'lucide-react';
 
 export default function CentralWhatsApp() {
-  const [activeTab, setActiveTab] = useState('conversas'); // 'contas' | 'conversas' | 'campanhas' | 'sincronizar'
+  const [activeTab, setActiveTab] = useState('automacao'); // 'contas' | 'conversas' | 'campanhas' | 'sincronizar' | 'automacao'
   
   // Mocks de dados
   const [isConnected, setIsConnected] = useState(true);
@@ -13,6 +13,54 @@ export default function CentralWhatsApp() {
     { id: 2, name: 'Ana Souza', phone: '+55 61 8888-2222', lastMsg: 'Bom dia, gostaria de saber sobre...', status: 'AGUARDANDO', unread: 2 },
     { id: 3, name: 'Carlos Prefeito', phone: '+55 61 7777-3333', lastMsg: 'Ok, combinado.', status: 'ATENDENDO: MÁRCIA', unread: 0 }
   ];
+
+  // Automação N8N State
+  const [flowNodes, setFlowNodes] = useState([
+    { id: '1', type: 'message', content: 'Olá {{primeiro_nome}}. Você entrou em contato...' }
+  ]);
+  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [addMenuIndex, setAddMenuIndex] = useState(null);
+
+  const addNode = (type, index) => {
+    const newNode = {
+      id: Date.now().toString(),
+      type,
+      content: type === 'message' ? '' : null,
+      fileName: type === 'audio' ? null : null
+    };
+    
+    const newNodes = [...flowNodes];
+    if (index !== null) {
+      newNodes.splice(index, 0, newNode);
+    } else {
+      newNodes.push(newNode);
+    }
+    
+    setFlowNodes(newNodes);
+    setIsAddMenuOpen(false);
+    setAddMenuIndex(null);
+  };
+
+  const moveNode = (index, direction) => {
+    if ((direction === -1 && index === 0) || (direction === 1 && index === flowNodes.length - 1)) return;
+    const newNodes = [...flowNodes];
+    const temp = newNodes[index];
+    newNodes[index] = newNodes[index + direction];
+    newNodes[index + direction] = temp;
+    setFlowNodes(newNodes);
+  };
+
+  const removeNode = (index) => {
+    const newNodes = [...flowNodes];
+    newNodes.splice(index, 1);
+    setFlowNodes(newNodes);
+  };
+
+  const handleUpdateNode = (index, key, value) => {
+    const newNodes = [...flowNodes];
+    newNodes[index][key] = value;
+    setFlowNodes(newNodes);
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -257,6 +305,153 @@ export default function CentralWhatsApp() {
           </div>
         );
 
+      case 'automacao':
+        return (
+          <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '1rem', background: '#0b141a', overflowY: 'auto', borderRadius: '12px' }}>
+            <div style={{ maxWidth: '700px', margin: '0 auto', width: '100%', padding: '2rem 0', position: 'relative' }}>
+              
+              <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#fff' }}>Gatilho do Fluxo</h3>
+                <div style={{ background: 'rgba(255,255,255,0.05)', display: 'inline-block', padding: '0.5rem 1.5rem', borderRadius: '20px', marginTop: '0.5rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  Quando o lead entrar na campanha...
+                </div>
+              </div>
+
+              {/* Linha inicial conectora do gatilho */}
+              <div style={{ width: '2px', height: '30px', background: 'rgba(255,255,255,0.2)', margin: '0 auto' }}></div>
+              
+              {flowNodes.map((node, index) => (
+                <div key={node.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  
+                  {/* Plus Menu antes do Nó */}
+                  <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <button 
+                      onClick={() => { setIsAddMenuOpen(isAddMenuOpen && addMenuIndex === index ? false : true); setAddMenuIndex(index); }}
+                      style={{ background: '#1f2937', color: 'var(--text-secondary)', border: '1px dashed rgba(255,255,255,0.2)', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, margin: '-15px 0' }}
+                    >
+                      <Plus size={16} />
+                    </button>
+                    {isAddMenuOpen && addMenuIndex === index && (
+                      <div className="liquid-glass" style={{ position: 'absolute', top: '15px', background: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.5rem', zIndex: 50, width: '250px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                        <button 
+                          onClick={() => addNode('message', index)} 
+                          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          style={{ width: '100%', textAlign: 'left', padding: '0.8rem', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '6px', transition: 'all 0.2s' }}>
+                          <MessageCircle size={18} /> Enviar mensagem
+                        </button>
+                        <button 
+                          onClick={() => addNode('audio', index)} 
+                          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          style={{ width: '100%', textAlign: 'left', padding: '0.8rem', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '6px', transition: 'all 0.2s' }}>
+                          <Mic size={18} /> Enviar áudio
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Conector */}
+                  <div style={{ width: '2px', height: '30px', background: 'rgba(255,255,255,0.2)', margin: '0 auto' }}></div>
+
+                  {/* Card do Nó */}
+                  <div className="section-card liquid-glass" style={{ width: '100%', padding: '0', overflow: 'hidden', background: '#111827', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    
+                    {/* Node Header */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.5rem', display: 'flex' }}>
+                          {node.type === 'message' ? <MessageCircle size={18} color="var(--text-secondary)" /> : <Mic size={18} color="var(--text-secondary)" />}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>AÇÃO</div>
+                          <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#fff' }}>
+                            {node.type === 'message' ? 'Enviar mensagem' : 'Enviar áudio'}
+                          </div>
+                        </div>
+                      </div>
+                      <ChevronDown size={20} color="var(--text-secondary)" />
+                    </div>
+
+                    {/* Node Content */}
+                    <div style={{ padding: '1.2rem' }}>
+                      {node.type === 'message' ? (
+                        <textarea 
+                          value={node.content} 
+                          onChange={(e) => handleUpdateNode(index, 'content', e.target.value)}
+                          placeholder="Digite sua mensagem..." 
+                          style={{ ...inputStyle, minHeight: '100px', resize: 'vertical', border: 'none', background: 'rgba(0,0,0,0.2)' }}
+                        />
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Arquivo de áudio</span>
+                          <div 
+                            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'}
+                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'}
+                            style={{ border: '2px dashed rgba(255,255,255,0.15)', borderRadius: '12px', padding: '2rem 1rem', textAlign: 'center', cursor: 'pointer', background: 'rgba(0,0,0,0.2)', transition: 'all 0.2s' }}>
+                            <Mic size={32} color="var(--text-muted)" style={{ margin: '0 auto 1rem' }} />
+                            <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '0.5rem', fontSize: '1.05rem' }}>Escolher arquivo de áudio</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>MP3, OGG, M4A ou WAV — até 12MB</div>
+                          </div>
+                          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                            Convertido para nota de voz (OGG/Opus). Só funciona dentro da janela de 24h — não existe template de áudio para reengajar.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Node Footer Controls */}
+                    <div style={{ padding: '1rem 1.2rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={() => moveNode(index, -1)} disabled={index === 0} style={{ background: 'transparent', border: 'none', color: index === 0 ? 'rgba(255,255,255,0.1)' : 'var(--text-secondary)', cursor: index === 0 ? 'default' : 'pointer' }}><ChevronUp size={20} /></button>
+                        <button onClick={() => moveNode(index, 1)} disabled={index === flowNodes.length - 1} style={{ background: 'transparent', border: 'none', color: index === flowNodes.length - 1 ? 'rgba(255,255,255,0.1)' : 'var(--text-secondary)', cursor: index === flowNodes.length - 1 ? 'default' : 'pointer' }}><ChevronDown size={20} /></button>
+                      </div>
+                      <button onClick={() => removeNode(index)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}>
+                        <Trash2 size={16} /> Excluir
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+
+              {/* Botão final Adicionar Nó */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: '2px', height: '30px', background: 'rgba(255,255,255,0.2)', margin: '0 auto' }}></div>
+                <div style={{ position: 'relative' }}>
+                  <button 
+                    onClick={() => { setIsAddMenuOpen(isAddMenuOpen && addMenuIndex === flowNodes.length ? false : true); setAddMenuIndex(flowNodes.length); }}
+                    style={{ background: 'var(--accent)', color: '#000', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, transition: 'transform 0.2s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <Plus size={20} />
+                  </button>
+                  {isAddMenuOpen && addMenuIndex === flowNodes.length && (
+                    <div className="liquid-glass" style={{ position: 'absolute', top: '50px', left: '50%', transform: 'translateX(-50%)', background: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.5rem', zIndex: 50, width: '250px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                      <button 
+                        onClick={() => addNode('message', null)} 
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        style={{ width: '100%', textAlign: 'left', padding: '0.8rem', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '6px', transition: 'all 0.2s' }}>
+                        <MessageCircle size={18} /> Enviar mensagem
+                      </button>
+                      <button 
+                        onClick={() => addNode('audio', null)} 
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        style={{ width: '100%', textAlign: 'left', padding: '0.8rem', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', borderRadius: '6px', transition: 'all 0.2s' }}>
+                        <Mic size={18} /> Enviar áudio
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+
       default: return null;
     }
   }
@@ -290,6 +485,11 @@ export default function CentralWhatsApp() {
             onClick={() => setActiveTab('sincronizar')}
             style={{ ...tabBtnStyle, background: activeTab === 'sincronizar' ? 'var(--accent)' : 'transparent', color: activeTab === 'sincronizar' ? '#000' : 'var(--text-muted)' }}
           ><RefreshCw size={16} /> Sincronizar</button>
+
+          <button 
+            onClick={() => setActiveTab('automacao')}
+            style={{ ...tabBtnStyle, background: activeTab === 'automacao' ? 'var(--accent)' : 'transparent', color: activeTab === 'automacao' ? '#000' : 'var(--text-muted)' }}
+          ><Network size={16} /> Automação</button>
         </div>
       </div>
 

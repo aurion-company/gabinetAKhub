@@ -1,48 +1,61 @@
-import React, { useState } from 'react';
-import { Kanban, Plus, HelpCircle, Sparkles, MessageCircle, MoreVertical, X, Mail, MapPin, Calendar, Clock, Edit2, Trash2, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Kanban, Plus, HelpCircle, Sparkles, MessageCircle, MoreVertical, X, Mail, MapPin, Calendar, Clock, Edit2, Trash2, Search, Loader2 } from 'lucide-react';
 
 export default function KanbanDinamico() {
   const [activePipeline, setActivePipeline] = useState('Funil de Atendimento Comunitário');
   const [selectedCard, setSelectedCard] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data para as colunas e cards
+  // Mock pipelines list
   const pipelines = ['Funil de Atendimento Comunitário', 'Lideranças de Bairro', 'Cobrança de Ofícios'];
 
-  const initialColumns = [
-    {
-      id: 'col_1',
-      title: 'Triagem (Novos)',
-      count: 142,
-      color: 'var(--warning)',
-      cards: [
-        { id: 'c1', name: 'Maria Joaquina', initials: 'MJ', city: 'Taguatinga - DF', phone: '(61) 99999-1111', timeInCol: '2 dias' },
-        { id: 'c2', name: 'João Ramos', initials: 'JR', city: 'Ceilândia - DF', phone: '(61) 98888-2222', timeInCol: '4 horas' }
-      ]
-    },
-    {
-      id: 'col_2',
-      title: 'Em Conversa',
-      count: 45,
-      color: 'var(--accent)',
-      cards: [
-        { id: 'c3', name: 'Ana Paula Silva', initials: 'AP', city: 'Samambaia - DF', phone: '(61) 97777-3333', timeInCol: '1 semana' }
-      ]
-    },
-    {
-      id: 'col_3',
-      title: 'Liderança Ativa',
-      count: 89,
-      color: 'var(--success)',
-      cards: [
-        { id: 'c4', name: 'Carlos Empresário', initials: 'CE', city: 'Águas Claras - DF', phone: '(61) 96666-4444', timeInCol: '2 meses' },
-        { id: 'c5', name: 'Lúcia Professora', initials: 'LP', city: 'Plano Piloto - DF', phone: '(61) 95555-5555', timeInCol: '3 meses' }
-      ]
+  const [columns, setColumns] = useState([]);
+
+  const fetchDemands = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/demands');
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Group demands by status
+        const cols = [
+          { id: 'ABERTO', title: 'Triagem (Novos)', count: 0, color: 'var(--warning)', cards: [] },
+          { id: 'EM_ANDAMENTO', title: 'Em Atendimento', count: 0, color: 'var(--accent)', cards: [] },
+          { id: 'CONCLUIDO', title: 'Concluído / Resolvido', count: 0, color: 'var(--success)', cards: [] }
+        ];
+
+        data.forEach(demand => {
+          let colId = demand.status;
+          if (!cols.find(c => c.id === colId)) colId = 'ABERTO'; // fallback
+
+          const col = cols.find(c => c.id === colId);
+          col.cards.push({
+            id: demand.id,
+            name: demand.title,
+            initials: demand.title.substring(0, 2).toUpperCase(),
+            city: demand.category,
+            phone: demand.protocol,
+            timeInCol: new Date(demand.createdAt).toLocaleDateString(),
+            raw: demand
+          });
+          col.count++;
+        });
+
+        setColumns(cols);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar demandas para o Kanban', error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
-  const [columns, setColumns] = useState(initialColumns);
+  useEffect(() => {
+    fetchDemands();
+  }, [activePipeline]);
 
-  // Manipuladores de Drag and Drop muito simples (apenas visual)
+  // Manipuladores de Drag and Drop
   const onDragStart = (e, cardId, sourceColId) => {
     e.dataTransfer.setData('cardId', cardId);
     e.dataTransfer.setData('sourceColId', sourceColId);
@@ -52,14 +65,15 @@ export default function KanbanDinamico() {
     e.preventDefault();
   };
 
-  const onDrop = (e, targetColId) => {
+  const onDrop = async (e, targetColId) => {
     const cardId = e.dataTransfer.getData('cardId');
     const sourceColId = e.dataTransfer.getData('sourceColId');
 
     if (sourceColId === targetColId) return;
 
+    // Atualização otimista
     setColumns(prev => {
-      const newCols = [...prev];
+      const newCols = prev.map(c => ({...c, cards: [...c.cards]}));
       const sourceCol = newCols.find(c => c.id === sourceColId);
       const targetCol = newCols.find(c => c.id === targetColId);
       
@@ -67,13 +81,23 @@ export default function KanbanDinamico() {
       const [card] = sourceCol.cards.splice(cardIndex, 1);
       
       targetCol.cards.push(card);
-      
-      // Atualiza counts virtuais
       sourceCol.count--;
       targetCol.count++;
       
       return newCols;
     });
+
+    // Request pro Banco
+    try {
+      await fetch('/api/demands', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cardId, status: targetColId })
+      });
+    } catch (error) {
+      console.error('Erro ao mover card', error);
+      fetchDemands(); // Reverter se der erro
+    }
   };
 
   return (
@@ -108,6 +132,11 @@ export default function KanbanDinamico() {
       </div>
 
       {/* ÁREA DO BOARD (COLUNAS) */}
+      {isLoading ? (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
+          <Loader2 className="spinner" size={32} />
+        </div>
+      ) : (
       <div style={{ display: 'flex', gap: '1.5rem', flex: 1, overflowX: 'auto', paddingBottom: '1rem' }}>
         
         {columns.map(col => (
@@ -186,6 +215,7 @@ export default function KanbanDinamico() {
         </div>
 
       </div>
+      )}
 
       {/* MODAL DETALHES DO CARD */}
       {selectedCard && (

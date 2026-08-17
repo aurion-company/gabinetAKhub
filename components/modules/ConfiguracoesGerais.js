@@ -1,8 +1,47 @@
-import React, { useState } from 'react';
-import { Settings, Globe, Database, ListTodo, KeyRound, Save, Copy, Key, Plus, Sparkles, Check, Hash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Globe, Database, ListTodo, KeyRound, Save, Copy, Key, Plus, Sparkles, Check, Hash, Loader2 } from 'lucide-react';
 
 export default function ConfiguracoesGerais() {
   const [activeTab, setActiveTab] = useState('gerais');
+  const [settings, setSettings] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const fetchSettings = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/settings');
+      if (res.ok) {
+        const data = await res.json();
+        const settingsMap = {};
+        data.forEach(item => {
+          settingsMap[item.key] = item.value;
+        });
+        setSettings(settingsMap);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const handleSave = async (key, value) => {
+    try {
+      await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      });
+      // Optionally update local state or show success toast here
+      setSettings(prev => ({...prev, [key]: value}));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const tabs = [
     { id: 'gerais', label: 'Gerais', icon: <Globe size={16} /> },
@@ -20,7 +59,11 @@ export default function ConfiguracoesGerais() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               <div>
                 <label style={labelStyle}>Fuso Horário *</label>
-                <select style={inputStyle}>
+                <select 
+                  style={inputStyle} 
+                  value={settings['timezone'] || 'America/Sao_Paulo (GMT-03:00)'} 
+                  onChange={(e) => setSettings({...settings, timezone: e.target.value})}
+                >
                   <option>America/Sao_Paulo (GMT-03:00)</option>
                   <option>America/Manaus (GMT-04:00)</option>
                   <option>America/Rio_Branco (GMT-05:00)</option>
@@ -28,14 +71,25 @@ export default function ConfiguracoesGerais() {
               </div>
               <div>
                 <label style={labelStyle}>Código do País *</label>
-                <select style={inputStyle}>
+                <select 
+                  style={inputStyle} 
+                  value={settings['country_code'] || 'Brasil +55'} 
+                  onChange={(e) => setSettings({...settings, country_code: e.target.value})}
+                >
                   <option>Brasil +55</option>
                   <option>Estados Unidos +1</option>
                 </select>
               </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-              <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 2rem' }}>
+              <button 
+                className="btn-primary" 
+                onClick={() => {
+                  handleSave('timezone', settings['timezone'] || 'America/Sao_Paulo (GMT-03:00)');
+                  handleSave('country_code', settings['country_code'] || 'Brasil +55');
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 2rem' }}
+              >
                 <Save size={18} /> Salvar Alterações
               </button>
             </div>
@@ -239,7 +293,13 @@ export default function ConfiguracoesGerais() {
 
       {/* CONTEÚDO DA ABA ATIVA */}
       <div style={{ flex: 1 }}>
-        {renderTabContent()}
+        {isLoading ? (
+          <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <Loader2 className="spinner" size={32} color="var(--accent)" />
+          </div>
+        ) : (
+          renderTabContent()
+        )}
       </div>
 
     </div>
