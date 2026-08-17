@@ -1,15 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ClipboardList, Plus, FileBarChart, Search, Filter, AlertCircle, CheckCircle2, Clock, Inbox, FileText, Download, Printer } from 'lucide-react';
 
 export default function GestaoDemandas() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'create', 'report'
+  const [loading, setLoading] = useState(true);
+  const [demandas, setDemandas] = useState([]);
 
-  const [demandas] = useState([
-    { protocolo: 'DEM-2026-001', cadastro: 'João Silva', assunto: 'Recapeamento Asfáltico', responsavel: 'Carlos Assessor', status: 'Em andamento', prioridade: 'Alta', prazo: 'Hoje' },
-    { protocolo: 'DEM-2026-002', cadastro: 'Associação Moradores', assunto: 'Iluminação Pública', responsavel: 'Você', status: 'Aberta', prioridade: 'Média', prazo: 'Em 3 dias' },
-    { protocolo: 'DEM-2026-003', cadastro: 'Maria Oliveira', assunto: 'Pedido de Vaga Creche', responsavel: 'Você', status: 'Finalizada', prioridade: 'Alta', prazo: 'No prazo' },
-    { protocolo: 'DEM-2026-004', cadastro: 'Roberto Souza', assunto: 'Poda de Árvore', responsavel: 'Equipe Externa', status: 'Atrasada', prioridade: 'Baixa', prazo: 'Vencido' },
-  ]);
+  useEffect(() => {
+    const fetchDemands = async () => {
+      try {
+        const response = await fetch('/api/demands');
+        if (response.ok) {
+          const data = await response.json();
+          // Mapeia para o formato visual
+          const mappedData = data.map(demand => ({
+            id: demand.id,
+            protocolo: demand.protocol,
+            cadastro: demand.voterId || 'Não Vinculado',
+            assunto: demand.title,
+            responsavel: 'Assessor Geral', // Simulando a ausência do Join no MVP
+            status: demand.status,
+            prioridade: demand.priority,
+            prazo: new Date(demand.createdAt).toLocaleDateString('pt-BR')
+          }));
+          setDemandas(mappedData);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar demandas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDemands();
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '85vh', gap: '1rem' }}>

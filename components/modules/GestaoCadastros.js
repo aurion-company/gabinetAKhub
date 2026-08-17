@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, Plus, ChevronDown, Download, Upload, Trash2, Link as LinkIcon, QrCode, Phone, UserCheck, Merge, AlertTriangle, FileText, Settings, Smartphone } from 'lucide-react';
 
 export default function GestaoCadastros() {
   const [view, setView] = useState('list'); // 'list' | 'export' | 'links' | 'duplicates'
   const [showMenu, setShowMenu] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [cadastros] = useState([
-    { id: 1, nome: 'João Vitor Silva', grupo: 'Lideranças', criado: 'André / Hoje', celular: '(61) 99999-1111', cidade: 'Brasília' },
-    { id: 2, nome: 'Ana Souza', grupo: 'Apoiadores', criado: 'Portal / Ontem', celular: '(61) 98888-2222', cidade: 'Brasília' },
-    { id: 3, nome: 'Carlos Roberto', grupo: 'Sem Grupo', criado: 'Importação / 14 Ago', celular: '(61) 97777-3333', cidade: 'Goiânia' },
-    { id: 4, nome: 'Maria Oliveira', grupo: 'Comunidade Zona Norte', criado: 'Link Apoiador / 12 Ago', celular: '(61) 96666-4444', cidade: 'Brasília' }
-  ]);
+  const [cadastros, setCadastros] = useState([]);
+
+  useEffect(() => {
+    const fetchVoters = async () => {
+      try {
+        const response = await fetch('/api/voters');
+        if (response.ok) {
+          const data = await response.json();
+          // Mapeia os dados do banco para o formato visual esperado pela tabela
+          const mappedData = data.map(voter => ({
+            id: voter.id,
+            nome: voter.name,
+            grupo: voter.tags && voter.tags.length > 0 ? voter.tags[0] : 'Sem Grupo',
+            criado: new Date(voter.createdAt).toLocaleDateString('pt-BR'),
+            celular: voter.phone || 'N/A',
+            cidade: voter.city || 'N/A'
+          }));
+          setCadastros(mappedData);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar eleitores:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVoters();
+  }, []);
 
   const renderContent = () => {
     switch (view) {
