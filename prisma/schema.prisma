@@ -1,0 +1,202 @@
+// Appweb/prisma/schema.prisma
+// Database Schema - GestãoPolítica360 (App Político & CRM Comercial 360)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}
+
+enum Role {
+  MASTER
+  POLITICO
+  ASSESSOR
+  COORDENADOR
+  OPERADOR
+}
+
+enum PlanTier {
+  BASIC
+  PRO
+  POLITICAL
+  ENTERPRISE
+}
+
+model Cabinet {
+  id                   String            @id @default(uuid())
+  name                 String
+  candidateName        String
+  politicalParty       String?
+  state                String
+  city                 String
+  plan                 PlanTier          @default(POLITICAL)
+  
+  // Asaas SaaS Integration
+  asaasCustomerId      String?
+  asaasSubscriptionId  String?
+  subscriptionStatus   String            @default("ACTIVE")
+  themeColor           String            @default("cyan")
+
+  // Meta & WhatsApp Integrations
+  metaPixelId          String?
+  metaCapiToken        String?
+  metaAdAccountId      String?
+  whatsappPhoneNumber  String?
+  whatsappApiToken     String?
+
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  users                User[]
+  voters               Voter[]
+  demands              Demand[]
+  officialDocs         OfficialDoc[]
+  events               Event[]
+  donations            Donation[]
+  settings             SystemSetting[]
+  lgpdConsents         LgpdConsentLog[]
+  auditLogs            AuditLog[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  cabinetId String
+  cabinet   Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ASSESSOR)
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  auditLogs AuditLog[]
+}
+
+model Voter {
+  id            String   @id @default(uuid())
+  cabinetId     String
+  cabinet       Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  name          String
+  cpf           String?  // Criptografado com AES-256
+  phone         String   // Criptografado com AES-256
+  email         String?
+  birthDate     DateTime?
+  address       String?
+  neighborhood  String?
+  city          String?
+  state         String?
+  lat           Float?
+  lng           Float?
+  votingZone    String?
+  votingSection String?
+  tags          String[]
+  coordinatorId String?
+  lgpdAccepted  Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  lgpdConsents  LgpdConsentLog[]
+}
+
+model Demand {
+  id          String   @id @default(uuid())
+  cabinetId   String
+  cabinet     Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  protocol    String   @unique
+  title       String
+  description String
+  category    String
+  status      String   @default("ABERTO") // ABERTO, EM_ANDAMENTO, CONCLUIDO, CANCELADO
+  priority    String   @default("MEDIA")  // BAIXA, MEDIA, ALTA, URGENTE
+  voterId     String?
+  assignedTo  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OfficialDoc {
+  id        String   @id @default(uuid())
+  cabinetId String
+  cabinet   Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  code      String   @unique // ex: OF-2026/001
+  type      String   // OFICIO, MEMORANDO, PROJETO_LEI, EMENDA
+  subject   String
+  content   String
+  recipient String
+  status    String   @default("RASCUNHO")
+  pdfUrl    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  cabinetId   String
+  cabinet     Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  location    String?
+  startDate   DateTime
+  endDate     DateTime
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Donation {
+  id            String   @id @default(uuid())
+  cabinetId     String
+  cabinet       Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  donorName     String
+  donorCpf      String
+  donorEmail    String
+  amount        Float
+  paymentMethod String   // PIX, BOLETO, CREDIT_CARD
+  transactionId String   @unique
+  receiptUrl    String?
+  status        String   @default("PENDENTE")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SystemSetting {
+  id        String   @id @default(uuid())
+  cabinetId String
+  cabinet   Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  key       String   // GEMINI_API_KEY, RESEND_API_KEY, META_PIXEL_ID, META_CAPI_TOKEN, META_AD_ACCOUNT_ID, WHATSAPP_API_TOKEN
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@unique([cabinetId, key])
+}
+
+// Tabela de Logs de Consentimento LGPD (Termos de Privacidade do Eleitor)
+model LgpdConsentLog {
+  id          String   @id @default(uuid())
+  cabinetId   String
+  cabinet     Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  voterId     String
+  voter       Voter    @relation(fields: [voterId], references: [id], onDelete: Cascade)
+  consentGiven Boolean  @default(true)
+  ipAddress   String?
+  userAgent   String?
+  termsVersion String   @default("v1.0-2026")
+  createdAt   DateTime @default(now())
+}
+
+// Trilha de Auditoria para Segurança de Padrão Militar (Rastreamento de Acesso a Dados Sensíveis)
+model AuditLog {
+  id         String   @id @default(uuid())
+  cabinetId  String
+  cabinet    Cabinet  @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String   // VIEW_VOTER, EXPORT_DATA, UPDATE_CONFIG, WHATSAPP_DISPATCH, META_PIXEL_TRIGGER
+  resource   String
+  ipAddress  String?
+  hashData   String   // HASH HMAC-SHA256 da operação para prova criptográfica
+  timestamp  DateTime @default(now())
+}
