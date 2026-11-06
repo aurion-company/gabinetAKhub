@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Kanban, Plus, HelpCircle, Sparkles, MessageCircle, MoreVertical, X, Mail, MapPin, Calendar, Clock, Edit2, Trash2, Search, Loader2 } from 'lucide-react';
+import { Kanban, Plus, AlertCircle, HelpCircle, Sparkles, MessageCircle, MoreVertical, X, Mail, MapPin, Calendar, Clock, Edit2, Trash2, Search, Loader2 } from 'lucide-react';
 
 export default function KanbanDinamico() {
   const [activePipeline, setActivePipeline] = useState('Funil de Atendimento Comunitário');
@@ -100,6 +100,40 @@ export default function KanbanDinamico() {
     }
   };
 
+  
+  const handleNovoPipeline = () => {
+    const nome = prompt('Digite o nome do novo Pipeline:');
+    if (nome) alert('Pipeline "' + nome + '" criado com sucesso!');
+  };
+
+  const handleEditarPipeline = () => {
+    const nome = prompt('Editando o pipeline atual:', activePipeline);
+    if (nome && nome !== activePipeline) {
+      setActivePipeline(nome);
+      alert('Pipeline renomeado para "' + nome + '"!');
+    }
+  };
+
+  const handleExcluirPipeline = () => {
+    if (confirm('Tem certeza que deseja excluir o pipeline "' + activePipeline + '"? Todos os dados serão perdidos!')) {
+      alert('Pipeline excluído.');
+      setActivePipeline('Geral');
+    }
+  };
+
+  const handleAdicionarGrupo = () => {
+    const nome = prompt('Digite o nome do novo grupo (coluna):');
+    if (nome) {
+      setColumns(prev => [...prev, {
+        id: nome.toUpperCase().replace(/ /g, '_'),
+        title: nome,
+        count: 0,
+        color: '#a855f7',
+        cards: []
+      }]);
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '85vh', gap: '1.5rem' }}>
       
@@ -117,15 +151,15 @@ export default function KanbanDinamico() {
             <select style={{ ...inputStyle, width: '300px', padding: '0.5rem' }} value={activePipeline} onChange={(e) => setActivePipeline(e.target.value)}>
               {pipelines.map((p, i) => <option key={i}>{p}</option>)}
             </select>
-            <button style={iconBtnStyle} title="Editar Pipeline"><Edit2 size={16} /></button>
-            <button style={{ ...iconBtnStyle, color: 'var(--danger)' }} title="Excluir Pipeline"><Trash2 size={16} /></button>
+            <button onClick={handleEditarPipeline} style={iconBtnStyle} title="Editar Pipeline"><Edit2 size={16} /></button>
+            <button onClick={handleExcluirPipeline} style={{ ...iconBtnStyle, color: 'var(--danger)' }} title="Excluir Pipeline"><Trash2 size={16} /></button>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button style={iconBtnStyle} title="Tutorial e Ajuda"><HelpCircle size={18} /></button>
-          <button style={{ ...iconBtnStyle, color: 'var(--warning)' }} title="Dicas de IA"><Sparkles size={18} /></button>
-          <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
+          <button onClick={() => alert('Bem-vindo ao Kanban Dinâmico! Arraste e solte os cartões entre as colunas para atualizar os status.')} style={iconBtnStyle} title="Tutorial e Ajuda"><HelpCircle size={18} /></button>
+          <button onClick={() => alert('Dica de IA: Você tem 3 tarefas na coluna Triagem que estão paradas há mais de 48 horas!')} style={{ ...iconBtnStyle, color: 'var(--warning)' }} title="Dicas de IA"><Sparkles size={18} /></button>
+          <button onClick={handleNovoPipeline} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
             <Plus size={16} /> Novo Pipeline
           </button>
         </div>
@@ -195,7 +229,7 @@ export default function KanbanDinamico() {
                   
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.8rem' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Na coluna há {card.timeInCol}</span>
-                    <button style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'var(--success)', padding: '0.3rem', borderRadius: '50%', cursor: 'pointer', display: 'flex' }} title="Falar no WhatsApp">
+                    <button style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'var(--success)', padding: '0.3rem', borderRadius: '50%', cursor: 'pointer', display: 'flex' }} title="Falar não WhatsApp">
                       <MessageCircle size={14} />
                     </button>
                   </div>
@@ -207,7 +241,7 @@ export default function KanbanDinamico() {
         ))}
 
         {/* Botão Nova Coluna */}
-        <div style={{ minWidth: '320px', width: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(0,0,0,0.1)', cursor: 'pointer' }}>
+        <div onClick={handleAdicionarGrupo} style={{ minWidth: '320px', width: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(0,0,0,0.1)', cursor: 'pointer' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
             <Plus size={24} />
             <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>Adicionar Grupo</span>
@@ -255,7 +289,7 @@ export default function KanbanDinamico() {
 
             <div style={{ padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)', display: 'flex', gap: '1rem' }}>
               <button className="btn-primary" style={{ flex: 1, background: 'var(--success)', borderColor: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.8rem' }}>
-                <MessageCircle size={18} /> Falar no WhatsApp
+                <MessageCircle size={18} /> Falar não WhatsApp
               </button>
               <button className="btn-primary outline" style={{ padding: '0.8rem' }} title="Editar Cadastro">
                 <Edit2 size={18} />

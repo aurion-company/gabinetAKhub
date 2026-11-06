@@ -25,7 +25,7 @@ export default function IntegracaoMetaAds() {
         if (account) setAdAccountId(account.value);
       }
     } catch (e) {
-      console.error('Erro ao buscar chaves no banco:', e);
+      console.error('Erro ao buscar chaves não banco:', e);
     }
   };
 
@@ -74,11 +74,11 @@ export default function IntegracaoMetaAds() {
         body: JSON.stringify({ key: 'META_AD_ACCOUNT_ID', value: adAccountId })
       });
 
-      setMessage('✅ Chaves de Integração CAPI e Pixel salvas com sucesso no banco de dados isolado.');
+      setMessage('✅ Chaves de Integração CAPI e Pixel salvas com sucesso não banco de dados isolado.');
       fetchStatus();
       setTimeout(() => setMessage(''), 4000);
     } catch (e) {
-      setMessage('❌ Erro ao salvar chaves no banco de dados.');
+      setMessage('❌ Erro ao salvar chaves não banco de dados.');
     }
   };
 

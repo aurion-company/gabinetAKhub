@@ -198,7 +198,7 @@ export default function CriadorFormularios() {
               <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', fontSize: '0.9rem', color: '#fff' }}>
                   <input type="checkbox" checked={formConfig.sendWaNotification} onChange={e => setFormConfig({...formConfig, sendWaNotification: e.target.checked})} style={{ width: '16px', height: '16px' }} />
-                  Enviar Notificação no WhatsApp
+                  Enviar Notificação não WhatsApp
                 </label>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', paddingLeft: '1.8rem' }}>Dispara mensagem de boas-vindas logo após o preenchimento.</p>
               </div>

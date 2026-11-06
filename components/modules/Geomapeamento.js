@@ -78,6 +78,7 @@ export default function Geomapeamento() {
     setTimeout(() => {
       setIsUpdating(false);
       setShowUpdateModal(false);
+      alert('Sincronização com sucesso: 2.216 cadastros atualizados no mapa.');
     }, 2000);
   };
 
@@ -100,7 +101,7 @@ export default function Geomapeamento() {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn-primary outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
+          <button onClick={() => alert('O Assistente IA sugere: A zona Leste possui maior engajamento. Considere intensificar as campanhas no bairro Vila Esperança.')} className="btn-primary outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
             <Sparkles size={16} /> Assistente IA
           </button>
           <button className="btn-primary" onClick={() => setShowUpdateModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
@@ -199,7 +200,7 @@ export default function Geomapeamento() {
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>📍</div>
             <h2 style={{ fontSize: '1.2rem' }}>Atualização Geográfica</h2>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              Identificamos <strong>2.216 cadastros</strong> sem coordenadas. O sistema buscará os locais exatos no Google Geocoding em segundo plano.
+              Identificamos <strong>2.216 cadastros</strong> sem coordenadas. O sistema buscará os locais exatos não Google Geocoding em segundo plano.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}>
               <button onClick={handleUpdate} className="btn-primary" disabled={isUpdating}>

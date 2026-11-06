@@ -127,7 +127,7 @@ export default function GeradorEtiquetas() {
               boxShadow: '0 10px 30px rgba(0,0,0,0.2)', padding: '10mm',
               display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2mm', gridAutoRows: '25.4mm'
             }}>
-              {/* Renderizando etiquetas fictícias baseadas no Array */}
+              {/* Renderizando etiquetas fictícias baseadas não Array */}
               {Array.from({ length: 30 }).map((_, i) => {
                 const dest = etiquetas[i % etiquetas.length];
                 return (

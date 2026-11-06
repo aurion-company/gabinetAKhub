@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Settings, Globe, Database, ListTodo, KeyRound, Save, Copy, Key, Plus, Sparkles, Check, Hash, Loader2 } from 'lucide-react';
 
 export default function ConfiguracoesGerais() {
@@ -105,7 +105,7 @@ export default function ConfiguracoesGerais() {
             </div>
             
             <div className="section-card liquid-glass" style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem' }}>
-              <h4 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Campos Obrigatórios no Formulário de Cadastro Externo</h4>
+              <h4 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Campos Obrigatórios não Formulário de Cadastro Externão</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', fontSize: '0.85rem' }}>
                 {['Nome Completo', 'E-mail', 'CPF / CNPJ', 'Telefone Fixo', 'Celular (WhatsApp)', 'CEP', 'Endereço', 'Número', 'Bairro', 'Cidade', 'UF', 'Complemento'].map((col, i) => (
                   <label key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
@@ -120,7 +120,7 @@ export default function ConfiguracoesGerais() {
                 <h4 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Regras de Duplicidade</h4>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', fontSize: '0.9rem' }}>
                   <input type="checkbox" defaultChecked style={{ width: '18px', height: '18px' }} />
-                  Permitir cadastro duplicado via link externo
+                  Permitir cadastro duplicado via link externão
                 </label>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', paddingLeft: '2.2rem' }}>Se desativado, o sistema bloqueará envios com o mesmo E-mail ou CPF.</p>
               </div>
@@ -154,7 +154,7 @@ export default function ConfiguracoesGerais() {
                 <input type="checkbox" defaultChecked style={{ width: '18px', height: '18px' }} />
                 Exibir campo <b>"Data do Fato"</b> em andamentos
               </label>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', paddingLeft: '2.2rem' }}>Quando ativo, este campo permite registrar a data exata em que uma ação ocorreu no histórico da demanda.</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', paddingLeft: '2.2rem' }}>Quando ativo, este campo permite registrar a data exata em que uma ação ocorreu não histórico da demanda.</p>
             </div>
 
             <div className="section-card liquid-glass" style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem' }}>
@@ -170,7 +170,7 @@ export default function ConfiguracoesGerais() {
                 <div style={{ width: '32px', height: '32px', background: 'var(--accent)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 'bold' }}>C</div>
                 <div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff' }}>Carlos Administrador</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>carlos@elegis.com.br</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>carlos@GabinetAK.com.br</div>
                 </div>
               </div>
             </div>

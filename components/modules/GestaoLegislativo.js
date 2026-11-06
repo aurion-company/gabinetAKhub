@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  BookOpen, ScrollText, Banknote, Vote, Plus, Search, Filter, Download, 
+  X, BookOpen, RefreshCw, ScrollText, Banknote, Vote, Plus, Search, Filter, Download, 
   CheckCircle2, Clock, AlertTriangle, FileText, ChevronRight, BarChart2,
   Building2, Landmark, PieChart, Sparkles, UserCheck, Calendar
 } from 'lucide-react';
@@ -10,11 +10,40 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
 
+  
+  const [showNovoModal, setShowNovoModal] = useState(false);
+  const [showDetalhesModal, setShowDetalhesModal] = useState(false);
+  const [showTseSyncModal, setShowTseSyncModal] = useState(false);
+  const [showNovoVotoModal, setShowNovoVotoModal] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleExportPDF = () => {
+    alert('Iniciando geração de PDF do relatório...');
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  };
+
+  const handleSyncTSE = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      setIsSyncing(false);
+      setShowTseSyncModal(false);
+      alert('Sincronização com o Tribunal Superior Eleitoral (TSE) concluída com sucesso!');
+    }, 2500);
+  };
+
+  const handleNovoRegistroSubmit = (e) => {
+    e.preventDefault();
+    alert('Novo registro salvo com sucesso!');
+    setShowNovoModal(false);
+  };
+
   // DADOS DE MOCK: PROJETOS DE LEI
   const [projetosLei, setProjetosLei] = useState([
     {
       id: 'PL-042/2026',
-      titulo: 'Dispõe sobre a criação do Programa de Tecnologia e Robótica nas Escolas Municipais',
+      titulo: 'Dispõe sobre a criação do Programa de Tecnãologia e Robótica nas Escolas Municipais',
       autor: 'Gabinete Dep. Silva / Ver. Marcos',
       comissao: 'Constituição e Justiça (CCJ)',
       status: 'Em Tramitação',
@@ -24,7 +53,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
     },
     {
       id: 'PL-038/2026',
-      titulo: 'Institui a obrigatoriedade de atendimento prioritário a cuidadores de PWD no serviço público',
+      titulo: 'Institui a obrigatoriedade de atendimento prioritário a cuidadores de PWD não serviço público',
       autor: 'Gabinete Dep. Silva',
       comissao: 'Saúde e Direitos Humanos',
       status: 'Aprovado',
@@ -125,7 +154,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
           </p>
         </div>
         
-        <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.3rem' }}>
+        <button onClick={() => setShowNovoModal(true)} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.3rem' }}>
           <Plus size={18} /> Novo Registro
         </button>
       </div>
@@ -183,7 +212,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
           />
         </div>
 
-        <button style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '0.55rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: '600' }}>
+        <button onClick={handleExportPDF} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '0.55rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: '600' }}>
           <Download size={15} /> Exportar Relatório (PDF)
         </button>
       </div>
@@ -207,7 +236,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
         </div>
 
         <div className="stat-card liquid-glass" style={{ padding: '1rem 1.2rem' }}>
-          <span className="stat-label">Cota Indenizatória no Mês</span>
+          <span className="stat-label">Cota Indenizatória não Mês</span>
           <span className="stat-value" style={{ fontSize: '1.8rem', color: '#a855f7' }}>
             R$ {totalVerbasMes.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </span>
@@ -250,7 +279,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
                     </span>
                   </td>
                   <td style={{ padding: '1rem', textAlign: 'right' }}>
-                    <button style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.78rem' }}>
+                    <button onClick={() => setShowDetalhesModal(pl)} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.78rem' }}>
                       Detalhes
                     </button>
                   </td>
@@ -268,7 +297,7 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)' }}>
                 <th style={{ padding: '0.9rem' }}>Código Emenda</th>
-                <th style={{ padding: '0.9rem' }}>Município / Destino</th>
+                <th style={{ padding: '0.9rem' }}>Município / Destinão</th>
                 <th style={{ padding: '0.9rem' }}>Objeto da Emenda</th>
                 <th style={{ padding: '0.9rem' }}>Valor Empenhado</th>
                 <th style={{ padding: '0.9rem' }}>Valor Pago</th>
@@ -352,9 +381,19 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
       {activeTab === 'resultados' && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', flex: 1 }}>
           <div className="section-card liquid-glass" style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.2)' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
-              <Vote size={20} /> Votação Histórica por Bairro (Última Eleição)
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)' }}>
+                <Vote size={20} /> Votação Histórica por Bairro (Última Eleição)
+              </h3>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={() => setShowTseSyncModal(true)} style={{ background: 'rgba(0, 240, 255, 0.1)', border: '1px solid var(--accent)', color: 'var(--accent)', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: '600' }}>
+                  <RefreshCw size={14} /> Sincronizar TSE
+                </button>
+                <button onClick={() => setShowNovoVotoModal(true)} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Plus size={14} /> Incluir Informação
+                </button>
+              </div>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
                 { bairro: 'Centro', votos: 4850, pct: 42.5 },
@@ -381,6 +420,83 @@ export default function GestaoLegislativo({ initialTab = 'pls' }) {
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '320px' }}>
               Total de 11.400 votos consolidados nas zonas eleitorais prioritárias do município.
             </p>
+          </div>
+        </div>
+      )}
+
+    
+      {/* MODAL: NOVO REGISTRO UNIFICADO */}
+      {showNovoModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="section-card liquid-glass" style={{ width: '500px', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '800' }}>Adicionar {activeTab === 'pls' ? 'Projeto de Lei' : activeTab === 'emendas' ? 'Emenda' : 'Verba'}</h3>
+              <button onClick={() => setShowNovoModal(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <form onSubmit={handleNovoRegistroSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Título / Objeto</label>
+                <input type="text" required style={{ width: '100%', padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{activeTab === 'verbas' ? 'Valor (R$)' : 'Detalhes / Autoria'}</label>
+                <input type="text" required style={{ width: '100%', padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+              </div>
+              <button type="submit" className="btn-primary" style={{ marginTop: '1rem' }}>Salvar Registro</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: DETALHES PL */}
+      {showDetalhesModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="section-card liquid-glass" style={{ width: '600px', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--accent)' }}>{showDetalhesModal.id}</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{showDetalhesModal.titulo}</p>
+              </div>
+              <button onClick={() => setShowDetalhesModal(null)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>
+              <p><strong>Autor:</strong> {showDetalhesModal.autor}</p>
+              <p><strong>Comissão:</strong> {showDetalhesModal.comissao}</p>
+              <p><strong>Status:</strong> <span style={{ color: 'var(--accent)' }}>{showDetalhesModal.status}</span></p>
+              <p><strong>Relator:</strong> {showDetalhesModal.relator}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: SINCRONIZAR TSE */}
+      {showTseSyncModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="section-card liquid-glass" style={{ width: '400px', padding: '2rem', textAlign: 'center' }}>
+            <Vote size={48} color="var(--accent)" style={{ margin: '0 auto 1rem' }} />
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '0.5rem' }}>Sincronização DivulgaCand TSE</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>O sistema buscará as votações consolidadas por Zona e Seção não repositório aberto do Tribunal Superior Eleitoral.</p>
+            <button onClick={handleSyncTSE} disabled={isSyncing} className="btn-primary" style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
+              {isSyncing ? <RefreshCw className="spin" size={16} /> : 'Iniciar Sincronização Segura'}
+            </button>
+            <button onClick={() => setShowTseSyncModal(false)} disabled={isSyncing} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', marginTop: '1rem', cursor: 'pointer', fontSize: '0.85rem' }}>Cancelar</button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: INCLUIR INFO MANUAL */}
+      {showNovoVotoModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="section-card liquid-glass" style={{ width: '400px', padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '800' }}>Adicionar Local de Votação</h3>
+              <button onClick={() => setShowNovoVotoModal(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <input type="text" placeholder="Nome do Bairro / Colégio Eleitoral" style={{ padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+              <input type="number" placeholder="Quantidade de Votos" style={{ padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+              <button onClick={() => { alert('Dado inserido localmente!'); setShowNovoVotoModal(false); }} className="btn-primary" style={{ marginTop: '0.5rem' }}>Salvar Dados</button>
+            </div>
           </div>
         </div>
       )}

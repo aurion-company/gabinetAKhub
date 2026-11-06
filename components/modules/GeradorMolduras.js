@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Image as ImageIcon, Plus, Link as LinkIcon, Download, Users, Copy, Edit, Trash2, Camera, Circle, Square, ArrowRight, Share2 } from 'lucide-react';
 
 export default function GeradorMolduras() {
   const [view, setView] = useState('list'); // 'list' | 'create'
   
   const [campanhas] = useState([
-    { id: 1, titulo: 'Acelera Norte', slug: 'acelera-norte', acessos: 1240, geradas: 850, formato: 'Redondo', status: 'Ativo', criacao: '16 Ago 2026' },
+    { id: 1, titulo: 'Acelera Nãorte', slug: 'acelera-nãorte', acessos: 1240, geradas: 850, formato: 'Redondo', status: 'Ativo', criacao: '16 Ago 2026' },
     { id: 2, titulo: 'Campanha de Filiação', slug: 'filiacao-2026', acessos: 530, geradas: 215, formato: 'Quadrado', status: 'Ativo', criacao: '10 Ago 2026' },
     { id: 3, titulo: 'Apoio à Saúde', slug: 'apoio-saude', acessos: 3200, geradas: 2800, formato: 'Redondo', status: 'Inativo', criacao: '05 Jul 2026' },
   ]);
@@ -59,7 +59,7 @@ export default function GeradorMolduras() {
                         <td style={{ padding: '1rem' }}>
                           <strong style={{ display: 'block', fontSize: '1.05rem', color: '#fff' }}>{c.titulo}</strong>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent)', fontSize: '0.85rem', marginTop: '0.3rem' }}>
-                            <LinkIcon size={12} /> elegiv.com.br/apoiar/{c.slug}
+                            <LinkIcon size={12} /> GabinetAK.com.br/apoiar/{c.slug}
                             <Copy size={12} style={{ cursor: 'pointer', marginLeft: '0.5rem', color: 'var(--text-muted)' }} title="Copiar URL" />
                           </div>
                         </td>
@@ -104,13 +104,13 @@ export default function GeradorMolduras() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                 <div>
                   <label style={labelStyle}>Título da Campanha *</label>
-                  <input type="text" placeholder="Ex: Acelera Norte 2026" style={inputStyle} />
+                  <input type="text" placeholder="Ex: Acelera Nãorte 2026" style={inputStyle} />
                 </div>
                 <div>
                   <label style={labelStyle}>URL (Slug) *</label>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRight: 'none', borderRadius: '8px 0 0 8px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>.../apoiar/</span>
-                    <input type="text" placeholder="acelera-norte" style={{ ...inputStyle, borderRadius: '0 8px 8px 0' }} />
+                    <input type="text" placeholder="acelera-nãorte" style={{ ...inputStyle, borderRadius: '0 8px 8px 0' }} />
                   </div>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function GeradorMolduras() {
               
               <div style={{ flex: 1, padding: '2rem 1.5rem', background: '#e8f4fe', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {/* Mock do App Apoiar */}
-                <h2 style={{ color: '#1e3a8a', fontSize: '1.2rem', fontWeight: '800', textAlign: 'center', marginBottom: '0.5rem' }}>Acelera Norte 2026</h2>
+                <h2 style={{ color: '#1e3a8a', fontSize: '1.2rem', fontWeight: '800', textAlign: 'center', marginBottom: '0.5rem' }}>Acelera Nãorte 2026</h2>
                 <p style={{ color: '#475569', fontSize: '0.85rem', textAlign: 'center', marginBottom: '2rem' }}>Mostre que você está com a gente! Gere sua foto oficial da campanha.</p>
                 
                 <div style={{ 
@@ -188,7 +188,7 @@ export default function GeradorMolduras() {
                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem'
                   }}>
                     <div style={{ background: '#3b82f6', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', padding: '0.2rem', textAlign: 'center', borderRadius: '4px' }}>
-                      #AceleraNorte
+                      #AceleraNãorte
                     </div>
                   </div>
                 </div>

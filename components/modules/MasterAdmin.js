@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Loader2 } from 'lucide-react';
@@ -297,7 +297,7 @@ export default function MasterAdmin({ disabledModules = [], setDisabledModules =
                             updated = [...disabledModules, mod.id]; // Desabilita
                           }
                           setDisabledModules(updated);
-                          localStorage.setItem('elegiv_disabled_modules', JSON.stringify(updated));
+                          localStorage.setItem('GabinetAK_disabled_modules', JSON.stringify(updated));
                         }}
                         style={{ accentColor: 'var(--accent)', width: '16px', height: '16px', cursor: 'pointer' }}
                       />

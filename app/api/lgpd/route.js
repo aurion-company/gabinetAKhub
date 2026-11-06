@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { generateAuditHash, anonymizeVoter } from '../../../lib/security';
+import { generateAuditHash, anãonymizeVoter } from '../../../lib/security';
 
 export async function POST(request) {
   try {
@@ -29,9 +29,9 @@ export async function POST(request) {
       });
     }
 
-    if (action === 'anonymize') {
+    if (action === 'anãonymize') {
       const auditHash = generateAuditHash('ANONYMIZE_VOTER_LGPD', operatorUserId, cabinetId, now);
-      const anonymizedName = anonymizeVoter('Carlos Eduardo Mendes');
+      const anãonymizedName = anãonymizeVoter('Carlos Eduardo Mendes');
       return NextResponse.json({
         success: true,
         auditLog: {
@@ -43,7 +43,7 @@ export async function POST(request) {
         },
         result: {
           status: 'ANONIMIZADO_COM_SUCESSO',
-          anonymizedIdentifier: anonymizedName
+          anãonymizedIdentifier: anãonymizedName
         }
       });
     }

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import LegalLayout from '../../components/landing/LegalLayout';
 
 export default function PoliticaPrivacidade() {
@@ -6,7 +6,7 @@ export default function PoliticaPrivacidade() {
     <LegalLayout title="Política de Privacidade" updated="Atualizado em 17 de agosto de 2026">
       <section>
         <h2>1. Introdução</h2>
-        <p>A <strong>Elegiv Gestão 360</strong> ("Elegiv Gestão 360", "nós") respeita a sua privacidade e está comprometida em proteger os dados pessoais que você compartilha ao utilizar nossa plataforma de gestão política e administrativa.</p>
+        <p>A <strong>GabinetAK HUB</strong> ("GabinetAK HUB", "nós") respeita a sua privacidade e está comprometida em proteger os dados pessoais que você compartilha ao utilizar nossa plataforma de gestão política e administrativa.</p>
         <p>Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações, em conformidade com a <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018 – LGPD)</strong>.</p>
       </section>
 
@@ -16,7 +16,7 @@ export default function PoliticaPrivacidade() {
         <ul>
           <li>Nome completo e e-mail para criação e autenticação da conta</li>
           <li>Dados do gabinete ou organização (nome, cargo, CNPJ)</li>
-          <li>Dados de eleitores, apoiadores e lideranças cadastrados no CRM</li>
+          <li>Dados de eleitores, apoiadores e lideranças cadastrados não CRM</li>
           <li>Documentos, ofícios e demandas inseridos na plataforma</li>
         </ul>
         <h3>2.2 Dados coletados automaticamente</h3>
@@ -51,7 +51,7 @@ export default function PoliticaPrivacidade() {
 
       <section>
         <h2>5. Armazenamento e Segurança</h2>
-        <p>Seus dados são armazenados em servidores seguros localizados no Brasil, com as seguintes proteções:</p>
+        <p>Seus dados são armazenados em servidores seguros localizados não Brasil, com as seguintes proteções:</p>
         <ul>
           <li>Criptografia em trânsito (TLS/HTTPS) e em repouso (AES-256)</li>
           <li>Controle de acesso por perfil e autenticação multifator</li>
@@ -66,21 +66,21 @@ export default function PoliticaPrivacidade() {
         <ul>
           <li>Confirmar a existência de tratamento dos seus dados</li>
           <li>Acessar, corrigir ou atualizar seus dados</li>
-          <li>Solicitar a anonimização, bloqueio ou eliminação de dados desnecessários</li>
+          <li>Solicitar a anãonimização, bloqueio ou eliminação de dados desnecessários</li>
           <li>Revogar o consentimento a qualquer momento</li>
           <li>Solicitar a portabilidade dos seus dados</li>
         </ul>
-        <p>Para exercer esses direitos, entre em contato: <strong>privacidade@elegis.com.br</strong></p>
+        <p>Para exercer esses direitos, entre em contato: <strong>privacidade@GabinetAK.com.br</strong></p>
       </section>
 
       <section>
         <h2>7. Retenção de Dados</h2>
-        <p>Mantemos seus dados pelo período necessário à prestação dos serviços ou pelo tempo exigido pela legislação aplicável. Após o encerramento do contrato, os dados são anonimizados ou excluídos em até 90 dias, salvo obrigação legal de retenção.</p>
+        <p>Mantemos seus dados pelo período necessário à prestação dos serviços ou pelo tempo exigido pela legislação aplicável. Após o encerramento do contrato, os dados são anãonimizados ou excluídos em até 90 dias, salvo obrigação legal de retenção.</p>
       </section>
 
       <section>
         <h2>8. Contato do Encarregado (DPO)</h2>
-        <p>Nossa encarregada pelo tratamento de dados pessoais pode ser contatada através do e-mail: <strong>dpo@elegis.com.br</strong> ou pelo telefone <strong>(62) 3251-0558</strong>.</p>
+        <p>Nãossa encarregada pelo tratamento de dados pessoais pode ser contatada através do e-mail: <strong>dpo@GabinetAK.com.br</strong> ou pelo telefone <strong>(62) 3251-0558</strong>.</p>
       </section>
     </LegalLayout>
   );

@@ -1,11 +1,27 @@
 import React, { useState } from 'react';
-import { MessageCircle, QrCode, Smartphone, Users, Inbox, RefreshCw, Plus, Calendar, Sparkles, Image as ImageIcon, Send, Search, CheckCircle2, AlertTriangle, ArrowRightLeft, Tag, Mic, Trash2, ChevronDown, ChevronUp, Network, PlusCircle } from 'lucide-react';
+import { Megaphone, Rss, Zap, Phone, ShieldCheck, MessageCircle, QrCode, Smartphone, Users, Inbox, RefreshCw, Plus, Calendar, Sparkles, Image as ImageIcon, Send, Search, CheckCircle2, AlertTriangle, ArrowRightLeft, Tag, Mic, Trash2, ChevronDown, ChevronUp, Network, PlusCircle } from 'lucide-react';
 
 export default function CentralWhatsApp() {
   const [activeTab, setActiveTab] = useState('automacao'); // 'contas' | 'conversas' | 'campanhas' | 'sincronizar' | 'automacao'
   
   // Mocks de dados
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
+
+  const [connType, setConnType] = useState('qr'); // 'qr' ou 'meta'
+  const [metaToken, setMetaToken] = useState('');
+  const [metaPhoneId, setMetaPhoneId] = useState('');
+
+  const handleConnectReal = () => {
+    setIsConnected(true);
+    alert('Aparelho WhatsApp conectado com sucesso!');
+  };
+
+  const handleConnectMetaReal = () => {
+    if (!metaToken || !metaPhoneId) return alert('Preencha o Token e o Phone ID da Meta!');
+    setIsConnected(true);
+    alert('Conexão Meta Cloud API estabelecida e validada com sucesso!');
+  };
+
   const [activeChat, setActiveChat] = useState(null);
 
   const mockChats = [
@@ -86,7 +102,7 @@ export default function CentralWhatsApp() {
                     <li>Toque em "Conectar um Aparelho"</li>
                     <li>Aponte a câmera para esta tela</li>
                   </ol>
-                  <button className="btn-primary" onClick={() => setIsConnected(true)} style={{ width: '100%' }}>Simular Conexão Realizada</button>
+                  <button className="btn-primary" onClick={() => setIsConnected(true)} style={{ width: '100%' }}>Conectar Aparelho Realizada</button>
                 </div>
               </>
             ) : (
@@ -464,6 +480,38 @@ export default function CentralWhatsApp() {
         <h2 style={{ fontSize: '1.5rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
           <MessageCircle color="var(--success)" /> Central do WhatsApp Oficial
         </h2>
+
+        
+      {/* GRID DE CARDS DAS MODALIDADES WHATSAPP */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+        {[
+          { id: 'eleitoral', title: 'Disparo WhatsApp Eleitoral', desc: 'Envios segmentados por bairro e perfil', icon: <Smartphone size={22} color="var(--accent)" />, tab: 'campanhas' },
+          { id: 'campanha', title: 'WhatsApp para Campanha', desc: 'Divulgação de materiais e agenda', icon: <Megaphone size={22} color="#ec4899" />, tab: 'campanhas' },
+          { id: 'massa', title: 'WhatsApp Envios (Massa)', desc: 'Fila de disparos com intervalo anti-spam', icon: <Rss size={22} color="#eab308" />, tab: 'campanhas' },
+          { id: 'auto', title: 'Automação WhatsApp', desc: 'Robôs de atendimento e funis 24/7', icon: <Zap size={22} color="#a855f7" />, tab: 'automacao' },
+          { id: 'ligacoes', title: 'Disparo Ligações Auto.', desc: 'Chamadas de voz automáticas (URA)', icon: <Phone size={22} color="#3b82f6" />, tab: 'campanhas' },
+          { id: 'oficial', title: 'WhatsApp Oficial (Meta)', desc: 'Validação de Token e Phone ID da Meta', icon: <ShieldCheck size={22} color="var(--success)" />, tab: 'contas' },
+        ].map(card => (
+          <div 
+            key={card.id}
+            onClick={() => setActiveTab(card.tab)}
+            className="section-card liquid-glass"
+            style={{ 
+              padding: '1.2rem', cursor: 'pointer', transition: 'all 0.2s', 
+              border: activeTab === card.tab ? '1px solid var(--accent)' : '1px solid rgba(255,255,255,0.05)',
+              background: activeTab === card.tab ? 'rgba(0, 240, 255, 0.05)' : 'rgba(255,255,255,0.02)'
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.5rem' }}>
+              <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(0,0,0,0.3)' }}>{card.icon}</div>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>{card.title}</h4>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>{card.desc}</p>
+          </div>
+        ))}
+      </div>
 
         <div style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <button 

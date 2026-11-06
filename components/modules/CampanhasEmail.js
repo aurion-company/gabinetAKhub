@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Mail, Search, Plus, Sparkles, Filter, Send, Image as ImageIcon, Type, Square, AlignJustify, ArrowLeft, Save, X, Settings2, Inbox, SendHorizontal, Star, Loader2 } from 'lucide-react';
 
 export default function CampanhasEmail() {
@@ -26,7 +26,7 @@ export default function CampanhasEmail() {
   // Mock de Inbox
   const [inbox] = useState([
     { id: 101, sender: 'João Ramos', email: 'joaoramos@email.com', subject: 'Dúvida sobre o IPTU', date: 'Hoje, 09:42', isRead: false },
-    { id: 102, sender: 'Maria Liderança', email: 'maria.lider@email.com', subject: 'Reunião confirmada no bairro', date: 'Ontem, 16:30', isRead: true },
+    { id: 102, sender: 'Maria Liderança', email: 'maria.lider@email.com', subject: 'Reunião confirmada não bairro', date: 'Ontem, 16:30', isRead: true },
     { id: 103, sender: 'Câmara Municipal', email: 'contato@camara.gov.br', subject: 'Pauta da próxima sessão', date: '12/08/2026', isRead: true },
   ]);
 
@@ -109,7 +109,7 @@ export default function CampanhasEmail() {
             </div>
             <div>
               <label style={labelStyle}>Assunto do Email *</label>
-              <input type="text" placeholder="Ex: Confira as novidades do mandato" style={inputStyle} value={formData.assunto} onChange={e => setFormData({...formData, assunto: e.target.value})} />
+              <input type="text" placeholder="Ex: Confira as nãovidades do mandato" style={inputStyle} value={formData.assunto} onChange={e => setFormData({...formData, assunto: e.target.value})} />
             </div>
             <div>
               <label style={labelStyle}>Destinatário (Para) *</label>
@@ -117,7 +117,7 @@ export default function CampanhasEmail() {
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div><label style={labelStyle}>Email do Remetente (Configurado no Servidor) *</label><input type="email" readOnly style={{...inputStyle, opacity: 0.7, cursor: 'not-allowed'}} value="gabinete@gestaopolitica360.com.br" /></div>
+            <div><label style={labelStyle}>Email do Remetente (Configurado não Servidor) *</label><input type="email" readOnly style={{...inputStyle, opacity: 0.7, cursor: 'not-allowed'}} value="gabinete@gestaopolitica360.com.br" /></div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
                 <label style={labelStyle}>Grupo ou Tag</label>
@@ -125,7 +125,7 @@ export default function CampanhasEmail() {
               </div>
               <div>
                 <label style={labelStyle}>Provedor de E-mail *</label>
-                <select style={inputStyle}><option>Padrão Elegiv (Resend)</option><option>AWS SES Próprio</option><option>SendGrid</option></select>
+                <select style={inputStyle}><option>Padrão GabinetAK (Resend)</option><option>AWS SES Próprio</option><option>SendGrid</option></select>
               </div>
             </div>
             <div>
@@ -165,7 +165,7 @@ export default function CampanhasEmail() {
           <div style={{ width: '250px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '1rem' }}>
             <h4 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Settings2 size={16} /> Propriedades</h4>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '2rem' }}>
-              Clique em um elemento no canvas para editar cores, links e margens.
+              Clique em um elemento não canvas para editar cores, links e margens.
             </div>
           </div>
 

@@ -421,8 +421,8 @@ export default function GeradorQRCode({ onOpenIA }) {
     const defaultMock = [
       {
         id: 'qr-101',
-        name: 'QR Panfleto Zona Norte',
-        content: 'https://eleger.app.br/agenda-zona-norte',
+        name: 'QR Panfleto Zona Nãorte',
+        content: 'https://eleger.app.br/agenda-zona-nãorte',
         contentType: 'url',
         isDynamic: true,
         scans: 482,
@@ -487,7 +487,7 @@ export default function GeradorQRCode({ onOpenIA }) {
   const handleSimulateScan = (id) => {
     const updated = savedQrs.map(qr => qr.id === id ? { ...qr, scans: qr.scans + 1 } : qr);
     updateSavedQrsState(updated);
-    showToast('📈 Escaneamento contabilizado no relatório!');
+    showToast('📈 Escaneamento contabilizado não relatório!');
   };
 
   const handleCopyTrackingLink = (id) => {
@@ -521,7 +521,7 @@ export default function GeradorQRCode({ onOpenIA }) {
 
   const downloadPNG = () => {
     const image = new Image();
-    image.crossOrigin = 'Anonymous';
+    image.crossOrigin = 'Anãonymous';
     image.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = resolution;
@@ -622,7 +622,7 @@ export default function GeradorQRCode({ onOpenIA }) {
             <QrCode color="var(--accent)" size={22} /> Gerador & Rastreio de QR Code Pro
           </h2>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            Crie QR Codes 100% escaneáveis com personalização completa de marcas e formas no estilo QRCode Monkey.
+            Crie QR Codes 100% escaneáveis com personalização completa de marcas e formas não estilo QRCode Monkey.
           </span>
         </div>
 
@@ -745,7 +745,7 @@ export default function GeradorQRCode({ onOpenIA }) {
                         <Zap size={16} color={isDynamic ? 'var(--accent)' : '#aaa'} /> QR Dinâmico
                       </div>
                       <span style={{ fontSize: '0.68rem', color: isDynamic ? '#e2e8f0' : 'var(--text-muted)', lineHeight: '1.3' }}>
-                        Rastreável com Analytics. Altere o destino a qualquer momento!
+                        Rastreável com Analytics. Altere o destinão a qualquer momento!
                       </span>
                     </button>
 
@@ -771,7 +771,7 @@ export default function GeradorQRCode({ onOpenIA }) {
                         <Shield size={16} color={!isDynamic ? '#10b981' : '#aaa'} /> QR Estático
                       </div>
                       <span style={{ fontSize: '0.68rem', color: !isDynamic ? '#e2e8f0' : 'var(--text-muted)', lineHeight: '1.3' }}>
-                        Direto no código. Não depende de servidor e não expira.
+                        Direto não código. Não depende de servidor e não expira.
                       </span>
                     </button>
                   </div>
@@ -791,7 +791,7 @@ export default function GeradorQRCode({ onOpenIA }) {
                   <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {contentType === 'url' && (
                       <div>
-                        <label style={labelStyle}>URL de Destino *</label>
+                        <label style={labelStyle}>URL de Destinão *</label>
                         <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} style={inputStyle} placeholder="https://eleger.app.br" />
                       </div>
                     )}
@@ -996,7 +996,7 @@ export default function GeradorQRCode({ onOpenIA }) {
 
                     {/* EYE BALL SHAPE */}
                     <div>
-                      <label style={labelStyle}>3. Centro Interno dos Olhos (Eye Ball Shape):</label>
+                      <label style={labelStyle}>3. Centro Internão dos Olhos (Eye Ball Shape):</label>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(105px, 1fr))', gap: '0.65rem', marginTop: '0.6rem' }}>
                         {EYE_BALL_SHAPES.map(item => {
                           const isSel = eyeBallShape === item.id;
@@ -1301,7 +1301,7 @@ export default function GeradorQRCode({ onOpenIA }) {
           <div>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#fff' }}>Gerenciador de Redirecionamento Inteligente de Links</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              Altere a URL de destino de qualquer QR Code impresso em tempo real. O cidadão que escanear o papel antigo será automaticamente guiado para a nova página!
+              Altere a URL de destinão de qualquer QR Code impresso em tempo real. O cidadão que escanear o papel antigo será automaticamente guiado para a nova página!
             </p>
           </div>
 
@@ -1316,22 +1316,22 @@ export default function GeradorQRCode({ onOpenIA }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--accent)' }}>
                     <LinkIcon size={14} /> Link Rastreado: <code>{typeof window !== 'undefined' ? window.location.origin : ''}/s/{qr.id}</code>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Destino Atual: <strong style={{ color: '#fff' }}>{qr.content}</strong></div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Destinão Atual: <strong style={{ color: '#fff' }}>{qr.content}</strong></div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button 
                     onClick={() => {
-                      const newUrl = prompt('Digite a nova URL de destino para este QR Code:', qr.content);
+                      const newUrl = prompt('Digite a nova URL de destinão para este QR Code:', qr.content);
                       if (newUrl) {
                         const updated = savedQrs.map(q => q.id === qr.id ? { ...q, content: newUrl } : q);
                         updateSavedQrsState(updated);
-                        showToast('✓ Destino da URL atualizado em tempo real!');
+                        showToast('✓ Destinão da URL atualizado em tempo real!');
                       }
                     }}
                     style={{ padding: '0.55rem 1rem', background: 'var(--accent)', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                   >
-                    <Edit3 size={14} /> Editar Destino
+                    <Edit3 size={14} /> Editar Destinão
                   </button>
 
                   <button 

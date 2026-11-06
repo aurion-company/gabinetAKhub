@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -72,10 +72,10 @@ export default function GestaoPaginasBio() {
 
   // Links List
   const [links, setLinks] = useState([
-    { id: '1', label: '💚 Apoiar Campanha (PIX)', url: 'https://elegis.com.br/doar', active: true, icon: 'Pix' },
-    { id: '2', label: '💬 Fale Comigo no WhatsApp', url: 'https://wa.me/5511999999999', active: true, icon: 'WhatsApp' },
-    { id: '3', label: '📜 Conheça Minhas Propostas de Governo', url: 'https://carlos.com.br/propostas', active: true, icon: 'Document' },
-    { id: '4', label: '📸 Siga meu perfil no Instagram', url: 'https://instagram.com/carlos', active: true, icon: 'Instagram' }
+    { id: '1', label: '💚 Apoiar Campanha (PIX)', url: 'https://GabinetAK.com.br/doar', active: true, icon: 'Pix' },
+    { id: '2', label: '💬 Fale Comigo não WhatsApp', url: 'https://wa.me/5511999999999', active: true, icon: 'WhatsApp' },
+    { id: '3', label: '📜 Conheça Minhas Propostas de Governão', url: 'https://carlos.com.br/propostas', active: true, icon: 'Document' },
+    { id: '4', label: '📸 Siga meu perfil não Instagram', url: 'https://instagram.com/carlos', active: true, icon: 'Instagram' }
   ]);
 
 
@@ -194,7 +194,7 @@ export default function GestaoPaginasBio() {
                     </td>
                     <td style={{ padding: '0.8rem 1rem' }}>
                       <span style={{ color: 'var(--accent)', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <Globe size={14} /> https://elegis.app/bio/{page.slug}
+                        <Globe size={14} /> https://GabinetAK.app/bio/{page.slug}
                       </span>
                     </td>
                     <td style={{ padding: '0.8rem 1rem' }}>
@@ -263,7 +263,7 @@ export default function GestaoPaginasBio() {
                 <div>
                   <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>URL Slug Única *</label>
                   <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.3rem', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border)', borderRadius: '8px', padding: '0 0.6rem' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>elegis.app/bio/</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>GabinetAK.app/bio/</span>
                     <input 
                       type="text" 
                       value={urlSlug} 
@@ -410,7 +410,7 @@ export default function GestaoPaginasBio() {
                 </div>
 
                 <div style={{ marginTop: 'auto', paddingTop: '1.5rem', fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)' }}>
-                  Desenvolvido por Elegiv Gestão 360
+                  Desenvolvido por GabinetAK HUB
                 </div>
               </div>
             </div>

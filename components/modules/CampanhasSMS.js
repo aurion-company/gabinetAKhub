@@ -205,7 +205,7 @@ export default function CampanhasSMS() {
                 <div>
                   <h4 style={{ color: 'var(--warning)', fontWeight: 'bold', marginBottom: '0.3rem', fontSize: '0.95rem' }}>Atenção Técnica de Performance</h4>
                   <p style={{ color: 'var(--text-primary)', fontSize: '0.85rem', lineHeight: '1.5' }}>
-                    É importante ressaltar que a inclusão de <strong>links (URLs)</strong> no corpo do texto (template) exige mais processamento das operadoras e diminui consideravelmente a velocidade de envio da campanha de SMS. Evite links muito longos ou, se possível, prefira alertas de texto simples.
+                    É importante ressaltar que a inclusão de <strong>links (URLs)</strong> não corpo do texto (template) exige mais processamento das operadoras e diminui consideravelmente a velocidade de envio da campanha de SMS. Evite links muito longos ou, se possível, prefira alertas de texto simples.
                   </p>
                 </div>
               </div>

@@ -5,9 +5,9 @@ export default function GestaoTiposDocumentos() {
   const [view, setView] = useState('list'); // 'list' | 'create'
   
   const [tipos, setTipos] = useState([
-    { id: 1, nome: 'Ofício', numInicial: 1, reiniciaAno: true },
-    { id: 2, nome: 'Memorando', numInicial: 1, reiniciaAno: true },
-    { id: 3, nome: 'Requerimento', numInicial: 100, reiniciaAno: false },
+    { id: 1, nome: 'Ofício', numInicial: 1, reiniciaAnão: true },
+    { id: 2, nome: 'Memorando', numInicial: 1, reiniciaAnão: true },
+    { id: 3, nome: 'Requerimento', numInicial: 100, reiniciaAnão: false },
   ]);
 
   const renderContent = () => {

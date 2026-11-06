@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Elegiv Gestão 360 | Plataforma de Mobilização Eleitoral e Gestão de Gabinete',
+  title: 'GabinetAK HUB | Plataforma de Mobilização Eleitoral e Gestão de Gabinete',
   description: 'Plataforma SaaS com inteligência política, segurança de nível militar AES-256-GCM, LGPD e automação de campanha.',
   icons: {
     icon: '/logo/icon.svg',

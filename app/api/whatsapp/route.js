@@ -43,6 +43,6 @@ export async function POST(request) {
 
     return NextResponse.json({ error: 'Ação não suportada' }, { status: 400 });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro no servidor de WhatsApp' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro não servidor de WhatsApp' }, { status: 500 });
   }
 }

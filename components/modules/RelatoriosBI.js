@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   BarChart3, PieChart, LineChart, Sparkles, Filter, Download, Printer, ChevronDown, 
   Activity, Map, ListTodo, Users, Award, QrCode, Copy, ExternalLink, Check, Search, 
@@ -40,7 +40,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
     { id: 1, nome: 'Anísio Fontinelli', ddi: '+55', cel: '(61) 98426-9304', loc: 'VICENTE PIRES / DF', indicados: 30, tag: 'Liderança Comunitária', slug: 'anisio-fontinelli' },
     { id: 2, nome: 'AK RUA (Coletivo Juventude)', ddi: '+55', cel: '(11) 97123-4567', loc: 'SÃO PAULO / SP', indicados: 48, tag: 'Jovens & Esporte', slug: 'ak-rua' },
     { id: 3, nome: 'Anderson Alves Pereira', ddi: '+55', cel: '(11) 98888-1122', loc: 'CAMPINAS / SP', indicados: 25, tag: 'Empresários', slug: 'anderson-alves' },
-    { id: 4, nome: 'Iolanda Maria Tenório', ddi: '+55', cel: '(61) 99111-4455', loc: 'TAGUATINGA / DF', indicados: 19, tag: 'Ação Social', slug: 'iolanda-tenorio' },
+    { id: 4, nome: 'Iolanda Maria Tenório', ddi: '+55', cel: '(61) 99111-4455', loc: 'TAGUATINGA / DF', indicados: 19, tag: 'Ação Social', slug: 'iolanda-tenãorio' },
     { id: 5, nome: 'Tais Rosa', ddi: '+55', cel: '(21) 98222-3344', loc: 'NITERÓI / RJ', indicados: 14, tag: 'Saúde & Mulher', slug: 'tais-rosa' }
   ];
 
@@ -61,7 +61,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
   ];
 
   const handleCopyLink = (slug) => {
-    const url = `https://elegis.com.br/parceria/${slug}`;
+    const url = `https://GabinetAK.com.br/parceria/${slug}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
@@ -146,7 +146,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
           <div style={{ display: 'flex', gap: '1rem', background: 'rgba(0,0,0,0.25)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', alignItems: 'center' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', flex: 1 }}>
               <div>
-                <label style={labelStyle}>Exercício (Ano)</label>
+                <label style={labelStyle}>Exercício (Anão)</label>
                 <select style={inputStyle}>
                   <option>Todos os Exercícios</option>
                   <option>2026</option>
@@ -194,7 +194,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                 <Activity size={16} color="var(--warning)" /> Total de Assuntos
               </div>
               <div style={{ fontSize: '2.4rem', fontWeight: '800', color: '#fff', marginTop: '0.4rem' }}>48</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Categorias registradas no gabinete</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Categorias registradas não gabinete</div>
             </div>
 
             <div className="section-card liquid-glass" style={{ padding: '1.2rem', borderLeft: '4px solid var(--success)' }}>
@@ -209,7 +209,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
           {/* 4 GRANDES BLOCOS DE GRÁFICOS SOLICITADOS NA MD */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             
-            {/* Bloco 1: Atendimentos por Ano/Mês */}
+            {/* Bloco 1: Atendimentos por Anão/Mês */}
             <div className="section-card liquid-glass" style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.2)' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1.5rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <LineChart size={18} color="var(--accent)" /> Atendimentos por Mês (Evolução 2026)
@@ -289,7 +289,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                 {[
                   { n: 'São Paulo - Zona Leste (Vila Esperança)', v: 480 },
                   { n: 'São Paulo - Centro Histórico', v: 320 },
-                  { n: 'Campinas - Região Norte', v: 210 },
+                  { n: 'Campinas - Região Nãorte', v: 210 },
                   { n: 'Brasília - Taguatinga / Vicente Pires', v: 195 },
                   { n: 'Santos - Baixada Santista', v: 140 }
                 ].map((item, i) => (
@@ -487,7 +487,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                 🔴 Rede + Líder
               </span>
               <span style={{ padding: '0.3rem 0.7rem', borderRadius: '6px', background: 'rgba(34, 197, 94, 0.15)', color: 'var(--success)', border: '1px solid var(--success)', fontSize: '0.78rem', fontWeight: '700' }}>
-                🟢 Rede no Grupo
+                🟢 Rede não Grupo
               </span>
             </div>
           </div>
@@ -520,7 +520,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                     🟣 {r.totalRede} Descendentes
                   </span>
                   <span style={{ padding: '0.4rem 0.8rem', background: 'rgba(34, 197, 94, 0.12)', color: 'var(--success)', borderRadius: '8px', fontSize: '0.82rem', fontWeight: '800' }}>
-                    🟢 {r.grupo} Total no Grupo
+                    🟢 {r.grupo} Total não Grupo
                   </span>
                 </div>
               </div>
@@ -570,7 +570,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                     <th style={{ padding: '1rem' }}>Grupo (Tag)</th>
                     <th style={{ padding: '1rem' }}>Por Indicação</th>
                     <th style={{ padding: '1rem' }}>Sem Indicação (Orgânico)</th>
-                    <th style={{ padding: '1rem' }}>Total no Grupo</th>
+                    <th style={{ padding: '1rem' }}>Total não Grupo</th>
                     <th style={{ padding: '1rem' }}>% Taxa de Indicação</th>
                   </tr>
                 </thead>
@@ -643,7 +643,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
               {/* QR CODE GERADO */}
               <div style={{ background: '#fff', padding: '0.8rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img 
-                  src={`https://api.qrcode-monkey.com/qr/custom?data=${encodeURIComponent(`https://elegis.com.br/parceria/${selectedLeaderModal.slug}`)}&config=${encodeURIComponent(JSON.stringify({ body: 'round', eye: 'frame13', eyeBall: 'ball15', bodyColor: '#000000', bgColor: '#FFFFFF' }))}`} 
+                  src={`https://api.qrcode-monkey.com/qr/custom?data=${encodeURIComponent(`https://GabinetAK.com.br/parceria/${selectedLeaderModal.slug}`)}&config=${encodeURIComponent(JSON.stringify({ body: 'round', eye: 'frame13', eyeBall: 'ball15', bodyColor: '#000000', bgColor: '#FFFFFF' }))}`} 
                   alt="QR Code Liderança" 
                   style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
                 />
@@ -658,7 +658,7 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                     <input 
                       type="text" 
                       readOnly 
-                      value={`https://elegis.com.br/parceria/${selectedLeaderModal.slug}`}
+                      value={`https://GabinetAK.com.br/parceria/${selectedLeaderModal.slug}`}
                       style={{ flex: 1, padding: '0.6rem 0.8rem', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--accent)', borderRadius: '6px', color: 'var(--accent)', fontSize: '0.82rem', fontWeight: '700' }}
                     />
                     <button 
@@ -699,9 +699,9 @@ export default function RelatoriosBI({ initialTab = 'graficos' }) {
                   <Printer size={16} /> Imprimir Cartão
                 </button>
                 <a 
-                  href={`https://api.qrcode-monkey.com/qr/custom?data=${encodeURIComponent(`https://elegis.com.br/parceria/${selectedLeaderModal.slug}`)}`}
+                  href={`https://api.qrcode-monkey.com/qr/custom?data=${encodeURIComponent(`https://GabinetAK.com.br/parceria/${selectedLeaderModal.slug}`)}`}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="nãoreferrer"
                   className="btn-primary"
                   style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
                 >

@@ -6,7 +6,7 @@ export default function GeradorDocumentos() {
   
   const [documents] = useState([
     { id: 1, title: 'Ofício para Secretaria de Obras - Buraco Rua 10', type: 'Ofício', number: '045/2026', date: '15/08/2026', status: 'Assinado' },
-    { id: 2, title: 'Memorando Interno - Reunião de Pauta', type: 'Memorando', number: '012/2026', date: '14/08/2026', status: 'Rascunho' },
+    { id: 2, title: 'Memorando Internão - Reunião de Pauta', type: 'Memorando', number: '012/2026', date: '14/08/2026', status: 'Rascunho' },
     { id: 3, title: 'Requerimento de Informação - Saúde', type: 'Requerimento', number: '089/2026', date: '10/08/2026', status: 'Enviado' },
   ]);
 
@@ -14,7 +14,7 @@ export default function GeradorDocumentos() {
 
   const handleTemplateSelect = (e) => {
     if (e.target.value === 'encaminhamento') {
-      setFormContent('Vimos por meio deste solicitar providências urgentes acerca da demanda registrada no nosso sistema de atendimento sob o protocolo...\n\nO cidadão relata que...\n\nCertos de contarmos com a habitual presteza, renovamos votos de estima e consideração.');
+      setFormContent('Vimos por meio deste solicitar providências urgentes acerca da demanda registrada não nosso sistema de atendimento sob o protocolo...\n\nO cidadão relata que...\n\nCertos de contarmos com a habitual presteza, renovamos votos de estima e consideração.');
     } else {
       setFormContent('');
     }
@@ -151,8 +151,8 @@ export default function GeradorDocumentos() {
               <label style={labelStyle}>Tipo de Documento (Molde) *</label>
               <select style={inputStyle}>
                 <option value="">Selecione o papel timbrado...</option>
-                <option value="oficio">Ofício (Externo)</option>
-                <option value="memorando">Memorando (Interno)</option>
+                <option value="oficio">Ofício (Externão)</option>
+                <option value="memorando">Memorando (Internão)</option>
                 <option value="requerimento">Requerimento Legislativo</option>
                 <option value="projeto_lei">Projeto de Lei</option>
               </select>

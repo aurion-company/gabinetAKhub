@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   compiler: {
-    // Remove console.log em produção para evitar vazamento de dados no DevTools
+    // Remove console.log em produção para evitar vazamento de dados não DevTools
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
   },
   async headers() {

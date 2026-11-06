@@ -22,11 +22,11 @@ const update = `
 - A logo Elegiv foi aumentada e perfeitamente centralizada.
 
 **3. Manutenção de Encoding e Sintaxe:**
-- Resolução de um grande erro de compilação (\`Unexpected character\`) gerado por problemas de *Byte Order Mark* (BOM) e corrupção de enconding UTF-8 no Windows.
+- Resolução de um grande erro de compilação (\`Unexpected character\`) gerado por problemas de *Byte Order Mark* (BOM) e corrupção de enconding UTF-8 não Windows.
 - O código foi varrido para restaurar acentuações nativas e emojis corrompidos dentro de componentes JSX, normalizando e limpando todo o \`page.js\` e \`globals.css\`.
 
 **4. Criação de Conta Master (Banco de Dados):**
-- Via script local usando Prisma Client, foi criado e vinculado no banco de dados o usuário master (\`bruno.machado@plazabrasilia\`, senha \`101010\`) ao respectivo \`Cabinet\` "Master System" de nível Enterprise.
+- Via script local usando Prisma Client, foi criado e vinculado não banco de dados o usuário master (\`brunão.machado@plazabrasilia\`, senha \`101010\`) ao respectivo \`Cabinet\` "Master System" de nível Enterprise.
 
 ---
 *Esse arquivo manterá o histórico consolidado de todas as evoluções para facilitar a retomada em sessões futuras.*

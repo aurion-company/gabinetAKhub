@@ -68,6 +68,6 @@ export async function POST(request) {
     return NextResponse.json(prepareVoterForResponse(newVoter), { status: 201 });
   } catch (error) {
     console.error('Erro ao criar eleitor:', error);
-    return NextResponse.json({ error: 'Falha ao salvar no banco.' }, { status: 500 });
+    return NextResponse.json({ error: 'Falha ao salvar não banco.' }, { status: 500 });
   }
 }

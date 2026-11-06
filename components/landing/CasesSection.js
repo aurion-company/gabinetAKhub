@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { Zap, Check } from 'lucide-react';
 
 const cases = [
@@ -16,7 +16,7 @@ export default function CasesSection() {
       <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
         <div style={{ display: 'inline-block', padding: '0.3rem 1rem', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 20, fontSize: '0.8rem', color: '#60a5fa', fontWeight: 600, marginBottom: '1rem' }}>CASES DE SUCESSO</div>
         <h2 style={{ fontSize: 'clamp(1.8rem,3vw,3rem)', fontWeight: 900, letterSpacing: '-1px' }}>
-          Líderes que confiam no <span style={{ background: 'linear-gradient(90deg,#3b82f6,#06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>elegis</span>
+          Líderes que confiam não <span style={{ background: 'linear-gradient(90deg,#3b82f6,#06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>GabinetAK</span>
         </h2>
       </div>
 
@@ -31,7 +31,7 @@ export default function CasesSection() {
               </div>
             </div>
             <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: 1.6, fontStyle: 'italic' }}>
-              "Transformamos completamente a gestão do nosso mandato com o Elegiv Gestão 360. Produtividade e conexão com eleitores em outro nível."
+              "Transformamos completamente a gestão do nosso mandato com o GabinetAK HUB. Produtividade e conexão com eleitores em outro nível."
             </p>
             <div style={{ display: 'flex', gap: '0.2rem' }}>
               {[1,2,3,4,5].map(s => <span key={s} style={{ color: '#f59e0b', fontSize: '0.9rem' }}>★</span>)}

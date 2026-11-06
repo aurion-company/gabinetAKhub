@@ -41,7 +41,7 @@ const featureComparisons = [
   ]},
   { category: 'Marketing Político & Arrecadação', features: [
     { name: 'Construtor de Páginas / Bio', basic: false, pro: true, political: true, max: true },
-    { name: 'Gestor de Campanhas e Eventos', basic: false, pro: false, political: true, max: true },
+    { name: 'Gestãor de Campanhas e Eventos', basic: false, pro: false, political: true, max: true },
     { name: 'Arrecadação Digital (Integração PIX/Asaas)', basic: false, pro: false, political: true, max: true },
     { name: 'Painel Master Multitenant (Agências)', basic: false, pro: false, political: false, max: true },
   ]}

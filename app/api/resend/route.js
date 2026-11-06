@@ -6,7 +6,7 @@ export async function POST(request) {
     const resendKey = process.env.RESEND_API_KEY;
 
     if (!resendKey) {
-      return NextResponse.json({ error: 'Chave Resend API não configurada no servidor' }, { status: 500 });
+      return NextResponse.json({ error: 'Chave Resend API não configurada não servidor' }, { status: 500 });
     }
 
     // Chamada segura de servidor para servidor via Resend HTTP API
@@ -27,6 +27,6 @@ export async function POST(request) {
     const data = await res.json();
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao disparar e-mail no servidor' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao disparar e-mail não servidor' }, { status: 500 });
   }
 }

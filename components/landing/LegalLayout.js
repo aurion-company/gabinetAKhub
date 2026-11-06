@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useRouter } from 'next/navigation';
 
 export default function LegalLayout({ title, updated, children }) {
@@ -11,7 +11,7 @@ export default function LegalLayout({ title, updated, children }) {
       {/* NAVBAR */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 5%', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)', background: 'rgba(7,11,20,0.9)', position: 'sticky', top: 0, zIndex: 100 }}>
         <button onClick={() => router.push('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-          <img src="/logo/horizontal.svg" alt="Elegiv Gestão 360" style={{ height: 32, objectFit: 'contain' }} />
+          <img src="/logo/horizontal.svg" alt="GabinetAK HUB" style={{ height: 32, objectFit: 'contain' }} />
         </button>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <button onClick={() => router.back()} style={{ color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}>← Voltar</button>
@@ -47,13 +47,13 @@ export default function LegalLayout({ title, updated, children }) {
 
       {/* FOOTER SIMPLIFICADO */}
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '2rem 5%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-        <img src="/logo/horizontal.svg" alt="Elegiv Gestão 360" style={{ height: 24, objectFit: 'contain' }} />
+        <img src="/logo/horizontal.svg" alt="GabinetAK HUB" style={{ height: 24, objectFit: 'contain' }} />
         <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           {[['Política de Privacidade','/politica-de-privacidade'],['Termos de Uso','/termos-de-uso'],['APIs Google','/uso-apis-google'],['LGPD','/lgpd']].map(([l,h]) => (
             <button key={l} onClick={() => router.push(h)} style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.8rem', cursor: 'pointer' }}>{l}</button>
           ))}
         </div>
-        <span style={{ fontSize: '0.8rem', color: '#475569' }}>© 2026 Elegiv Gestão 360</span>
+        <span style={{ fontSize: '0.8rem', color: '#475569' }}>© 2026 GabinetAK HUB</span>
       </footer>
     </div>
   );

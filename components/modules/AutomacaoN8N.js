@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Cpu, Network, Zap, Webhook, Activity, Database, Key, Send, Copy, Settings, CheckCircle2 } from 'lucide-react';
 
 export default function AutomacaoN8N() {
@@ -12,9 +12,9 @@ export default function AutomacaoN8N() {
   };
 
   const webhooks = [
-    { name: 'Novo Eleitor Cadastrado', url: 'https://n8n.elegis.com.br/webhook/eleitor-novo', method: 'POST' },
-    { name: 'Demanda Concluída', url: 'https://n8n.elegis.com.br/webhook/demanda-fim', method: 'POST' },
-    { name: 'Recebimento de PIX', url: 'https://n8n.elegis.com.br/webhook/pix-recebido', method: 'POST' },
+    { name: 'Novo Eleitor Cadastrado', url: 'https://n8n.GabinetAK.com.br/webhook/eleitor-novo', method: 'POST' },
+    { name: 'Demanda Concluída', url: 'https://n8n.GabinetAK.com.br/webhook/demanda-fim', method: 'POST' },
+    { name: 'Recebimento de PIX', url: 'https://n8n.GabinetAK.com.br/webhook/pix-recebido', method: 'POST' },
   ];
 
   return (
@@ -81,7 +81,7 @@ export default function AutomacaoN8N() {
             Automação Visual de Workflows
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '1rem', marginTop: '0.5rem', maxWidth: '600px', lineHeight: 1.5 }}>
-            Conecte o Elegiv Gestão 360 a centenas de aplicativos externos. Crie regras, dispare webhooks e automatize seu gabinete sem escrever código.
+            Conecte o GabinetAK HUB a centenas de aplicativos externos. Crie regras, dispare webhooks e automatize seu gabinete sem escrever código.
           </p>
         </div>
         
@@ -134,7 +134,7 @@ export default function AutomacaoN8N() {
                   <div style={{ position: 'absolute', right: '-6px', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#8b5cf6', borderRadius: '50%', border: '2px solid #070b14' }}></div>
                 </div>
 
-                {/* NÓ 2: Elegiv CRM Action */}
+                {/* NÓ 2: GabinetAK HUB Action */}
                 <div style={{ position: 'absolute', top: '150px', left: '450px', width: '240px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', backdropFilter: 'blur(10px)', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', transition: 'transform 0.2s', cursor: 'grab' }} className="node-card">
                   {/* Conector Input */}
                   <div style={{ position: 'absolute', left: '-6px', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3b82f6', borderRadius: '50%', border: '2px solid #070b14' }}></div>
@@ -143,7 +143,7 @@ export default function AutomacaoN8N() {
                       <Database size={20} />
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff' }}>Elegiv CRM</div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff' }}>GabinetAK HUB</div>
                       <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Criar Registro / Eleitor</div>
                     </div>
                   </div>
@@ -152,7 +152,7 @@ export default function AutomacaoN8N() {
                   <div style={{ position: 'absolute', right: '-6px', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3b82f6', borderRadius: '50%', border: '2px solid #070b14' }}></div>
                 </div>
 
-                {/* NÓ 3: Elegiv WhatsApp Action */}
+                {/* NÓ 3: GabinetAK WhatsApp Action */}
                 <div style={{ position: 'absolute', top: '300px', left: '450px', width: '240px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', backdropFilter: 'blur(10px)', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', transition: 'transform 0.2s', cursor: 'grab' }} className="node-card">
                   {/* Conector Input */}
                   <div style={{ position: 'absolute', left: '-6px', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#06b6d4', borderRadius: '50%', border: '2px solid #070b14' }}></div>
@@ -185,25 +185,25 @@ export default function AutomacaoN8N() {
                 <Key size={20} color="#ea580c" /> Credenciais de API n8n
               </h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                Utilize as credenciais abaixo para configurar o Node do Elegiv Gestão 360 na sua instância n8n.
+                Utilize as credenciais abaixo para configurar o Node do GabinetAK HUB na sua instância n8n.
               </p>
               
               <div style={{ display: 'grid', gap: '1rem' }}>
                 <div>
                   <label style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'bold', marginBottom: '0.3rem', display: 'block' }}>URL Base da API</label>
                   <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.8rem 1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <code style={{ color: '#38bdf8', fontSize: '0.9rem' }}>https://api.elegis.com.br/v1</code>
-                    <button onClick={() => copyToClipboard('https://api.elegis.com.br/v1')} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
-                      {copied === 'https://api.elegis.com.br/v1' ? <CheckCircle2 size={18} color="#22c55e" /> : <Copy size={18} />}
+                    <code style={{ color: '#38bdf8', fontSize: '0.9rem' }}>https://api.GabinetAK.com.br/v1</code>
+                    <button onClick={() => copyToClipboard('https://api.GabinetAK.com.br/v1')} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                      {copied === 'https://api.GabinetAK.com.br/v1' ? <CheckCircle2 size={18} color="#22c55e" /> : <Copy size={18} />}
                     </button>
                   </div>
                 </div>
                 <div>
                   <label style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'bold', marginBottom: '0.3rem', display: 'block' }}>Bearer Token (Chave de API)</label>
                   <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '0.8rem 1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <code style={{ color: '#fff', fontSize: '0.9rem' }}>elegiv_live_938xj28dhx812jd...</code>
-                    <button onClick={() => copyToClipboard('elegiv_live_938xj28dhx812jd...')} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
-                      {copied === 'elegiv_live_938xj28dhx812jd...' ? <CheckCircle2 size={18} color="#22c55e" /> : <Copy size={18} />}
+                    <code style={{ color: '#fff', fontSize: '0.9rem' }}>GabinetAK_live_938xj28dhx812jd...</code>
+                    <button onClick={() => copyToClipboard('GabinetAK_live_938xj28dhx812jd...')} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                      {copied === 'GabinetAK_live_938xj28dhx812jd...' ? <CheckCircle2 size={18} color="#22c55e" /> : <Copy size={18} />}
                     </button>
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function AutomacaoN8N() {
                 <Webhook size={20} color="#3b82f6" /> Webhooks de Entrada Ativos
               </h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                O Elegiv Gestão 360 está disparando eventos para estas URLs configuradas no seu n8n.
+                O GabinetAK HUB está disparando eventos para estas URLs configuradas não seu n8n.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

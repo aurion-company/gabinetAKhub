@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Users, Search, Plus, Sparkles, Filter, ShieldCheck, KeyRound, Edit, Eye, ArrowLeft, Save, X, Check, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export default function GestaoUsuarios() {
@@ -7,9 +7,9 @@ export default function GestaoUsuarios() {
 
   // Mock de Usuários
   const [usuarios, setUsuarios] = useState([
-    { id: 1, nome: 'Carlos Administrador', email: 'carlos@elegis.com.br', telefone: '(61) 99999-0000', setor: 'Gabinete', perfil: 'Master', criadoEm: '10/08/2026', ativo: true },
-    { id: 2, nome: 'Ana Comunicação', email: 'ana@elegis.com.br', telefone: '(61) 98888-1111', setor: 'Comunicação', perfil: 'Usuário', criadoEm: '12/08/2026', ativo: true },
-    { id: 3, nome: 'João Atendimento', email: 'joao@elegis.com.br', telefone: '(61) 97777-2222', setor: 'Atendimento', perfil: 'Usuário Restrito', criadoEm: '14/08/2026', ativo: false },
+    { id: 1, nome: 'Carlos Administrador', email: 'carlos@GabinetAK.com.br', telefone: '(61) 99999-0000', setor: 'Gabinete', perfil: 'Master', criadoEm: '10/08/2026', ativo: true },
+    { id: 2, nome: 'Ana Comunicação', email: 'ana@GabinetAK.com.br', telefone: '(61) 98888-1111', setor: 'Comunicação', perfil: 'Usuário', criadoEm: '12/08/2026', ativo: true },
+    { id: 3, nome: 'João Atendimento', email: 'joao@GabinetAK.com.br', telefone: '(61) 97777-2222', setor: 'Atendimento', perfil: 'Usuário Restrito', criadoEm: '14/08/2026', ativo: false },
   ]);
 
   const toggleStatus = (id) => {

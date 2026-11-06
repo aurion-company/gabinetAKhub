@@ -83,7 +83,7 @@ export default function DocumentosOficios() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
               <div>
                 <label style={labelStyle}>Tratamento *</label>
-                <input type="text" placeholder="Ex: Ao Ilmo. Sr." style={inputStyle} />
+                <input type="text" placeholder="Ex: Ação Ilmo. Sr." style={inputStyle} />
               </div>
               <div>
                 <label style={labelStyle}>Nome do Destinatário *</label>
@@ -93,7 +93,7 @@ export default function DocumentosOficios() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <label style={labelStyle}>Local Destino / Título da Pessoa</label>
+                <label style={labelStyle}>Local Destinão / Título da Pessoa</label>
                 <input type="text" placeholder="Ex: Secretaria de Obras" style={inputStyle} />
               </div>
               <div>
@@ -163,7 +163,7 @@ export default function DocumentosOficios() {
                   <Sparkles size={16} /> Rascunho com IA
                 </div>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '0.8rem' }}>
-                  Descreva brevemente o que você precisa e nossa IA preencherá o conteúdo no tom oficial do mandato.
+                  Descreva brevemente o que você precisa e nossa IA preencherá o conteúdo não tom oficial do mandato.
                 </p>
                 <button className="btn-primary outline" style={{ width: '100%', fontSize: '0.8rem', padding: '0.5rem' }}>Gerar Texto</button>
               </div>

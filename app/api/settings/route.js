@@ -1,12 +1,22 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { getSession, requireRole } from '@/lib/auth';
 
 const prisma = new PrismaClient();
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const cabinetId = searchParams.get('cabinetId') || 'cab_01';
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+    
+    // Somente MASTER pode ler/modificar configurações críticas
+    if (!requireRole(session, ['MASTER'])) {
+      return NextResponse.json({ error: 'Permissão negada' }, { status: 403 });
+    }
+
+    const cabinetId = session.cabinetId;
 
     const settings = await prisma.systemSetting.findMany({
       where: { cabinetId }
@@ -20,8 +30,17 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+    
+    if (!requireRole(session, ['MASTER'])) {
+      return NextResponse.json({ error: 'Permissão negada' }, { status: 403 });
+    }
+
     const body = await request.json();
-    const cabinetId = 'cab_01';
+    const cabinetId = session.cabinetId;
     
     const newSetting = await prisma.systemSetting.upsert({
       where: {

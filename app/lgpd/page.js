@@ -1,12 +1,12 @@
-'use client';
+﻿'use client';
 import LegalLayout from '../../components/landing/LegalLayout';
 
 export default function LGPD() {
   return (
     <LegalLayout title="Adequação à LGPD" updated="Atualizado em 17 de agosto de 2026">
       <section>
-        <h2>1. Nosso Compromisso com a LGPD</h2>
-        <p>A <strong>Elegiv Gestão 360</strong> está plenamente comprometida com a conformidade à <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709, de 14 de agosto de 2018 – LGPD)</strong>, que regula o tratamento de dados pessoais no Brasil.</p>
+        <h2>1. Nãosso Compromisso com a LGPD</h2>
+        <p>A <strong>GabinetAK HUB</strong> está plenamente comprometida com a conformidade à <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709, de 14 de agosto de 2018 – LGPD)</strong>, que regula o tratamento de dados pessoais não Brasil.</p>
         <p>Adotamos as melhores práticas técnicas e organizacionais para garantir a privacidade, segurança e os direitos dos titulares de dados que utilizam nossa plataforma.</p>
       </section>
 
@@ -58,12 +58,12 @@ export default function LGPD() {
           <li>📋 <strong>Confirmação e Acesso</strong>: Saber quais dados tratamos sobre você</li>
           <li>✏️ <strong>Correção</strong>: Atualizar dados incompletos, inexatos ou desatualizados</li>
           <li>🗑️ <strong>Eliminação</strong>: Solicitar a exclusão de dados desnecessários</li>
-          <li>🔒 <strong>Anonimização ou Bloqueio</strong>: Quando o tratamento for excessivo</li>
+          <li>🔒 <strong>Anãonimização ou Bloqueio</strong>: Quando o tratamento for excessivo</li>
           <li>📦 <strong>Portabilidade</strong>: Receber seus dados em formato estruturado</li>
           <li>↩️ <strong>Revogação do Consentimento</strong>: A qualquer tempo, sem ônus</li>
           <li>⚖️ <strong>Oposição</strong>: Opor-se ao tratamento baseado em legítimo interesse</li>
         </ul>
-        <p style={{ marginTop: '1rem' }}>Para exercer seus direitos, envie uma solicitação para: <strong>lgpd@elegis.com.br</strong></p>
+        <p style={{ marginTop: '1rem' }}>Para exercer seus direitos, envie uma solicitação para: <strong>lgpd@GabinetAK.com.br</strong></p>
       </section>
 
       <section>
@@ -71,7 +71,7 @@ export default function LGPD() {
         <ul>
           <li>🔐 Criptografia de dados em trânsito (TLS 1.3) e em repouso (AES-256)</li>
           <li>🛡️ Controle de acesso por perfil (RBAC) e autenticação de dois fatores (2FA)</li>
-          <li>📊 Logs de auditoria de todas as ações sensíveis no sistema</li>
+          <li>📊 Logs de auditoria de todas as ações sensíveis não sistema</li>
           <li>🔄 Backups criptografados diários com retenção de 30 dias</li>
           <li>🧪 Testes regulares de segurança e análise de vulnerabilidades</li>
           <li>📋 Plano de Resposta a Incidentes com notificação à ANPD em até 72h</li>
@@ -80,9 +80,9 @@ export default function LGPD() {
 
       <section>
         <h2>6. Encarregado de Dados (DPO)</h2>
-        <p>Nosso Encarregado pelo Tratamento de Dados Pessoais (Data Protection Officer) está disponível para esclarecimentos e solicitações:</p>
+        <p>Nãosso Encarregado pelo Tratamento de Dados Pessoais (Data Protection Officer) está disponível para esclarecimentos e solicitações:</p>
         <ul>
-          <li><strong>E-mail:</strong> dpo@elegis.com.br</li>
+          <li><strong>E-mail:</strong> dpo@GabinetAK.com.br</li>
           <li><strong>Telefone:</strong> (62) 3251-0558</li>
           <li><strong>Endereço:</strong> Rua 72, nº 223, Sala 1507, Jardim Goiás, Goiânia-GO, CEP 74.805-480</li>
         </ul>
@@ -90,7 +90,7 @@ export default function LGPD() {
 
       <section>
         <h2>7. Autoridade Nacional de Proteção de Dados (ANPD)</h2>
-        <p>Caso você não esteja satisfeito com a nossa resposta, você tem o direito de apresentar uma reclamação diretamente à <strong>ANPD</strong> pelo site <a href="https://www.gov.br/anpd" target="_blank" rel="noreferrer" style={{ color: '#60a5fa' }}>www.gov.br/anpd</a>.</p>
+        <p>Caso você não esteja satisfeito com a nossa resposta, você tem o direito de apresentar uma reclamação diretamente à <strong>ANPD</strong> pelo site <a href="https://www.gov.br/anpd" target="_blank" rel="nãoreferrer" style={{ color: '#60a5fa' }}>www.gov.br/anpd</a>.</p>
       </section>
     </LegalLayout>
   );

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getSession } from '@/lib/auth';
 
 // Função auxiliar para gerar protocolo
 const generateProtocol = () => {
@@ -11,8 +12,13 @@ const generateProtocol = () => {
 
 export async function GET(request) {
   try {
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+    
+    const cabinetId = session.cabinetId;
     const { searchParams } = new URL(request.url);
-    const cabinetId = searchParams.get('cabinetId') || 'cab_01'; 
     const status = searchParams.get('status');
 
     let whereClause = { cabinetId };
@@ -35,8 +41,13 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     const body = await request.json();
-    const cabinetId = body.cabinetId || 'cab_01';
+    const cabinetId = session.cabinetId;
     
     await prisma.cabinet.upsert({
       where: { id: cabinetId },
@@ -66,17 +77,28 @@ export async function POST(request) {
     return NextResponse.json(newDemand, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar demanda:', error);
-    return NextResponse.json({ error: 'Falha ao salvar no banco.' }, { status: 500 });
+    return NextResponse.json({ error: 'Falha ao salvar não banco.' }, { status: 500 });
   }
 }
 
 export async function PATCH(request) {
   try {
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { id, status } = body;
 
     if (!id || !status) {
       return NextResponse.json({ error: 'ID e Status são obrigatórios' }, { status: 400 });
+    }
+
+    // Verifica se a demanda pertence ao cabinetId da sessão
+    const demandToUpdate = await prisma.demand.findUnique({ where: { id } });
+    if (!demandToUpdate || demandToUpdate.cabinetId !== session.cabinetId) {
+      return NextResponse.json({ error: 'Demanda não encontrada ou sem permissão' }, { status: 403 });
     }
 
     const updatedDemand = await prisma.demand.update({
@@ -87,6 +109,6 @@ export async function PATCH(request) {
     return NextResponse.json(updatedDemand);
   } catch (error) {
     console.error('Erro ao atualizar demanda:', error);
-    return NextResponse.json({ error: 'Falha ao atualizar no banco.' }, { status: 500 });
+    return NextResponse.json({ error: 'Falha ao atualizar não banco.' }, { status: 500 });
   }
 }

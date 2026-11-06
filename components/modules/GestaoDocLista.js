@@ -5,7 +5,7 @@ export default function GestaoDocLista({ onOpenIA }) {
   const [view, setView] = useState('list'); // 'list' | 'create'
   
   const [oficios, setOficios] = useState([
-    { id: 1, numero: 'OF-001/2026', data: '16/08/2026', assunto: 'Solicitação de Reforma na Escola Municipal Norte', destinatario: 'Secretaria de Educação | Prefeitura' },
+    { id: 1, numero: 'OF-001/2026', data: '16/08/2026', assunto: 'Solicitação de Reforma na Escola Municipal Nãorte', destinatario: 'Secretaria de Educação | Prefeitura' },
     { id: 2, numero: 'OF-002/2026', data: '14/08/2026', assunto: 'Pedido de Recapeamento Asfáltico Bairro Centro', destinatario: 'Secretaria de Obras | Carlos Silva' },
     { id: 3, numero: 'OF-003/2026', data: '10/08/2026', assunto: 'Indicação de Verba para Posto de Saúde', destinatario: 'Ministério da Saúde | Chefia de Gabinete' },
   ]);
@@ -93,7 +93,7 @@ export default function GestaoDocLista({ onOpenIA }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: '1rem' }}>
                   <div>
                     <label style={labelStyle}>Tratamento *</label>
-                    <input type="text" defaultValue="Ao Ilmo. Sr." style={inputStyle} />
+                    <input type="text" defaultValue="Ação Ilmo. Sr." style={inputStyle} />
                   </div>
                   <div>
                     <label style={labelStyle}>Nome do Destinatário *</label>
@@ -102,7 +102,7 @@ export default function GestaoDocLista({ onOpenIA }) {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Local Destino ou Título da Pessoa</label>
+                  <label style={labelStyle}>Local Destinão ou Título da Pessoa</label>
                   <input type="text" placeholder="Ex: Prefeitura Municipal | Secretaria de Obras" style={inputStyle} />
                 </div>
 

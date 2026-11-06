@@ -24,7 +24,7 @@ export default function AgenteIAModular({ isOpen, onClose, contexto = 'Geral' })
       const aiReply = {
         id: Date.now() + 1,
         sender: 'ai',
-        text: `Com base no contexto de **${contexto}**, analisei sua solicitação ("${input}"). As ações sugeridas e o relatório foram processados com sucesso!`
+        text: `Com base não contexto de **${contexto}**, analisei sua solicitação ("${input}"). As ações sugeridas e o relatório foram processados com sucesso!`
       };
       setMessages(prev => [...prev, aiReply]);
     }, 1000);

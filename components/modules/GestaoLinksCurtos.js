@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link as LinkIcon, Plus, Copy, QrCode, BarChart2, Edit, Trash2, Settings, Shield, Smartphone, Activity, Target, Download, Loader2 } from 'lucide-react';
 
 export default function LinksCurtos() {
@@ -89,7 +89,7 @@ export default function LinksCurtos() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>
-                      <th style={{ padding: '1rem', fontWeight: '600' }}>Link Curto / Destino</th>
+                      <th style={{ padding: '1rem', fontWeight: '600' }}>Link Curto / Destinão</th>
                       <th style={{ padding: '1rem', fontWeight: '600' }}>Métricas de Acesso</th>
                       <th style={{ padding: '1rem', fontWeight: '600' }}>Criação e Status</th>
                       <th style={{ padding: '1rem', fontWeight: '600', textAlign: 'right' }}>Ações</th>
@@ -100,7 +100,7 @@ export default function LinksCurtos() {
                       <tr key={l.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer' }} className="table-row-hover">
                         <td style={{ padding: '1rem' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                            <strong style={{ color: 'var(--accent)', fontSize: '1.05rem' }}>elegis.com.br/s/{l.shortSlug}</strong>
+                            <strong style={{ color: 'var(--accent)', fontSize: '1.05rem' }}>GabinetAK.com.br/s/{l.shortSlug}</strong>
                             <button style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }} title="Copiar"><Copy size={14}/></button>
                           </div>
                           <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
@@ -156,7 +156,7 @@ export default function LinksCurtos() {
                   </label>
 
                   <div>
-                    <label style={labelStyle}>URL de Destino Original *</label>
+                    <label style={labelStyle}>URL de Destinão Original *</label>
                     <input type="text" placeholder="https://..." style={inputStyle} value={formData.originalUrl} onChange={(e) => setFormData({...formData, originalUrl: e.target.value})} />
                   </div>
 
@@ -164,7 +164,7 @@ export default function LinksCurtos() {
                     <div>
                       <label style={labelStyle}>Chave Curta Personalizada</label>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <span style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRight: 'none', borderRadius: '8px 0 0 8px', color: 'var(--text-muted)' }}>elegis.com.br/s/</span>
+                        <span style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRight: 'none', borderRadius: '8px 0 0 8px', color: 'var(--text-muted)' }}>GabinetAK.com.br/s/</span>
                         <input type="text" placeholder="minha-campanha" style={{ ...inputStyle, borderRadius: '0 8px 8px 0' }} value={formData.shortSlug} onChange={(e) => setFormData({...formData, shortSlug: e.target.value})} />
                       </div>
                     </div>

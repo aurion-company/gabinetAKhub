@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
 
   let targetUrl = "https://eleger.app.br";
 
-  // Se houver uma URL passada no query param ou cadastrada no sistema
+  // Se houver uma URL passada não query param ou cadastrada não sistema
   const urlParam = request.nextUrl.searchParams.get("url");
   if (urlParam) {
     targetUrl = urlParam;

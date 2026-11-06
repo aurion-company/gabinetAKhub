@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
+import { getSession } from '@/lib/auth';
 
 export async function POST(request) {
   try {
+    const session = getSession();
+    if (!session) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     const { prompt, task } = await request.json();
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return NextResponse.json({ error: 'Chave Gemini AI não configurada no servidor' }, { status: 500 });
+      return NextResponse.json({ error: 'Chave Gemini AI não configurada não servidor' }, { status: 500 });
     }
 
     // Chamada segura realizada de servidor para servidor

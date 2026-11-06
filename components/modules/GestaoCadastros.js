@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, Plus, ChevronDown, Download, Upload, Trash2, Link as LinkIcon, QrCode, Phone, UserCheck, Merge, AlertTriangle, FileText, Settings, Smartphone } from 'lucide-react';
 
 export default function GestaoCadastros() {
@@ -140,7 +140,7 @@ export default function GestaoCadastros() {
               </div>
 
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
-                <label style={{ ...labelStyle, fontSize: '1rem', color: '#fff' }}>Quais colunas devem entrar no Excel?</label>
+                <label style={{ ...labelStyle, fontSize: '1rem', color: '#fff' }}>Quais colunas devem entrar não Excel?</label>
                 <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                   <label style={checkboxLabel}><input type="checkbox" defaultChecked /> Nome Completo</label>
                   <label style={checkboxLabel}><input type="checkbox" defaultChecked /> Celular / WhatsApp</label>
@@ -188,11 +188,11 @@ export default function GestaoCadastros() {
                   </div>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <strong style={{ color: '#fff' }}>Equipe Zona Norte (Carlos)</strong>
+                      <strong style={{ color: '#fff' }}>Equipe Zona Nãorte (Carlos)</strong>
                       <span style={{ background: 'var(--success)', color: '#000', padding: '0.2rem 0.6rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>42 captados</span>
                     </div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--accent)', background: 'rgba(0,240,255,0.1)', padding: '0.4rem', borderRadius: '4px', fontFamily: 'monospace' }}>
-                      https://app.elegis.com.br/carlos-zn
+                      https://app.GabinetAK.com.br/carlos-zn
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
                       <button style={{ ...iconBtnStyle, fontSize: '0.75rem', padding: '0.3rem 0.8rem', flex: 1 }}>Acessar</button>
@@ -230,7 +230,7 @@ export default function GestaoCadastros() {
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.3rem' }}>Telefone (61) 99999-1111 está vinculado a <strong>3 registros</strong>.</p>
                   </div>
                   <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn-primary outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>Ignorar</button>
+                    <button className="btn-primary outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>Ignãorar</button>
                     <button className="btn-primary" style={{ background: 'var(--danger)', borderColor: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Merge size={16}/> Mesclar Registros</button>
                   </div>
                 </div>
@@ -241,7 +241,7 @@ export default function GestaoCadastros() {
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.3rem' }}>Telefone (61) 98888-7777 está vinculado a <strong>2 registros</strong>.</p>
                   </div>
                   <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn-primary outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>Ignorar</button>
+                    <button className="btn-primary outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>Ignãorar</button>
                     <button className="btn-primary" style={{ background: 'var(--danger)', borderColor: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Merge size={16}/> Mesclar Registros</button>
                   </div>
                 </div>

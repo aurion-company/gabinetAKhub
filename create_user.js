@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'bruno.machado@plazabrasilia';
+  const email = 'brunão.machado@plazabrasilia';
   const password = await bcrypt.hash('101010', 10);
   let cabinet = await prisma.cabinet.findFirst({ where: { name: 'Master System' } });
   if (!cabinet) {
@@ -14,7 +14,7 @@ async function main() {
   const user = await prisma.user.upsert({
     where: { email },
     update: { password, role: 'MASTER' },
-    create: { email, password, name: 'Bruno Machado', role: 'MASTER', cabinetId: cabinet.id }
+    create: { email, password, name: 'Brunão Machado', role: 'MASTER', cabinetId: cabinet.id }
   });
   console.log('User created successfully: ' + user.email);
 }

@@ -1,6 +1,6 @@
-# =� Elegiv Gest�o 360 - Documenta��o T�cnica & Handover de Desenvolvimento
+﻿# =� GabinetAK HUB Gest�o 360 - Documenta��o T�cnica & Handover de Desenvolvimento
 
-Este documento apresenta o **relat�rio consolidado do estado de desenvolvimento** da plataforma **Elegiv Gest�o 360**. Toda a arquitetura foi mapeada e implementada com base no conjunto de especifica��es da pasta `MD Elegis ref` (51 arquivos de documenta��o), resultando em um ecossistema SaaS pol�tico completo, modular e preparado para produ��o.
+Este documento apresenta o **relat�rio consolidado do estado de desenvolvimento** da plataforma **GabinetAK HUB Gest�o 360**. Toda a arquitetura foi mapeada e implementada com base não conjunto de especifica��es da pasta `MD GabinetAK HUB ref` (51 arquivos de documenta��o), resultando em um ecossistema SaaS pol�tico completo, modular e preparado para produ��o.
 
 ---
 
@@ -36,7 +36,7 @@ Unifica��o dos 5 m�dulos anal�ticos em uma interface por abas:
 - **Formatos dos M�dulos (Body Shape):** Pontos, Arredondado, Diamante, Estrela, Quadrados.
 - **Op��es de Logos Centrais:** PIX Bacen, WhatsApp, Instagram, Wi-Fi e Upload Customizado.
 - **Estiliza��o dos Olhos (Eye Frames):** Varia��es redondas, quadradas e estilizadas.
-- **Responsividade e Enquadramento:** Enquadramento perfeito no modal sem cortes em telas mobile.
+- **Responsividade e Enquadramento:** Enquadramento perfeito não modal sem cortes em telas mobile.
 
 ### 3. Construtor de P�ginas Bio / Linktree (`GestaoPaginasBio.js`)
 - **Dashboard de Landing Pages:** M�tricas de acessos (`Views` e `Clicks`) e status de publica��o online.
@@ -77,9 +77,9 @@ Unifica��o dos 5 m�dulos anal�ticos em uma interface por abas:
 
 ---
 
-## =� 3. Tabela de Mapeamento com Especifica��es `MD Elegis ref`
+## =� 3. Tabela de Mapeamento com Especifica��es `MD GabinetAK HUB ref`
 
-| Arquivo de Especifica��o (`MD Elegis ref`) | Componente React Correspondente | Status |
+| Arquivo de Especifica��o (`MD GabinetAK HUB ref`) | Componente React Correspondente | Status |
 | :--- | :--- | :--- |
 | `menu_lateral_esquerdo_crm.md` | `app/page.js` (Sidebar Component) | =� 100% |
 | `modulo_agenda_crm.md` | `AgendaWA.js` | =� 100% |
@@ -151,14 +151,14 @@ Para a fase final de entrada em produ��o:
 **2. Otimização de Interface (Mobile Topbar):**
 - A barra superior foi reajustada para dispositivos móveis: a saudação de texto ("Olá, SuperAdmin") foi ocultada, mantendo apenas a foto/avatar para poupar espaço.
 - O botão de notificação foi padronizado com o ícone `Bell` (lucide-react), combinando perfeitamente com o menu hambúrguer.
-- A logo Elegiv foi aumentada e perfeitamente centralizada.
+- A logo GabinetAK HUB foi aumentada e perfeitamente centralizada.
 
 **3. Manutenção de Encoding e Sintaxe:**
-- Resolução de um grande erro de compilação (`Unexpected character`) gerado por problemas de *Byte Order Mark* (BOM) e corrupção de enconding UTF-8 no Windows.
+- Resolução de um grande erro de compilação (`Unexpected character`) gerado por problemas de *Byte Order Mark* (BOM) e corrupção de enconding UTF-8 não Windows.
 - O código foi varrido para restaurar acentuações nativas e emojis corrompidos dentro de componentes JSX, normalizando e limpando todo o `page.js` e `globals.css`.
 
 **4. Criação de Conta Master (Banco de Dados):**
-- Via script local usando Prisma Client, foi criado e vinculado no banco de dados o usuário master (`bruno.machado@plazabrasilia`, senha `101010`) ao respectivo `Cabinet` "Master System" de nível Enterprise.
+- Via script local usando Prisma Client, foi criado e vinculado não banco de dados o usuário master (`brunão.machado@plazabrasilia`, senha `101010`) ao respectivo `Cabinet` "Master System" de nível Enterprise.
 
 ---
 *Esse arquivo manterá o histórico consolidado de todas as evoluções para facilitar a retomada em sessões futuras.*

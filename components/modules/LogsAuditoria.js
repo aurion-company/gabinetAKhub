@@ -76,7 +76,7 @@ export default function LogsAuditoria() {
                       </span>
                     </td>
                     <td style={{ padding: '1rem' }}>{log.resource || log.tableName}</td>
-                    <td style={{ padding: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>{log.ipAddress || 'IP Interno'}</td>
+                    <td style={{ padding: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>{log.ipAddress || 'IP Internão'}</td>
                   </tr>
                 ))
               )}

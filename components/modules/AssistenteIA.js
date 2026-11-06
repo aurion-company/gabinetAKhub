@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Cpu, Send, Plus, Sparkles, MessageSquare, Bot, User, RefreshCw, Paperclip } from 'lucide-react';
 
 export default function AssistenteIA() {
   const [inputMessage, setInputMessage] = useState('');
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'ai', text: 'Olá! Sou o Assistente IA do Elegiv Gestão 360. Como posso ajudar seu mandato hoje?', timestamp: 'Agora mesmo' }
+    { id: 1, sender: 'ai', text: 'Olá! Sou o Assistente IA do GabinetAK HUB. Como posso ajudar seu mandato hoje?', timestamp: 'Agora mesmo' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
   const quickSuggestions = [
     "Quantos cadastros temos?",
     "Quantas pessoas são homens?",
-    "Quantas pessoas moram no bairro Centro?",
+    "Quantas pessoas moram não bairro Centro?",
     "Quantas demandas pendentes existem?"
   ];
 
@@ -27,9 +27,9 @@ export default function AssistenteIA() {
     // Simula a resposta da IA
     setTimeout(() => {
       let responseText = "Entendido. Estou analisando os dados do banco de dados para você...";
-      if (msg.includes("cadastros")) responseText = "Atualmente temos 1.432 cadastros registrados no CRM, sendo 120 adicionados nos últimos 7 dias.";
-      else if (msg.includes("Centro")) responseText = "Existem 437 contatos com endereço no bairro Centro.";
-      else if (msg.includes("demandas")) responseText = "Temos 142 demandas no sistema. 15 estão pendentes e 10 estão em andamento.";
+      if (msg.includes("cadastros")) responseText = "Atualmente temos 1.432 cadastros registrados não CRM, sendo 120 adicionados nos últimos 7 dias.";
+      else if (msg.includes("Centro")) responseText = "Existem 437 contatos com endereço não bairro Centro.";
+      else if (msg.includes("demandas")) responseText = "Temos 142 demandas não sistema. 15 estão pendentes e 10 estão em andamento.";
 
       setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'ai', text: responseText, timestamp: 'Agora' }]);
       setIsTyping(false);
@@ -54,7 +54,7 @@ export default function AssistenteIA() {
           </div>
           <div>
             <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              Assistente de IA Elegiv Gestão 360 <Sparkles size={14} color="var(--accent)" />
+              Assistente de IA GabinetAK HUB <Sparkles size={14} color="var(--accent)" />
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Inteligência artificial alimentada pela base do CRM e OpenAI.</p>
           </div>
@@ -161,7 +161,7 @@ export default function AssistenteIA() {
           </button>
         </div>
         <div style={{ textAlign: 'center', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.8rem' }}>
-          A Inteligência Artificial pode cometer erros. Verifique os dados importantes no painel.
+          A Inteligência Artificial pode cometer erros. Verifique os dados importantes não painel.
         </div>
       </div>
 

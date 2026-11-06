@@ -18,7 +18,7 @@ export default function GestaoDemandas() {
             protocolo: demand.protocol,
             cadastro: demand.voterId || 'Não Vinculado',
             assunto: demand.title,
-            responsavel: 'Assessor Geral', // Simulando a ausência do Join no MVP
+            responsavel: 'Assessor Geral', // Simulando a ausência do Join não MVP
             status: demand.status,
             prioridade: demand.priority,
             prazo: new Date(demand.createdAt).toLocaleDateString('pt-BR')
@@ -202,14 +202,14 @@ export default function GestaoDemandas() {
                   <select style={inputStyle}>
                     <option>Em Aberto (Triagem)</option>
                     <option>Em Andamento</option>
-                    <option>Aguardando Retorno (Órgão)</option>
+                    <option>Aguardando Retornão (Órgão)</option>
                   </select>
                 </div>
                 <div>
                   <label style={labelStyle}>Assessor Responsável</label>
                   <select style={inputStyle}>
                     <option>Atribuir a mim</option>
-                    <option>Equipe Externa Norte</option>
+                    <option>Equipe Externa Nãorte</option>
                   </select>
                 </div>
               </div>

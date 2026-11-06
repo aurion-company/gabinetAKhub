@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { User, Lock, Bell, Smartphone, Upload, Camera, Save, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function MeuPerfil() {
@@ -6,7 +6,7 @@ export default function MeuPerfil() {
 
   const [formData, setFormData] = useState({
     nome: 'SuperAdmin Master',
-    email: 'admin@elegiv.com.br',
+    email: 'admin@GabinetAK.com.br',
     celular: '(61) 99999-0000',
     cargo: 'SaaS Superuser'
   });
@@ -148,7 +148,7 @@ export default function MeuPerfil() {
             <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '0.5rem' }}>Notificações</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Escolha como deseja ser avisado sobre atualizações no CRM.</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Escolha como deseja ser avisado sobre atualizações não CRM.</p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <label style={toggleRowStyle}>
@@ -164,7 +164,7 @@ export default function MeuPerfil() {
 
                   <label style={toggleRowStyle}>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <strong style={{ color: '#fff', fontSize: '0.95rem' }}>Lembretes no WhatsApp</strong>
+                      <strong style={{ color: '#fff', fontSize: '0.95rem' }}>Lembretes não WhatsApp</strong>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Para reuniões da agenda e alertas urgentes de demandas.</span>
                     </div>
                     <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '50px', height: '24px' }}>

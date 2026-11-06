@@ -322,14 +322,71 @@ body {
 .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 .chart-container { height: 180px; display: flex; align-items: flex-end; gap: 6px; padding-top: 1rem; }
 
-/* BUTTONS */
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent));
-  color: #000; border: none; padding: 0.5rem 1rem; border-radius: var(--radius-sm);
-  font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none;
-  transition: all var(--transition); box-shadow: 0 4px 12px var(--accent-glow);
+/* ===== BUTTONS (LIQUID GLASS DESIGN SYSTEM) ===== */
+.btn-primary,
+button.btn-primary,
+.btn-liquid-glass {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.85) 0%, rgba(122, 0, 255, 0.85) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700 !important;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 16px var(--accent-glow); }
+
+.btn-primary:hover,
+button.btn-primary:hover,
+.btn-liquid-glass:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 240, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:active,
+button.btn-primary:active,
+.btn-liquid-glass:active {
+  transform: translateY(0);
+}
+
+.btn-primary.outline,
+.btn-secondary,
+.btn-outline,
+button.outline,
+button.btn-outline {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: var(--radius-sm, 8px);
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  font-weight: 600 !important;
+}
+
+.btn-primary.outline:hover,
+.btn-secondary:hover,
+.btn-outline:hover,
+button.outline:hover,
+button.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: var(--accent, #00f0ff) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
 
 /* Empty state */
 .empty-state {

@@ -1,5 +1,5 @@
-// Appweb/prisma/schema.prisma
-// Database Schema - GestãoPolítica360 (App Político & CRM Comercial 360)
+﻿// Appweb/prisma/schema.prisma
+// Database Schema - GestÃ£oPolÃ­tica360 (App PolÃ­tico & CRM Comercial 360)
 
 generator client {
   provider = "prisma-client-js"
@@ -189,7 +189,7 @@ model LgpdConsentLog {
   createdAt   DateTime @default(now())
 }
 
-// Trilha de Auditoria para Segurança de Padrão Militar (Rastreamento de Acesso a Dados Sensíveis)
+// Trilha de Auditoria para SeguranÃ§a de PadrÃ£o Militar (Rastreamento de Acesso a Dados SensÃ­veis)
 model AuditLog {
   id         String   @id @default(uuid())
   cabinetId  String
@@ -199,7 +199,7 @@ model AuditLog {
   action     String   // VIEW_VOTER, EXPORT_DATA, UPDATE_CONFIG, WHATSAPP_DISPATCH, META_PIXEL_TRIGGER
   resource   String
   ipAddress  String?
-  hashData   String   // HASH HMAC-SHA256 da operação para prova criptográfica
+  hashData   String   // HASH HMAC-SHA256 da operaÃ§Ã£o para prova criptogrÃ¡fica
   timestamp  DateTime @default(now())
 }
 
@@ -229,3 +229,4 @@ model BioPage {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+

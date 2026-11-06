@@ -140,7 +140,7 @@ export default function AtendimentoProtocolo() {
     const phone = getVoterPhone(a.voterId);
     if (!phone) return alert('Cidadão não possui telefone cadastrado.');
     
-    const message = `Olá, ${name}! Seu atendimento foi registrado no Gabinete. Protocolo: *${a.protocol}*. Assunto: ${a.title}. Status atual: ${a.status}.`;
+    const message = `Olá, ${name}! Seu atendimento foi registrado não Gabinete. Protocolo: *${a.protocol}*. Assunto: ${a.title}. Status atual: ${a.status}.`;
     const cleanPhone = phone.replace(/\D/g, '');
     const url = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
@@ -28,6 +28,7 @@ import PainelArrecadacao from '../../components/modules/PainelArrecadacao';
 import MasterAdmin from '../../components/modules/MasterAdmin';
 import AtendimentoProtocolo from '../../components/modules/AtendimentoProtocolo';
 import SiteInstitucional from '../../components/modules/SiteInstitucional';
+import GestaoFaturas from '../../components/modules/GestaoFaturas';
 
 // Importação Dinâmica sob Demanda (Code Splitting) para Módulos Pesados
 const GeradorQRCode = dynamic(() => import('../../components/modules/GeradorQRCode'), { ssr: false });
@@ -39,17 +40,85 @@ const CampanhasEmail = dynamic(() => import('../../components/modules/CampanhasE
 const CentralWhatsApp = dynamic(() => import('../../components/modules/CentralWhatsApp'), { ssr: false });
 const CampanhasSMS = dynamic(() => import('../../components/modules/CampanhasSMS'), { ssr: false });
 const AutomacaoN8N = dynamic(() => import('../../components/modules/AutomacaoN8N'), { ssr: false });
+
 import { 
   Menu, ChevronLeft, ChevronRight, Home, Users, ClipboardList, Kanban, Inbox, CalendarDays, CheckSquare, FileText,
   MessageCircle, Target, Mail, Megaphone, FileSignature, Map, MapPin, Sparkles, Bell,
   Network, LineChart, Zap, HandCoins, Scale, Landmark, ShieldCheck, Wrench, Key, Settings, Crown, Search,
-  LayoutDashboard, Coins, PenTool, LayoutTemplate, BoxSelect, UsersRound, Fingerprint, PieChart, Focus, Briefcase, FileSearch, HelpCircle, FileClock, Info, LayoutList, CheckCircle2, TrendingUp, UserCheck, Share2, Smartphone, Rss, BookOpen, ScrollText, Banknote, Vote, Goal, Tags, Contact, FileBox, Mails, FileBadge2, Cpu, Activity, BarChart3, Medal, QrCode, PenLine, Link, UserCog, LogOut, User, Camera, X, Pin
+  LayoutDashboard, Coins, PenTool, LayoutTemplate, BoxSelect, UsersRound, Fingerprint, PieChart, Focus, Briefcase, FileSearch, HelpCircle, FileClock, Info, LayoutList, CheckCircle2, TrendingUp, UserCheck, Share2, Smartphone, Rss, BookOpen, ScrollText, Banknote, Vote, Goal, Tags, Contact, FileBox, Mails, FileBadge2, Cpu, Activity, BarChart3, Medal, QrCode, PenLine, Link, UserCog, LogOut, User, Camera, X, Pin, Calendar, Phone, Cake, Lock
 } from 'lucide-react';
 
 export default function DashboardPage() {
   const [activePage, setActivePage] = useState('home');
-  const [userPlan, setUserPlan] = useState('enterprise');
+  const [mounted, setMounted] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth', { method: 'DELETE' });
+    } catch (e) {
+      console.error('Erro ao encerrar sessão:', e);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('GabinetAK_active_page');
+      window.location.href = '/acessar';
+    }
+  };
+
+  // Carregar estado salvo apenas no cliente após a hidratação (Evita erro de Hydration do Next.js)
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pageParam = urlParams.get('page');
+      const saved = localStorage.getItem('GabinetAK_active_page');
+      if (pageParam === 'logout') {
+        handleLogout();
+        return;
+      }
+      if (pageParam) {
+        setActivePage(pageParam);
+      } else if (saved && saved !== 'logout') {
+        setActivePage(saved);
+      }
+    }
+  }, []);
+
+  // Salvar no localStorage e atualizar URL ao trocar de página
+  useEffect(() => {
+    if (mounted && activePage) {
+      if (activePage === 'logout') {
+        handleLogout();
+        return;
+      }
+      localStorage.setItem('GabinetAK_active_page', activePage);
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('page') !== activePage) {
+          url.searchParams.set('page', activePage);
+          window.history.replaceState(null, '', url.pathname + url.search);
+        }
+      } catch (e) {}
+    }
+  }, [activePage, mounted]);
+
+  const [userPlan, setUserPlan] = useState('political'); // Default: Political
   const [billingCycle, setBillingCycle] = useState('mensal'); // mensal, trimestral, anual
+
+  // Carregar e ouvir mudanças no Plano do Usuário (Sincronização com Gestão de Faturas)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPlan = localStorage.getItem('GabinetAK_user_plan');
+      if (savedPlan) setUserPlan(savedPlan);
+    }
+    const handlePlanChange = () => {
+      if (typeof window !== 'undefined') {
+        const savedPlan = localStorage.getItem('GabinetAK_user_plan');
+        if (savedPlan) setUserPlan(savedPlan);
+      }
+    };
+    window.addEventListener('GabinetAK_plan_changed', handlePlanChange);
+    return () => window.removeEventListener('GabinetAK_plan_changed', handlePlanChange);
+  }, []);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -84,7 +153,7 @@ export default function DashboardPage() {
   const [disabledModules, setDisabledModules] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('elegiv_disabled_modules');
+    const saved = localStorage.getItem('GabinetAK_disabled_modules');
     if (saved) setDisabledModules(JSON.parse(saved));
   }, []);
 
@@ -100,7 +169,7 @@ export default function DashboardPage() {
   const [pinnedItems, setPinnedItems] = useState([]);
   
   useEffect(() => {
-    const saved = localStorage.getItem('elegiv_pinned_items');
+    const saved = localStorage.getItem('GabinetAK_pinned_items');
     if (saved) setPinnedItems(JSON.parse(saved));
   }, []);
 
@@ -113,7 +182,7 @@ export default function DashboardPage() {
       updated = [...pinnedItems, id];
     }
     setPinnedItems(updated);
-    localStorage.setItem('elegiv_pinned_items', JSON.stringify(updated));
+    localStorage.setItem('GabinetAK_pinned_items', JSON.stringify(updated));
   };
 
   // Estados de Integração Meta & WhatsApp
@@ -179,7 +248,7 @@ export default function DashboardPage() {
     }
   }, [activePage]);
 
-  // ESTRUTURA DOS 25+ MDULOS ORGANIZADOS POR CATEGORIAS (ALINHADO COM MD + EXTRAS)
+  // ESTRUTURA DOS 25+ MDULOS ORGANIZADOS POR CATEGORIAS (ALINHADO COM MD + EXTRAS)
   const menuCategories = [
     {
       category: 'Atalhos Principais',
@@ -351,6 +420,10 @@ export default function DashboardPage() {
   const planLevels = { basic: 1, pro: 2, political: 3, enterprise: 4 };
 
   const handleNavClick = (mod) => {
+    if (mod.id === 'logout') {
+      handleLogout();
+      return;
+    }
     const userLevel = planLevels[userPlan] || 1;
     const requiredLevel = planLevels[mod.minPlan] || 1;
 
@@ -361,6 +434,7 @@ export default function DashboardPage() {
       setActivePage(mod.id);
     }
   };
+
   const handleRunAi = async () => {
     if (!aiPrompt) return;
     setIsAiLoading(true);
@@ -425,7 +499,7 @@ export default function DashboardPage() {
     };
     setTenantsList([...tenantsList, newTenant]);
     setNewCabinetName('');
-    setAdminStatusMessage(`S& Gabinete "${newCabinetName}" provisionado com sucesso no ecossistema Elegiv!`);
+    setAdminStatusMessage(`S& Gabinete "${newCabinetName}" provisionado com sucesso no ecossistema GabinetAK!`);
   };
 
   const handleChangeTenantStatus = (id, currentStatus) => {
@@ -544,7 +618,7 @@ export default function DashboardPage() {
     {
       id: 'political',
       name: 'Political',
-      desc: 'GESTÒO ELEITORAL COMPLETA',
+      desc: 'GESTÃO ELEITORAL COMPLETA',
       isPopular: true,
       price: { mensal: '499,90', trimestral: '429,90', anual: '349,90' },
       oldPrice: { mensal: '599,90', trimestral: '499,90', anual: '499,90' },
@@ -582,7 +656,7 @@ export default function DashboardPage() {
   return (
     <div style={{ display: 'flex', width: '100%', minHeight: '100vh', background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
       
-      {/* SIDEBAR RETRÁTIL COM MARCA VETORIAL ELEGIV */}
+      {/* SIDEBAR RETRÁTIL COM MARCA VETORIAL GabinetAK */}
       <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
         
         {/* BRANDING HEADER */}
@@ -590,7 +664,7 @@ export default function DashboardPage() {
           <a href="#" className="logo" onClick={(e) => { e.preventDefault(); setActivePage('home'); }}>
             <img 
               src={sidebarCollapsed ? "/logo/icon.svg" : "/logo/horizontal.svg"} 
-              alt="Elegiv Gestão 360" 
+              alt="GabinetAK HUB" 
               className="logo-svg"
             />
           </a>
@@ -616,7 +690,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* LISTA DE CATEGORIAS E MDULOS */}
+        {/* LISTA DE CATEGORIAS E MÓDULOS */}
         <nav className="sidebar-nav">
           <style dangerouslySetInnerHTML={{__html: `
             .nav-item-container:hover .pin-btn { opacity: 1 !important; }
@@ -646,7 +720,8 @@ export default function DashboardPage() {
                     </div>
                   )}
                   {filteredItems.map((mod) => {
-                    const isLocked = disabledModules.includes(mod.id);
+                    const isLockedByPlan = (planLevels[userPlan] || 1) < (planLevels[mod.minPlan] || 1);
+                    const isLocked = disabledModules.includes(mod.id) || isLockedByPlan;
                     const isActive = activePage === mod.id;
                     const isPinned = pinnedItems.includes(mod.id);
 
@@ -668,7 +743,7 @@ export default function DashboardPage() {
                             <span className="nav-badge">{mod.badge}</span>
                           )}
                           {!sidebarCollapsed && isLocked && (
-                            <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>x</span>
+                            <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>🔒</span>
                           )}
                         </div>
                         {!sidebarCollapsed && !isLocked && (
@@ -697,7 +772,7 @@ export default function DashboardPage() {
         </nav>
       </aside>
 
-      {/* ÁREA PRINCIPAL DA APLICA!ÒO */}
+      {/* ÁREA PRINCIPAL DA APLICAÇÃO */}
       <div className={`main-wrapper ${sidebarCollapsed ? 'expanded' : ''}`}>
         
         {/* TOPBAR HEADER STICKY */}
@@ -705,7 +780,7 @@ export default function DashboardPage() {
           <div className="topbar-left">
             <button className="mobile-menu-toggle" onClick={() => setIsMobileOpen(!isMobileOpen)}><Menu size={24} /></button>
             <div className="topbar-context">
-              Elegiv Gestão 360 / <strong style={{ color: 'var(--text-primary)' }}>
+              GabinetAK HUB / <strong style={{ color: 'var(--text-primary)' }}>
                 {menuCategories.flatMap(c => c.items).find(i => i.id === activePage)?.label || 'Visão Geral'}
               </strong>
             </div>
@@ -713,17 +788,20 @@ export default function DashboardPage() {
 
           {/* LOGO MOBILE CENTRALIZADA */}
           <div className="mobile-topbar-logo">
-            <img src="/logo/horizontal.svg" alt="Elegiv Gestão 360" style={{ height: '36px' }} />
+            <img src="/logo/horizontal.svg" alt="GabinetAK HUB" style={{ height: '36px' }} />
           </div>
 
           <div className="topbar-right">
-            {/* NOTIFICA!ÒO BELL WITH BADGE & PANEL */}
-            <button className="topbar-btn" onClick={() => setIsNotifOpen(!isNotifOpen)} title="Notificaes" style={{ background: "transparent", border: "none", color: "var(--text-secondary)", cursor: "pointer", position: "relative" }}><Bell size={24} /><span className="notif-badge">3</span></button>
+            {/* NOTIFICAÇÃO BELL WITH BADGE & PANEL */}
+            <button className="topbar-btn" onClick={() => setIsNotifOpen(!isNotifOpen)} title="Notificações" style={{ background: "transparent", border: "none", color: "var(--text-secondary)", cursor: "pointer", position: "relative" }}>
+              <Bell size={24} />
+              <span className="notif-badge">3</span>
+            </button>
 
-            {/* PANEL DE NOTIFICA!"ES */}
+            {/* PANEL DE NOTIFICAÇÕES */}
             <div className={`notif-panel ${isNotifOpen ? 'open' : ''}`}>
               <div className="notif-panel-header">
-                <h3>x Notificações <span className="notif-count">3 novas</span></h3>
+                <h3>🔔 Notificações <span className="notif-count">3 novas</span></h3>
                 <div className="notif-actions">
                   <button onClick={() => { setActivePage('notificacoes'); setIsNotifOpen(false); }} style={{ background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', borderRadius: '6px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.75rem' }}>Ver Todas</button>
                   <button onClick={() => setIsNotifOpen(false)}>Fechar</button>
@@ -733,7 +811,7 @@ export default function DashboardPage() {
                 <div className="notif-item unread">
                   <div className="notif-item-dot"></div>
                   <div className="notif-item-content">
-                    <div className="notif-title">x Novo Lead via WhatsApp</div>
+                    <div className="notif-title">⚡ Novo Lead via WhatsApp</div>
                     <div className="notif-meta">Marcos Silva solicitou protocolo no bairro Centro.</div>
                     <div className="notif-time">Há 5 minutos</div>
                   </div>
@@ -744,14 +822,6 @@ export default function DashboardPage() {
                     <div className="notif-title">🎯 Disparo CAPI Concluído</div>
                     <div className="notif-meta">Evento Lead enviado com sucesso para Meta Ads.</div>
                     <div className="notif-time">Há 22 minutos</div>
-                  </div>
-                </div>
-                <div className="notif-item unread">
-                  <div className="notif-item-dot"></div>
-                  <div className="notif-item-content">
-                    <div className="notif-title">🛡️ Trilha de Auditoria LGPD</div>
-                    <div className="notif-meta">Acesso criptografado registrado com hash HMAC-256.</div>
-                    <div className="notif-time">Há 1 hora</div>
                   </div>
                 </div>
               </div>
@@ -767,7 +837,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* DROPDOWN DE CONTA E CONFIGURA!"ES */}
+              {/* DROPDOWN DE CONTA E CONFIGURAÇÕES */}
               {isUserMenuOpen && (
                 <div className="user-dropdown-panel liquid-glass" style={{
                   position: 'absolute', top: '120%', right: '0', width: '300px', 
@@ -777,8 +847,8 @@ export default function DashboardPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <div className="user-avatar" style={{ width: 45, height: 45, fontSize: '1rem' }}>EG</div>
                     <div>
-                      <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>Elegiv Oficial</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>admin@elegiv.com.br</div>
+                      <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>GabinetAK Oficial</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>admin@GabinetAK.com.br</div>
                       <div style={{ marginTop: '0.3rem' }}><span className="pricing-badge">{userPlan.toUpperCase()} PLAN</span></div>
                     </div>
                   </div>
@@ -826,7 +896,7 @@ export default function DashboardPage() {
                     <button style={{ textAlign: 'left', background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '0.5rem', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => { setActivePage('ajustes_config'); setIsUserMenuOpen(false); }}>
                       <Settings size={16} /> Configurações do Gabinete
                     </button>
-                    <button style={{ textAlign: 'left', background: 'transparent', border: 'none', color: '#ef4444', padding: '0.5rem', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button style={{ textAlign: 'left', background: 'transparent', border: 'none', color: '#ef4444', padding: '0.5rem', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => { handleLogout(); setIsUserMenuOpen(false); }}>
                       <LogOut size={16} /> Sair
                     </button>
                   </div>
@@ -839,17 +909,46 @@ export default function DashboardPage() {
         {/* CONTAINER DA PÁGINA ATIVA */}
         <main className="page-content" ref={pageContainerRef}>
           
+          {(() => {
+            const currentNavMod = menuCategories.flatMap(c => c.items).find(i => i.id === activePage);
+            const isCurrentPageLocked = currentNavMod && !['home', 'conta_faturas', 'faturas', 'conta_assinaturas', 'meu_perfil', 'conta_perfil', 'ajustes_config', 'preferencias', 'master_admin'].includes(activePage) && (planLevels[userPlan] || 1) < (planLevels[currentNavMod.minPlan] || 1);
+            if (isCurrentPageLocked) {
+              return (
+                <div className="section-card liquid-glass" style={{ padding: '4rem 2rem', textAlign: 'center', margin: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '50%', width: '90px', height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 30px rgba(239, 68, 68, 0.2)' }}>
+                    <Lock size={44} color="#ef4444" />
+                  </div>
+                  <h2 style={{ fontSize: '1.8rem', fontWeight: '900', color: '#fff', marginBottom: '0.5rem' }}>
+                    Recurso Bloqueado no Plano {userPlan.toUpperCase()}
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', maxWidth: '580px', lineHeight: '1.6', marginBottom: '2rem' }}>
+                    A ferramenta <strong>"{currentNavMod?.label}"</strong> não está inclusa na sua assinatura atual. Faça um upgrade para o plano <strong>{currentNavMod?.minPlan?.toUpperCase()}</strong> ou superior para liberar este módulo no seu gabinete.
+                  </p>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <button onClick={() => setActivePage('conta_faturas')} style={{ padding: '0.8rem 1.8rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ffffff', borderRadius: '8px', cursor: 'pointer' }}>
+                      <Zap size={18} color="#ffffff" /> Upgrade de Plano
+                    </button>
+                    <button onClick={() => setActivePage('home')} style={{ padding: '0.8rem 1.5rem', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                      Voltar ao Início
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })()}
+
           {/* HOME / DASHBOARD OVERVIEW */}
           {activePage === 'home' && (
             <div className="home-grid">
               
               <div className="home-main">
-                {/* HERO BANNER DINMICO */}
+                {/* HERO BANNER DINÂMICO */}
                 <div className="hero-banner" ref={heroBannerRef}>
                   <div className="hero-content">
-                    <div className="hero-date">x& {currentDateFormatted}</div>
+                    <div className="hero-date" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><Sparkles size={14} /> {currentDateFormatted}</div>
                     <h1 className="hero-title">
-                      Bem-vindo ao Elegiv Gestão 360
+                      Bem-vindo ao GabinetAK HUB
                     </h1>
                     <p className="hero-subtitle">
                       Plataforma de inteligência eleitoral, gestão de demandas comunitárias e disparos WhatsApp em tempo real.
@@ -888,7 +987,7 @@ export default function DashboardPage() {
                 {/* ATALHOS RÁPIDOS */}
                 <div className="section-card liquid-glass">
                   <div className="section-card-header">
-                    <h3 className="section-title">⚡ Acesso Rápido a Módulos Chave</h3>
+                    <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Zap size={18} color="var(--accent)" /> Acesso Rápido a Módulos Chave</h3>
                   </div>
                   <div className="quick-access-grid">
                     <div className="qa-item" onClick={() => setActivePage('master_admin')}>
@@ -930,10 +1029,10 @@ export default function DashboardPage() {
                 {/* CALENDÁRIO WIDGET */}
                 <div className="calendar-card section-card liquid-glass">
                   <div className="calendar-header">
-                    <span className="cal-title">x& Agosto 2026</span>
-                    <div>
-                      <button className="cal-nav">⬹</button>
-                      <button className="cal-nav">⬺</button>
+                    <span className="cal-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CalendarDays size={16} color="var(--accent)" /> Agosto 2026</span>
+                    <div style={{ display: 'flex', gap: '0.2rem' }}>
+                      <button className="cal-nav"><ChevronLeft size={14} /></button>
+                      <button className="cal-nav"><ChevronRight size={14} /></button>
                     </div>
                   </div>
                   <div className="calendar-days">
@@ -960,21 +1059,21 @@ export default function DashboardPage() {
                 {/* ANIVERSARIANTES VIP */}
                 <div className="section-card liquid-glass">
                   <div className="section-card-header">
-                    <h3 className="section-title">🎂 Aniversariantes VIP da Semana</h3>
+                    <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Cake size={18} color="var(--accent)" /> Aniversariantes VIP da Semana</h3>
                   </div>
                   <div className="birthday-list">
                     <div className="birthday-item">
                       <div className="birthday-avatar">CR</div>
                       <div>
                         <div className="birthday-name">Cláudio Roberto (Liderança)</div>
-                        <div className="birthday-phone">x (11) 98877-1122 ⬢ Hoje</div>
+                        <div className="birthday-phone" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Phone size={12} /> (11) 98877-1122 | Hoje</div>
                       </div>
                     </div>
                     <div className="birthday-item">
                       <div className="birthday-avatar">AM</div>
                       <div>
                         <div className="birthday-name">Ana Maria (Coordenadora)</div>
-                        <div className="birthday-phone">x (11) 97766-3344 ⬢ Amanhã</div>
+                        <div className="birthday-phone" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Phone size={12} /> (11) 97766-3344 | Amanhã</div>
                       </div>
                     </div>
                   </div>
@@ -985,162 +1084,18 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* PÁGINA: PAINEL MASTER ADMIN (SaaS GOVERNANCE & TENANTS) */}
-          {activePage === 'master_admin' && <MasterAdmin disabledModules={disabledModules} setDisabledModules={setDisabledModules} menuCategories={menuCategories} />}
-
-          {/* INTEGRA!ÒO META ADS (CAPI) */}
-          {activePage === 'mkt_trafego' && <IntegracaoMetaAds />}
-
-
-
-          {activePage === 'map_eleitor' && (
-            <div className="section-card liquid-glass" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '80vh' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <MapPin color="var(--accent)" /> Mapeamento de Eleitor (CRM)
-                </h2>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <button className="btn-primary outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
-                    <Search size={16} /> Filtros Avançados
-                  </button>
-                  <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}>
-                    <Users size={16} /> Novo Contato
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '1.5rem', flex: 1, overflow: 'hidden' }}>
-                {/* Tabela CRM */}
-                <div className="section-card liquid-glass" style={{ padding: '0', overflowY: 'auto' }}>
-                  <div style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '1rem' }}>
-                    <div className="input-group" style={{ flex: 1, margin: 0 }}>
-                      <input type="text" placeholder="Buscar eleitor por nome, telefone ou CPF..." className="form-input" style={{ width: '100%' }} />
-                    </div>
-                  </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
-                        <th style={{ padding: '1rem' }}>Eleitor</th>
-                        <th style={{ padding: '1rem' }}>Telefone</th>
-                        <th style={{ padding: '1rem' }}>Bairro</th>
-                        <th style={{ padding: '1rem' }}>Tag / Apoio</th>
-                        <th style={{ padding: '1rem' }}>Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { name: 'Maria das Graças', tel: '(11) 98888-7777', bairro: 'Vila Esperança', tag: 'Apoiador Forte', tagColor: 'var(--success)' },
-                        { name: 'João Carlos', tel: '(11) 97777-6666', bairro: 'Centro', tag: 'Indeciso', tagColor: 'var(--warning)' },
-                        { name: 'Ana Paula Silva', tel: '(11) 96666-5555', bairro: 'Jardim Primavera', tag: 'Liderança', tagColor: '#a855f7' },
-                      ].map((c, i) => (
-                        <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', transition: 'background 0.2s', cursor: 'pointer' }}>
-                          <td style={{ padding: '1rem', fontWeight: '600', color: '#fff' }}>{c.name}</td>
-                          <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{c.tel}</td>
-                          <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{c.bairro}</td>
-                          <td style={{ padding: '1rem' }}>
-                            <span style={{ padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700', border: `1px solid ${c.tagColor}`, color: c.tagColor, background: 'rgba(0,0,0,0.3)' }}>
-                              {c.tag}
-                            </span>
-                          </td>
-                          <td style={{ padding: '1rem', display: 'flex', gap: '0.5rem' }}>
-                            <button style={{ background: 'rgba(0,230,118,0.1)', color: 'var(--success)', border: 'none', padding: '0.4rem', borderRadius: '4px', cursor: 'pointer' }} title="WhatsApp"><MessageCircle size={14} /></button>
-                            <button style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)', border: 'none', padding: '0.4rem', borderRadius: '4px', cursor: 'pointer' }} title="Nova Demanda"><ClipboardList size={14} /></button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Mapa Mock */}
-                <div className="section-card liquid-glass" style={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-                  <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem', fontWeight: '600', textTransform: 'uppercase' }}>Visão Geográfica</h3>
-                  <div style={{ flex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url("https://www.transparenttextures.com/patterns/cartographer.png")' }}></div>
-                    <div style={{ textAlign: 'center', zIndex: 1 }}>
-                      <Map size={48} color="var(--accent)" style={{ opacity: 0.5, margin: '0 auto 1rem' }} />
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Mapa de Calor Ativado<br/>(Requer Chave API Google Maps)</p>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Maior Concentração:</span>
-                      <span style={{ fontWeight: '600', color: 'var(--accent)' }}>Vila Esperança</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* CONSTRUTOR DE PÁGINAS BIO E CONVERSÒO / DOA!"ES */}
-          {['pag_candidato', 'pag_conversao', 'criador_doacao'].includes(activePage) && <GestaoPaginasBio />}
-
-          {/* GABINETE DINMICO (KANBAN E DEMANDAS) */}
-          {['kanban', 'prod_tarefas'].includes(activePage) && <KanbanDinamico />}
-          {['demandas', 'crm_suporte', 'prod_assuntos'].includes(activePage) && <GestaoDemandas />}
-
-          {/* AGENDA COM WHATSAPP */}
-          {activePage === 'agenda_wa' && <AgendaWA />}
-
-          {/* CRM ELEITORAL (CADASTROS) */}
-          {['cadastros', 'leads', 'crm_atendimento', 'crm_demandas'].includes(activePage) && <GestaoCadastros />}
-          {activePage === 'atendimento' && <AtendimentoProtocolo />}
-
-          {/* ENCURTADOR DE LINKS */}
-          {activePage === 'ferr_links' && <GestaoLinksCurtos />}
-
-          {/* GERADOR DE QR CODE */}
-          {activePage === 'ferr_qr' && <GeradorQRCode onOpenIA={openIAWithContext} />}
-
-          {/* ASSINADOR DIGITAL ICP-BRASIL */}
-          {activePage === 'ferr_assinador' && <AssinadorDigital />}
-
-          {/* GESTÒO LEGISLATIVA (PLs, EMENDAS, VERBAS, RESULTADOS) */}
-          {activePage === 'leg_pl' && <GestaoLegislativo initialTab="pls" />}
-          {activePage === 'leg_emendas' && <GestaoLegislativo initialTab="emendas" />}
-          {activePage === 'leg_verbas' && <GestaoLegislativo initialTab="verbas" />}
-          {activePage === 'leg_resultados' && <GestaoLegislativo initialTab="resultados" />}
-
-          {/* GEOMAPEAMENTO ELEITORAL */}
-          {['geomapeamento', 'crm_assuntos'].includes(activePage) && <Geomapeamento />}
-
-          {/* CAMPANHAS DE E-MAIL & MARKETING DIGITAL */}
-          {['email_envio', 'email_templates', 'mkt_digital', 'mkt_fluxos'].includes(activePage) && <CampanhasEmail />}
-
-          {/* RELATRIOS BI & RANKING (CONFORME DOCUMENTA!ÒO MD) */}
-          {activePage === 'rel_demandas' && <RelatoriosBI initialTab="demandas" />}
-          {activePage === 'rel_cadastros' && <RelatoriosBI initialTab="cadastros" />}
-          {activePage === 'rel_ranking' && <RelatoriosBI initialTab="ranking_indicacoes" />}
-          {['rel_grupos', 'grupos_tags'].includes(activePage) && <RelatoriosBI initialTab="ranking_grupos" />}
-          {['rel_graficos', 'relatorios', 'dashboard'].includes(activePage) && <RelatoriosBI initialTab="graficos" />}
-
-          {/* CENTRAL WHATSAPP, TRÁFEGO & AUTOMA!"ES */}
-          {['wa_oficial', 'whatsapp', 'wa_eleitoral', 'wa_campanha', 'wa_massa', 'wa_auto', 'ligacoes_auto', 'mkt_gestao'].includes(activePage) && <CentralWhatsApp />}
-
-          {/* N8N AUTOMA!ÒO */}
-          {activePage === 'mkt_n8n' && <AutomacaoN8N />}
-
-          {/* CAMPANHAS DE SMS */}
-          {activePage === 'sms_envio' && <CampanhasSMS />}
-
-          {/* ASSISTENTE DE IA */}
-          {['ia_assistente', 'ia_mkt', 'ia_sentimento'].includes(activePage) && <AssistenteIA />}
-
-          {/* CRIADOR DE FORMULÁRIOS */}
-          {activePage === 'forms' && <CriadorFormularios />}
-
-          {/* OFÍCIOS & GERADOR DE DOCUMENTOS */}
-          {['doc_oficios', 'gerador_doc'].includes(activePage) && <DocumentosOficios />}
-
-          {/* GESTÒO DE USUÁRIOS & MASTER ADMIN */}
+          {/* GESTÃO DE USUÁRIOS & MASTER ADMIN */}
           {['master_admin', 'admin_master'].includes(activePage) && <MasterAdmin />}
+          {['ajustes_usuarios', 'usuarios'].includes(activePage) && <GestaoUsuarios />}
 
-          {/* CONFIGURA!"ES GERAIS DO GABINETE */}
+          {/* GESTÃO DE FATURAS & ASSINATURAS */}
+          {['conta_faturas', 'faturas', 'conta_assinaturas', 'assinaturas'].includes(activePage) && <GestaoFaturas />}
+
+          {/* CONFIGURAÇÕES GERAIS DO GABINETE */}
           {['ajustes_config', 'preferencias', 'configuracoes'].includes(activePage) && <ConfiguracoesGerais />}
 
           {/* MEU PERFIL */}
-          {['meu_perfil', 'conta_perfil'].includes(activePage) && <MeuPerfil />}
+          {['meu_perfil', 'conta_perfil', 'conta_minha_conta', 'conta_minhas_contas'].includes(activePage) && <MeuPerfil />}
 
           {/* GERADOR DE MOLDURAS / TWIBBON */}
           {activePage === 'mkt_molduras' && <GeradorMolduras />}
@@ -1148,13 +1103,13 @@ export default function DashboardPage() {
           {/* MALA DIRETA E ETIQUETAS */}
           {activePage === 'doc_etiquetas' && <GeradorEtiquetas />}
 
-          {/* GESTÒO DE TIPOS DE DOCUMENTOS */}
+          {/* GESTÃO DE TIPOS DE DOCUMENTOS */}
           {activePage === 'doc_tipos' && <GestaoTiposDocumentos />}
 
-          {/* GESTÒO DE DOCUMENTOS RECEBIDOS */}
+          {/* GESTÃO DE DOCUMENTOS RECEBIDOS */}
           {activePage === 'doc_recebidos' && <GestaoDocumentosRecebidos />}
 
-          {/* REPOSITRIO DE DOCUMENTOS / OFÍCIOS */}
+          {/* REPOSITRIO DE DOCUMENTOS / OFÍCIOS */}
           {activePage === 'doc_lista' && <GestaoDocLista onOpenIA={openIAWithContext} />}
 
           {/* AGENTE DE IA MODULAR CONTEXTUAL (DRAWER FLUTUANTE) */}
@@ -1291,7 +1246,7 @@ export default function DashboardPage() {
               </div>
               
               <div className="pricing-header">
-                <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem', color: '#fff' }}>Planos e Preços  Elegiv Gestão 360</h2>
+                <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem', color: '#fff' }}>Planos e Preços  GabinetAK HUB</h2>
                 <p style={{ color: 'var(--text-secondary)' }}>Acesse os módulos completos de inteligência eleitoral e expanda seu gabinete.</p>
                 
                 <div className="pricing-toggle">
@@ -1346,35 +1301,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* MDULO AGENDA WA */}
-          {activePage === 'agenda_wa' && <AgendaWA />}
-
-          {/* MDULO OFÍCIOS */}
-          {activePage === 'doc_oficios' && <DocumentosOficios />}
-
-          {/* MDULO GEOMAPEAMENTO */}
-          {activePage === 'geomapeamento' && <Geomapeamento />}
-
-          {/* MDULO CAMPANHAS EMAIL */}
-          {['email_envio', 'email_templates'].includes(activePage) && <CampanhasEmail />}
-
-          {/* CENTRAL DE RELATRIOS BI */}
-          {['rel_demandas', 'rel_cadastros', 'rel_ranking'].includes(activePage) && <RelatoriosBI />}
-
-          {/* ASSISTENTE DE IA */}
-          {['ia_assistente', 'ia_mkt', 'ia_sentimento'].includes(activePage) && <AssistenteIA />}
-
-          {/* GESTÒO DE USUÁRIOS E ACESSOS */}
-          {['ajustes_usuarios', 'seg_acessos'].includes(activePage) && <GestaoUsuarios />}
-
-          {/* GESTÒO DE LINKS CURTOS */}
-          {activePage === 'ferr_links' && <GestaoLinksCurtos />}
-
-          {/* ASSINADOR DIGITAL */}
-          {activePage === 'ferr_assinador' && <AssinadorDigital />}
-
-          {/* FALLBACK PARA MDULOS EM CONSTRU!ÒO */}
-          {!['home', 'admin-master', 'master_admin', 'admin_master', 'mkt_trafego', 'cadastros', 'demandas', 'kanban', 'forms', 'whatsapp', 'wa_oficial', 'wa_eleitoral', 'wa_campanha', 'wa_massa', 'wa_auto', 'sms_envio', 'ligacoes_auto', 'meta', 'ia', 'seguranca', 'preferencias', 'agenda_wa', 'doc_oficios', 'geomapeamento', 'email_envio', 'email_templates', 'rel_demandas', 'rel_cadastros', 'rel_ranking', 'ia_assistente', 'ia_mkt', 'ia_sentimento', 'ajustes_usuarios', 'seg_acessos', 'logs_auditoria', 'ferr_assinador', 'ajustes_config', 'meu_perfil', 'conta_perfil', 'ferr_links', 'ferr_qr', 'mkt_molduras', 'doc_etiquetas', 'doc_tipos', 'doc_recebidos', 'doc_lista', 'pag_candidato', 'atendimento', 'leads', 'crm_atendimento', 'crm_demandas', 'crm_suporte', 'crm_assuntos', 'leg_pl', 'leg_emendas', 'leg_verbas', 'leg_resultados', 'prod_tarefas', 'prod_assuntos', 'mkt_digital', 'mkt_fluxos', 'painel_arrecadacao', 'criador_doacao', 'pag_conversao', 'map_eleitor', 'notificacoes', 'dashboard'].includes(activePage) && (
+          {/* FALLBACK PARA MDULOS EM CONSTRUÇÃO */}
+          {!['home', 'admin-master', 'master_admin', 'admin_master', 'mkt_trafego', 'cadastros', 'demandas', 'kanban', 'forms', 'whatsapp', 'wa_oficial', 'wa_eleitoral', 'wa_campanha', 'wa_massa', 'wa_auto', 'sms_envio', 'ligacoes_auto', 'meta', 'ia', 'seguranca', 'preferencias', 'agenda_wa', 'doc_oficios', 'geomapeamento', 'email_envio', 'email_templates', 'rel_demandas', 'rel_cadastros', 'rel_ranking', 'ia_assistente', 'ia_mkt', 'ia_sentimento', 'ajustes_usuarios', 'usuarios', 'seg_acessos', 'logs_auditoria', 'ferr_assinador', 'ajustes_config', 'meu_perfil', 'conta_perfil', 'conta_faturas', 'faturas', 'conta_assinaturas', 'assinaturas', 'conta_minha_conta', 'conta_minhas_contas', 'ferr_links', 'ferr_qr', 'mkt_molduras', 'doc_etiquetas', 'doc_tipos', 'doc_recebidos', 'doc_lista', 'pag_candidato', 'atendimento', 'leads', 'crm_atendimento', 'crm_demandas', 'crm_suporte', 'crm_assuntos', 'leg_pl', 'leg_emendas', 'leg_verbas', 'leg_resultados', 'prod_tarefas', 'prod_assuntos', 'mkt_digital', 'mkt_fluxos', 'painel_arrecadacao', 'criador_doacao', 'pag_conversao', 'map_eleitor', 'notificacoes', 'dashboard'].includes(activePage) && (
             <div className="section-card liquid-glass" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', textAlign: 'center' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚧</div>
               <h2 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Módulo em Construção</h2>
@@ -1455,3 +1383,4 @@ export default function DashboardPage() {
 }
 
 
+ 

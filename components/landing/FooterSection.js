@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useRouter } from 'next/navigation';
 
 export default function FooterSection() {
@@ -25,8 +25,8 @@ export default function FooterSection() {
           <button onClick={() => router.push('/acessar')} style={{ padding: '1rem 2.5rem', background: 'linear-gradient(135deg,#3b82f6,#06b6d4)', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 0 30px rgba(59,130,246,0.4)' }}>
             Começar Gratuitamente
           </button>
-          <a href="https://wa.me/556232510558" target="_blank" rel="noreferrer" style={{ padding: '1rem 2.5rem', background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-            💬 Falar no WhatsApp
+          <a href="https://wa.me/556232510558" target="_blank" rel="nãoreferrer" style={{ padding: '1rem 2.5rem', background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            💬 Falar não WhatsApp
           </a>
         </div>
       </section>
@@ -35,7 +35,7 @@ export default function FooterSection() {
       <footer style={{ padding: '4rem 5% 2rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr repeat(3, 1fr)', gap: '3rem', marginBottom: '3rem' }}>
           <div>
-            <img src="/logo/horizontal.svg" alt="Elegiv Gestão 360" style={{ height: 32, objectFit: 'contain', marginBottom: '1rem' }} />
+            <img src="/logo/horizontal.svg" alt="GabinetAK HUB" style={{ height: 32, objectFit: 'contain', marginBottom: '1rem' }} />
             <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: 260 }}>A plataforma completa para gestão de gabinetes, campanhas eleitorais e arrecadação.</p>
             <div style={{ marginTop: '1.5rem', fontSize: '0.8rem', color: '#64748b' }}>
               <div>📍 Rua 72, nº 223 · Sala 1507</div>
@@ -69,7 +69,7 @@ export default function FooterSection() {
         </div>
 
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#475569' }}>© 2026 Elegiv Gestão 360. Todos os direitos reservados.</span>
+          <span style={{ fontSize: '0.8rem', color: '#475569' }}>© 2026 GabinetAK HUB. Todos os direitos reservados.</span>
           <span style={{ fontSize: '0.8rem', color: '#475569' }}>Gestão política inteligente há mais de uma década 🇧🇷</span>
         </div>
       </footer>
