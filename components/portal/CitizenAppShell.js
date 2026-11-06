@@ -51,7 +51,7 @@ export default function CitizenAppShell() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [initialAIQuery, setInitialAIQuery] = useState('');
 
-  // Itens exatamente no estilo visual limpo do HubPolítico (Print 1 de referência)
+  // Itens exatamente no estilo visual encorpado e marcante do HubPolítico (Print de referência)
   const menuItems = [
     { id: 'home', label: 'Nova conversa', icon: Plus, isAction: true },
     { id: 'radar', label: 'Mapa de votos & demandas', icon: Map },
@@ -75,13 +75,15 @@ export default function CitizenAppShell() {
       <style jsx global>{`
         body {
           background-color: #FFFFFF !important;
-          color: #111827 !important;
+          color: #0F172A !important;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
           margin: 0;
           padding: 0;
           width: 100%;
           min-height: 100vh;
           overflow-x: hidden;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
         .citizen-app-shell {
@@ -93,7 +95,7 @@ export default function CitizenAppShell() {
           box-sizing: border-box;
         }
 
-        /* SIDEBAR BRANCA LIMPA FIXA (CLONE EXATO DO PRINT 1 HUBPOLÍTICO) */
+        /* SIDEBAR BRANCA LIMPA FIXA (ESTILO EXATO DO PRINT HUBPOLÍTICO) */
         .citizen-sidebar {
           width: 240px;
           min-width: 240px;
@@ -121,11 +123,11 @@ export default function CitizenAppShell() {
         }
 
         .sidebar-brand {
-          padding: 1.25rem 1.25rem 1rem 1.25rem;
+          padding: 1.35rem 1.25rem 1.1rem 1.25rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-bottom: 1px solid #F3F4F6;
+          border-bottom: 1px solid #F1F5F9;
         }
 
         .brand-logo-wrap {
@@ -161,7 +163,7 @@ export default function CitizenAppShell() {
         }
 
         .brand-name {
-          font-size: 1.15rem;
+          font-size: 1.22rem;
           font-weight: 700;
           letter-spacing: -0.03em;
           color: #0F172A;
@@ -169,55 +171,59 @@ export default function CitizenAppShell() {
         }
 
         .brand-name-accent {
+          font-weight: 900;
           color: #0038FF;
         }
 
         .brand-hub-badge {
-          font-size: 0.6rem;
-          font-weight: 800;
+          font-size: 0.62rem;
+          font-weight: 900;
           background: #EEF2FF;
           color: #0038FF;
           padding: 2px 5px;
           border-radius: 4px;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
           line-height: 1;
         }
 
+        /* ITENS DO MENU COM TIPOGRAFIA MAIS BOLD (PRINT HUBPOLÍTICO) */
         .sidebar-nav {
           flex: 1;
           overflow-y: auto;
           padding: 0.75rem 0.65rem;
           display: flex;
           flex-direction: column;
-          gap: 0.2rem;
+          gap: 0.25rem;
         }
 
         .sidebar-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0.6rem 0.85rem;
+          padding: 0.65rem 0.85rem;
           border-radius: 8px;
-          color: #4B5563;
-          font-size: 0.88rem;
-          font-weight: 500;
+          color: #0F172A;
+          font-size: 0.9rem;
+          font-weight: 600;
           background: transparent;
           border: none;
           cursor: pointer;
           transition: all 0.15s ease;
           text-align: left;
           width: 100%;
+          letter-spacing: -0.01em;
         }
 
         .sidebar-item:hover {
-          background: #F3F4F6;
-          color: #111827;
+          background: #F1F5F9;
+          color: #000000;
+          font-weight: 700;
         }
 
         .sidebar-item.active {
           background: #EEF2FF;
           color: #0038FF;
-          font-weight: 600;
+          font-weight: 700;
         }
 
         .sidebar-item-content {
@@ -228,20 +234,21 @@ export default function CitizenAppShell() {
 
         .item-shortcut {
           font-size: 0.7rem;
-          color: #9CA3AF;
-          background: #F3F4F6;
+          font-weight: 600;
+          color: #64748B;
+          background: #F1F5F9;
           padding: 0.15rem 0.4rem;
           border-radius: 4px;
-          border: 1px solid #E5E7EB;
+          border: 1px solid #E2E8F0;
         }
 
-        /* RODAPÉ DA SIDEBAR (ESTILO PRINT 1 HUBPOLÍTICO) */
+        /* RODAPÉ DA SIDEBAR MAIS BOLD (PRINT HUBPOLÍTICO) */
         .sidebar-footer {
-          padding: 1rem;
+          padding: 1.1rem;
           border-top: 1px solid #E5E7EB;
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.6rem;
           background: #FFFFFF;
         }
 
@@ -249,13 +256,15 @@ export default function CitizenAppShell() {
           background: #0038FF;
           color: #FFFFFF;
           border: none;
-          padding: 0.65rem;
+          padding: 0.7rem;
           border-radius: 8px;
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 700;
           cursor: pointer;
           text-align: center;
+          letter-spacing: -0.01em;
           transition: background 0.2s;
+          box-shadow: 0 2px 8px rgba(0, 56, 255, 0.2);
         }
 
         .btn-sidebar-primary:hover {
@@ -264,20 +273,21 @@ export default function CitizenAppShell() {
 
         .btn-sidebar-secondary {
           background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          color: #374151;
-          padding: 0.55rem;
+          border: 1.5px solid #E2E8F0;
+          color: #0F172A;
+          padding: 0.65rem;
           border-radius: 8px;
-          font-size: 0.82rem;
-          font-weight: 600;
+          font-size: 0.86rem;
+          font-weight: 700;
           cursor: pointer;
           text-align: center;
+          letter-spacing: -0.01em;
           transition: all 0.2s;
         }
 
         .btn-sidebar-secondary:hover {
-          background: #F9FAFB;
-          border-color: #D1D5DB;
+          background: #F8FAFC;
+          border-color: #CBD5E1;
         }
 
         .sidebar-footer-links {
@@ -285,24 +295,25 @@ export default function CitizenAppShell() {
           align-items: center;
           justify-content: space-between;
           padding-top: 0.5rem;
-          font-size: 0.8rem;
-          color: #6B7280;
+          font-size: 0.82rem;
+          color: #475569;
         }
 
         .link-entrar {
-          color: #6B7280;
+          color: #334155;
           text-decoration: none;
-          font-weight: 500;
+          font-weight: 600;
           display: flex;
           align-items: center;
           gap: 0.3rem;
+          transition: color 0.15s;
         }
 
         .link-entrar:hover {
-          color: #111827;
+          color: #000000;
         }
 
-        /* ÁREA PRINCIPAL LIMPA BRANCA (CANVAS 100% LARGURA) */
+        /* ÁREA PRINCIPAL LIMPA BRANCA (100% LARGURA) */
         .citizen-main {
           flex: 1;
           width: calc(100vw - 240px);
@@ -323,9 +334,9 @@ export default function CitizenAppShell() {
           }
         }
 
-        /* TOPBAR DIREITA COM BOTÕES PÍLULA (PRINT 1) */
+        /* TOPBAR DIREITA COM BOTÕES PÍLULA BOLD */
         .citizen-topbar {
-          height: 64px;
+          height: 68px;
           width: 100%;
           padding: 0 2.5rem;
           display: flex;
@@ -343,9 +354,9 @@ export default function CitizenAppShell() {
 
         .menu-toggle-btn {
           display: none;
-          background: #F3F4F6;
-          border: 1px solid #E5E7EB;
-          color: #111827;
+          background: #F1F5F9;
+          border: 1px solid #E2E8F0;
+          color: #0F172A;
           padding: 0.45rem;
           border-radius: 8px;
           cursor: pointer;
@@ -362,36 +373,38 @@ export default function CitizenAppShell() {
         .topbar-right {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.85rem;
           margin-left: auto;
         }
 
         .btn-top-outline {
           background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          color: #374151;
-          padding: 0.5rem 1.15rem;
+          border: 1.5px solid #E2E8F0;
+          color: #0F172A;
+          padding: 0.55rem 1.25rem;
           border-radius: 9999px;
-          font-size: 0.85rem;
-          font-weight: 600;
+          font-size: 0.88rem;
+          font-weight: 700;
           cursor: pointer;
+          letter-spacing: -0.01em;
           transition: all 0.2s;
         }
 
         .btn-top-outline:hover {
-          background: #F9FAFB;
-          border-color: #D1D5DB;
+          background: #F8FAFC;
+          border-color: #CBD5E1;
         }
 
         .btn-top-primary {
           background: #0038FF;
           color: #FFFFFF;
           border: none;
-          padding: 0.5rem 1.35rem;
+          padding: 0.55rem 1.4rem;
           border-radius: 9999px;
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 700;
           cursor: pointer;
+          letter-spacing: -0.01em;
           transition: background 0.2s;
           box-shadow: 0 2px 10px rgba(0, 56, 255, 0.25);
         }
@@ -400,7 +413,7 @@ export default function CitizenAppShell() {
           background: #0028CC;
         }
 
-        /* CONTAINER CENTRALIZADO PREENCHENDO A TELA DE FORMA PROPORCIONAL */
+        /* CONTAINER CENTRALIZADO */
         .portal-viewport {
           flex: 1;
           width: 100%;
@@ -419,18 +432,18 @@ export default function CitizenAppShell() {
           }
         }
 
-        /* BOTÃO FEEDBACK FLUTUANTE DISCRETO (PRINT 1 HUBPOLÍTICO) */
+        /* BOTÃO FEEDBACK FLUTUANTE DISCRETO BOLD */
         .btn-floating-feedback {
           position: fixed;
           bottom: 20px;
           left: 260px;
           background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          color: #4B5563;
+          border: 1.5px solid #E2E8F0;
+          color: #1E293B;
           border-radius: 9999px;
-          padding: 0.4rem 0.85rem;
-          font-size: 0.78rem;
-          font-weight: 500;
+          padding: 0.45rem 0.95rem;
+          font-size: 0.8rem;
+          font-weight: 600;
           display: flex;
           align-items: center;
           gap: 0.4rem;
@@ -447,9 +460,9 @@ export default function CitizenAppShell() {
         }
 
         .btn-floating-feedback:hover {
-          background: #F9FAFB;
-          color: #111827;
-          border-color: #D1D5DB;
+          background: #F8FAFC;
+          color: #000000;
+          border-color: #CBD5E1;
         }
 
         /* BACKDROP MOBILE */
@@ -474,7 +487,7 @@ export default function CitizenAppShell() {
         onClick={() => setSidebarOpen(false)}
       />
 
-      {/* SIDEBAR FIXA LIMPA (PRINT 1) */}
+      {/* SIDEBAR FIXA LIMPA (PRINT HUBPOLÍTICO) */}
       <aside className={`citizen-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <a href="/" className="brand-logo-wrap">
@@ -512,7 +525,11 @@ export default function CitizenAppShell() {
                 }}
               >
                 <div className="sidebar-item-content">
-                  <Icon size={17} color={isActive ? '#0038FF' : '#6B7280'} />
+                  <Icon 
+                    size={18} 
+                    strokeWidth={isActive ? 2.5 : 2.2} 
+                    color={isActive ? '#0038FF' : '#1E293B'} 
+                  />
                   <span>{item.label}</span>
                 </div>
                 {item.shortcut && (
@@ -543,10 +560,10 @@ export default function CitizenAppShell() {
               Entrar
             </a>
             <button 
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}
               title="Alternar Tema"
             >
-              <Moon size={15} />
+              <Moon size={16} />
             </button>
           </div>
         </div>
@@ -645,7 +662,7 @@ export default function CitizenAppShell() {
           className="btn-floating-feedback"
           onClick={() => handleOpenAIWithPrompt('Gostaria de deixar um feedback sobre a plataforma')}
         >
-          <MessageCircle size={14} color="#6B7280" />
+          <MessageCircle size={15} color="#1E293B" />
           <span>Feedback</span>
         </button>
       </main>

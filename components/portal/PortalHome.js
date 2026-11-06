@@ -26,10 +26,10 @@ export default function PortalHome({
   const [promptText, setPromptText] = useState('');
 
   const chips = [
-    { label: 'A abstenção aumentou no 2º turno no meu bairro?', query: 'Como foi a abstenção nas últimas eleições no meu bairro?' },
-    { label: 'Que emendas o mandato destinou para a Saúde?', query: 'Quais emendas parlamentares foram destinadas para a saúde pública?' },
-    { label: 'Em que obras e áreas o gabinete mais investiu?', query: 'Em que obras e áreas temáticas o gabinete mais investiu recursos?' },
-    { label: 'Quanto o mandato economizou de cota?', query: 'Quanto o mandato economizou de cota parlamentar este ano?' },
+    { icon: '📊', label: 'A abstenção aumentou no 2º turno no meu bairro?', query: 'Como foi a abstenção nas últimas eleições no meu bairro?' },
+    { icon: '🏥', label: 'Que emendas o mandato destinou para a Saúde?', query: 'Quais emendas parlamentares foram destinadas para a saúde pública?' },
+    { icon: '🏗️', label: 'Em que obras e áreas o gabinete mais investiu?', query: 'Em que obras e áreas temáticas o gabinete mais investiu recursos?' },
+    { icon: '💰', label: 'Quanto o mandato economizou de cota?', query: 'Quanto o mandato economizou de cota parlamentar este ano?' },
   ];
 
   const handleChipClick = (chip) => {
@@ -51,11 +51,11 @@ export default function PortalHome({
           flex-direction: column;
           align-items: center;
           width: 100%;
-          padding-top: 1.5rem;
+          padding-top: 1rem;
           box-sizing: border-box;
         }
 
-        /* HERO COM GLOW SUAVE ATRÁS (PRINT 1 HUBPOLÍTICO) */
+        /* HERO COM GLOW SUAVE ATRÁS (ESTILO HUBPOLÍTICO) */
         .hero-section {
           width: 100%;
           display: flex;
@@ -64,26 +64,26 @@ export default function PortalHome({
           text-align: center;
           gap: 1.5rem;
           padding: 2.5rem 1rem 1.5rem 1rem;
-          background: radial-gradient(circle at 50% 35%, rgba(224, 231, 255, 0.6) 0%, rgba(238, 242, 255, 0.25) 50%, transparent 80%);
+          background: radial-gradient(circle at 50% 35%, rgba(224, 231, 255, 0.65) 0%, rgba(238, 242, 255, 0.3) 50%, transparent 80%);
           border-radius: 24px;
         }
 
         .portal-headline {
-          font-size: 2.25rem;
-          font-weight: 700;
-          letter-spacing: -0.025em;
-          color: #111827;
+          font-size: 2.6rem;
+          font-weight: 800;
+          letter-spacing: -0.035em;
+          color: #0F172A;
           margin: 0;
-          line-height: 1.2;
+          line-height: 1.15;
         }
 
         @media (max-width: 768px) {
           .portal-headline {
-            font-size: 1.75rem;
+            font-size: 1.85rem;
           }
         }
 
-        /* COMMAND BOX COM BORDA LILÁS/AZUL CLARO SUAVE (PRINT 1 HUBPOLÍTICO) */
+        /* COMMAND BOX COM BORDA LILÁS/AZUL CLARO SUAVE */
         .command-box-container {
           width: 100%;
           max-width: 760px;
@@ -113,8 +113,9 @@ export default function PortalHome({
           width: 100%;
           background: transparent;
           border: none;
-          color: #1F2937;
-          font-size: 1.02rem;
+          color: #0F172A;
+          font-size: 1.05rem;
+          font-weight: 500;
           font-family: inherit;
           resize: none;
           min-height: 52px;
@@ -123,7 +124,8 @@ export default function PortalHome({
         }
 
         .prompt-textarea::placeholder {
-          color: #9CA3AF;
+          color: #64748B;
+          font-weight: 450;
         }
 
         .command-box-footer {
@@ -137,72 +139,78 @@ export default function PortalHome({
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.78rem;
-          color: #4B5563;
-          background: #F9FAFB;
-          border: 1px solid #E5E7EB;
-          padding: 0.3rem 0.65rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #334155;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          padding: 0.35rem 0.75rem;
           border-radius: 6px;
           cursor: pointer;
           user-select: none;
         }
 
         .model-selector-pill:hover {
-          background: #F3F4F6;
-          border-color: #D1D5DB;
+          background: #F1F5F9;
+          border-color: #CBD5E1;
         }
 
         .btn-prompt-send {
           background: #0038FF;
           border: none;
           color: #FFFFFF;
-          padding: 0.45rem 1.15rem;
+          padding: 0.45rem 1.2rem;
           border-radius: 8px;
-          font-size: 0.85rem;
-          font-weight: 600;
+          font-size: 0.88rem;
+          font-weight: 700;
           cursor: pointer;
           display: flex;
           align-items: center;
-          gap: 0.35rem;
+          gap: 0.4rem;
           transition: background 0.2s;
+          box-shadow: 0 2px 6px rgba(0, 56, 255, 0.25);
         }
 
         .btn-prompt-send:hover {
           background: #0028CC;
         }
 
-        /* CHIPS RÁPIDOS ARREDONDADOS (PRINT 1) */
+        /* CHIPS RÁPIDOS ARREDONDADOS BOLD (PRINT HUBPOLÍTICO) */
         .chips-container {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 0.5rem;
+          gap: 0.6rem;
           width: 100%;
-          max-width: 840px;
+          max-width: 860px;
         }
 
         .suggestion-chip {
           background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          color: #4B5563;
-          padding: 0.5rem 1.1rem;
+          border: 1.5px solid #E2E8F0;
+          color: #1E293B;
+          padding: 0.55rem 1.2rem;
           border-radius: 9999px;
-          font-size: 0.82rem;
-          font-weight: 500;
+          font-size: 0.85rem;
+          font-weight: 600;
           cursor: pointer;
           transition: all 0.2s ease;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+          letter-spacing: -0.01em;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
         }
 
         .suggestion-chip:hover {
-          background: #F9FAFB;
+          background: #F8FAFC;
           border-color: #A5B4FC;
-          color: #111827;
+          color: #000000;
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+          box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
         }
 
-        /* BENTO GRID DE 3 CARDS LIMPOS (PRINT 1 HUBPOLÍTICO) */
+        /* BENTO GRID DE 3 CARDS BOLD */
         .bento-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -229,7 +237,7 @@ export default function PortalHome({
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          min-height: 180px;
+          min-height: 185px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
           box-sizing: border-box;
         }
@@ -248,7 +256,7 @@ export default function PortalHome({
           margin-bottom: 0.75rem;
         }
 
-        /* Card 1: 4 Círculos Bege dos Eixos */
+        /* Card 1: 4 Círculos Bege */
         .eixos-circles-row {
           display: flex;
           align-items: center;
@@ -278,13 +286,13 @@ export default function PortalHome({
           align-items: center;
           justify-content: center;
           color: #FFFFFF;
-          font-weight: 700;
-          font-size: 0.8rem;
+          font-weight: 800;
+          font-size: 0.85rem;
           box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
           letter-spacing: 0.02em;
         }
 
-        /* Card 3: Mosaico de fotos reais */
+        /* Card 3: Mosaico de fotos */
         .mosaico-fotos {
           display: flex;
           gap: 6px;
@@ -304,23 +312,25 @@ export default function PortalHome({
         }
 
         .bento-card-title {
-          font-size: 0.98rem;
-          font-weight: 700;
-          color: #111827;
-          margin: 0 0 0.3rem 0;
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0 0 0.35rem 0;
           display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
+          letter-spacing: -0.02em;
         }
 
         .bento-card-desc {
-          font-size: 0.8rem;
-          color: #6B7280;
+          font-size: 0.84rem;
+          font-weight: 500;
+          color: #475569;
           margin: 0;
-          line-height: 1.4;
+          line-height: 1.45;
         }
 
-        /* SEÇÃO INFERIOR: CONTEÚDOS ESPECIAIS (PRINT 1 HUBPOLÍTICO) */
+        /* SEÇÃO INFERIOR: CONTEÚDOS ESPECIAIS BOLD */
         .special-contents-section {
           width: 100%;
           max-width: 1040px;
@@ -332,20 +342,21 @@ export default function PortalHome({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 1rem;
+          margin-bottom: 1.1rem;
         }
 
         .special-title {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #111827;
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: #0F172A;
           margin: 0;
+          letter-spacing: -0.02em;
         }
 
         .link-see-all {
-          font-size: 0.82rem;
+          font-size: 0.88rem;
           color: #0038FF;
-          font-weight: 600;
+          font-weight: 700;
           text-decoration: none;
           cursor: pointer;
         }
@@ -368,9 +379,9 @@ export default function PortalHome({
         }
 
         .special-card {
-          height: 115px;
+          height: 120px;
           border-radius: 14px;
-          padding: 1.1rem;
+          padding: 1.15rem;
           color: #FFFFFF;
           display: flex;
           flex-direction: column;
@@ -386,18 +397,19 @@ export default function PortalHome({
         }
 
         .special-card-tag {
-          font-size: 0.68rem;
-          opacity: 0.85;
+          font-size: 0.72rem;
+          opacity: 0.9;
           text-transform: uppercase;
           letter-spacing: 0.06em;
-          font-weight: 600;
+          font-weight: 700;
         }
 
         .special-card-title {
-          font-size: 0.92rem;
-          font-weight: 700;
+          font-size: 0.98rem;
+          font-weight: 800;
           margin: 0.25rem 0 0 0;
           line-height: 1.25;
+          letter-spacing: -0.01em;
         }
       `}</style>
 
@@ -424,9 +436,9 @@ export default function PortalHome({
 
             <div className="command-box-footer">
               <div className="model-selector-pill">
-                <Sparkles size={13} color="#6366F1" />
+                <Sparkles size={14} color="#6366F1" />
                 <span>Rápido · Inteligência GabinetAK</span>
-                <ChevronDown size={12} color="#9CA3AF" />
+                <ChevronDown size={13} color="#64748B" />
               </div>
 
               <button type="submit" className="btn-prompt-send">
@@ -437,7 +449,7 @@ export default function PortalHome({
           </form>
         </div>
 
-        {/* CHIPS RÁPIDOS ARREDONDADOS (PRINT 1) */}
+        {/* CHIPS RÁPIDOS ARREDONDADOS BOLD */}
         <div className="chips-container">
           {chips.map((chip, idx) => (
             <button
@@ -445,13 +457,14 @@ export default function PortalHome({
               className="suggestion-chip"
               onClick={() => handleChipClick(chip)}
             >
-              {chip.label}
+              <span>{chip.icon}</span>
+              <span>{chip.label}</span>
             </button>
           ))}
         </div>
       </section>
 
-      {/* BENTO GRID 3 CARDS LADO A LADO (PRINT 1 HUBPOLÍTICO) */}
+      {/* BENTO GRID 3 CARDS BOLD */}
       <section className="bento-grid">
         {/* Card 1: Eixos do Mandato */}
         <div className="bento-card" onClick={() => onNavigate('eixos')}>
@@ -465,7 +478,7 @@ export default function PortalHome({
           </div>
           <div>
             <h3 className="bento-card-title">
-              <Compass size={16} color="#0038FF" />
+              <Compass size={18} strokeWidth={2.4} color="#0038FF" />
               Os 12 Eixos do Mandato
             </h3>
             <p className="bento-card-desc">
@@ -483,7 +496,7 @@ export default function PortalHome({
           </div>
           <div>
             <h3 className="bento-card-title">
-              <MapPin size={16} color="#0038FF" />
+              <MapPin size={18} strokeWidth={2.4} color="#0038FF" />
               Mapa de Demandas & Obras
             </h3>
             <p className="bento-card-desc">
@@ -518,7 +531,7 @@ export default function PortalHome({
           </div>
           <div>
             <h3 className="bento-card-title">
-              <Vote size={16} color="#0038FF" />
+              <Vote size={18} strokeWidth={2.4} color="#0038FF" />
               Veja votações e leis
             </h3>
             <p className="bento-card-desc">
@@ -528,7 +541,7 @@ export default function PortalHome({
         </div>
       </section>
 
-      {/* SEÇÃO INFERIOR: CONTEÚDOS ESPECIAIS (PRINT 1 HUBPOLÍTICO) */}
+      {/* SEÇÃO INFERIOR: CONTEÚDOS ESPECIAIS BOLD */}
       <section className="special-contents-section">
         <div className="special-contents-header">
           <h2 className="special-title">Conteúdos especiais</h2>
