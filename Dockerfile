@@ -2,33 +2,36 @@
 # Dockerfile — GabinetAK HUB (Next.js Standalone Build)
 # ==========================================
 
-# 1. DEPENDÊNCIAS
-FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:20-alpine AS builder
+RUN apk add --no-cache libc6-compat git
 WORKDIR /app
 
-# Copia manifests de dependências
-COPY package*.json ./
+# Copia arquivos do contexto local
+COPY . .
+
+# Se package.json não existir no contexto de build do Coolify, clona diretamente do GitHub
+RUN if [ ! -f "package.json" ]; then \
+      echo "==> package.json não encontrado no contexto local. Clonando do GitHub..." && \
+      git clone --depth 1 https://github.com/aurion-company/gabinetAKhub.git /tmp/repo && \
+      cp -r /tmp/repo/. /app/ && \
+      rm -rf /tmp/repo && \
+      echo "==> Repositório clonado com sucesso!"; \
+    fi
+
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Instala dependências
 RUN npm install --legacy-peer-deps
 
-# 2. BUILD
-FROM node:20-alpine AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Executa prisma generate apenas se a pasta/schema prisma existir
+# Executa prisma generate se o schema existir
 RUN if [ -d "./prisma" ]; then npx prisma generate; fi
 
 # Compila o Next.js
 RUN npm run build
 
-# 3. RUNNER DE PRODUÇÃO
+# ==========================================
+# 2. RUNNER DE PRODUÇÃO
+# ==========================================
 FROM node:20-alpine AS runner
 WORKDIR /app
 
@@ -40,7 +43,7 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copia assets e standalone
+# Copia assets e aplicação standalone gerada pelo Next.js
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
