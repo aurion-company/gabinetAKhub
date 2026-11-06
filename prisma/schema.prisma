@@ -1,4 +1,4 @@
-﻿// Appweb/prisma/schema.prisma
+// Appweb/prisma/schema.prisma
 // Database Schema - GestÃ£oPolÃ­tica360 (App PolÃ­tico & CRM Comercial 360)
 
 generator client {
