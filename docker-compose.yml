@@ -1,34 +1,21 @@
 version: '3.8'
 
 services:
-  app:
+  gabinetak-app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: gabinetak_hub
     restart: always
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - HOSTNAME=0.0.0.0
       - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET:-gabinetak_hub_jwt_secret_2026_hetzner}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - RESEND_API_KEY=${RESEND_API_KEY}
-      - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN}
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres:16-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: gp360_user
-      POSTGRES_PASSWORD: gp360_secure_password
-      POSTGRES_DB: gp360_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}

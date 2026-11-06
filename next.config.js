@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   compiler: {
-    // Remove console.log em produção para evitar vazamento de dados não DevTools
+    // Remove console.log em produção para evitar vazamento de dados no DevTools
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
   },
   async headers() {
