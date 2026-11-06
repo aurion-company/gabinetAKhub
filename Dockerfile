@@ -6,16 +6,20 @@ FROM node:20-alpine AS builder
 RUN apk add --no-cache libc6-compat git openssl
 WORKDIR /app
 
-# Copia arquivos do contexto local
+# Invalida o cache para garantir que sempre baixe a última versão do master
+ARG CACHEBUST=20261106_v6
+
+# Copia arquivos do contexto local se existirem
 COPY . .
 
-# Se package.json não existir no contexto de build do Coolify, clona diretamente do GitHub
-RUN if [ ! -f "package.json" ]; then \
-      echo "==> package.json não encontrado no contexto local. Clonando do GitHub..." && \
-      git clone --depth 1 https://github.com/aurion-company/gabinetAKhub.git /tmp/repo && \
+# Se package.json não existir no contexto de build do Coolify ou se precisarmos atualizar, clona diretamente do GitHub
+RUN if [ ! -f "package.json" ] || [ ! -d "components/portal" ]; then \
+      echo "==> Baixando a versão mais recente do GabinetAK HUB do GitHub..." && \
+      rm -rf /tmp/repo && \
+      git clone --depth 1 -b master https://github.com/aurion-company/gabinetAKhub.git /tmp/repo && \
       cp -r /tmp/repo/. /app/ && \
       rm -rf /tmp/repo && \
-      echo "==> Repositório clonado com sucesso!"; \
+      echo "==> Repositório atualizado com sucesso!"; \
     fi
 
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -26,7 +30,7 @@ RUN npm install --legacy-peer-deps
 # Executa prisma generate se o schema existir
 RUN if [ -d "./prisma" ]; then npx prisma generate; fi
 
-# Compila o Next.js
+# Compila o Next.js (Gera a Home do Cidadão na rota / e o painel em /app)
 RUN npm run build
 
 # ==========================================
