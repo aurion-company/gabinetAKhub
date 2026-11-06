@@ -1,26 +1,45 @@
 'use client';
-import { useState } from 'react';
-import { X, Send, Sparkles, Bot, User, CornerDownLeft } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Send, Sparkles, Bot, User, CornerDownLeft, Loader2, RefreshCw } from 'lucide-react';
 
-export default function CitizenAIChatDrawer({ isOpen, onClose, initialPrompt = '' }) {
+export default function CitizenAIChatDrawer({ 
+  isOpen, 
+  onClose, 
+  initialQuery = '', 
+  initialPrompt = '' 
+}) {
+  const effectiveInitial = initialQuery || initialPrompt || '';
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Olá! Sou o Assistente de Inteligência Cidadã do Gabinete. Como posso te ajudar hoje? Posso responder sobre gastos do mandato, projetos de lei, emendas para o seu bairro ou orientar sobre como abrir uma demanda!'
+      text: 'Olá! Sou o Assistente de Inteligência do GabinetAK HUB. Como posso te ajudar hoje? Posso responder sobre gastos do mandato, projetos de lei, emendas para o seu bairro ou orientar sobre como abrir uma demanda!'
     }
   ]);
-  const [inputVal, setInputVal] = useState(initialPrompt);
+  const [inputVal, setInputVal] = useState('');
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const hasTriggeredInitial = useRef(false);
 
-  if (!isOpen) return null;
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!inputVal.trim()) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
 
-    const userText = inputVal;
-    setInputVal('');
-    setMessages(prev => [...prev, { sender: 'user', text: userText }]);
+  // Dispara automaticamente quando aberto via Home ou Chip
+  useEffect(() => {
+    if (isOpen && effectiveInitial && !hasTriggeredInitial.current) {
+      hasTriggeredInitial.current = true;
+      executeAIQuery(effectiveInitial);
+    }
+  }, [isOpen, effectiveInitial]);
+
+  const executeAIQuery = async (queryText) => {
+    if (!queryText.trim()) return;
+
+    setMessages(prev => [...prev, { sender: 'user', text: queryText }]);
     setLoading(true);
 
     try {
@@ -28,12 +47,14 @@ export default function CitizenAIChatDrawer({ isOpen, onClose, initialPrompt = '
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `Você é o Assistente de Inteligência Cidadã do mandato GabinetAK HUB. Seja transparente, educado, objetivo e prestativo com o eleitor. Pergunta do cidadão: "${userText}". Responda em no máximo 3 parágrafos claros.`
+          prompt: queryText,
+          task: 'Consulta do Cidadão no Portal Público',
+          isPublic: true
         })
       });
 
       const data = await res.json();
-      const reply = data.text || data.response || 'Nosso gabinete está focado em transparência total e fiscalização. Esse tema já foi encaminhado para a equipe técnica de análise parlamentar!';
+      const reply = data.text || data.response || 'Nosso gabinete está focado em transparência total e fiscalização. Esse tema foi recebido e encaminhado para análise da equipe técnica.';
 
       setMessages(prev => [...prev, { sender: 'ai', text: reply }]);
     } catch (err) {
@@ -41,12 +62,22 @@ export default function CitizenAIChatDrawer({ isOpen, onClose, initialPrompt = '
         ...prev, 
         { 
           sender: 'ai', 
-          text: 'Recebemos sua pergunta! Nossos dados de transparência mostram que o mandato prioriza Saúde, Asfalto e Segurança nas cidades do DF. Você também pode abrir uma demanda formal na aba Início!' 
+          text: 'Recebemos sua consulta! A Inteligência do Gabinete monitora ativamente as demandas de saúde, infraestrutura e segurança do DF. Você também pode registrar uma demanda formal na barra lateral!' 
         }
       ]);
     } finally {
       setLoading(false);
     }
+  };
+
+  if (!isOpen) return null;
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!inputVal.trim() || loading) return;
+    const text = inputVal;
+    setInputVal('');
+    executeAIQuery(text);
   };
 
   return (
@@ -55,185 +86,252 @@ export default function CitizenAIChatDrawer({ isOpen, onClose, initialPrompt = '
         .drawer-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(15, 23, 42, 0.45);
           backdrop-filter: blur(4px);
           z-index: 100;
           display: flex;
           justify-content: flex-end;
+          animation: fadeIn 0.2s ease-out;
         }
 
-        .drawer-panel {
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .drawer-content {
           width: 100%;
-          max-width: 440px;
+          max-width: 480px;
           height: 100vh;
-          background: #0C0E14;
-          border-left: 1px solid #1A1D27;
+          background: #FFFFFF;
           display: flex;
           flex-direction: column;
-          box-shadow: -15px 0 40px rgba(0, 0, 0, 0.7);
+          box-shadow: -10px 0 35px rgba(0, 0, 0, 0.15);
+          animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
         }
 
         .drawer-header {
-          padding: 1.25rem;
-          border-bottom: 1px solid #1A1D27;
+          padding: 1.25rem 1.5rem;
+          border-bottom: 1.5px solid #F1F5F9;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: #090A0F;
+          background: #FFFFFF;
         }
 
-        .header-title-box {
+        .header-title-wrap {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.65rem;
         }
 
-        .ai-avatar {
-          width: 34px;
-          height: 34px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #FFFFFF;
-        }
-
-        .btn-drawer-close {
-          background: #141722;
-          border: 1px solid #1E2230;
-          color: #94A3B8;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
+        .ai-badge-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: #EEF2FF;
           display: flex;
           align-items: center;
           justify-content: center;
+          color: #0038FF;
+        }
+
+        .header-title {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          line-height: 1.2;
+        }
+
+        .header-subtitle {
+          font-size: 0.76rem;
+          font-weight: 600;
+          color: #64748B;
+          margin: 0;
+        }
+
+        .btn-close {
+          background: transparent;
+          border: none;
+          color: #64748B;
+          padding: 0.4rem;
+          border-radius: 6px;
           cursor: pointer;
+          transition: background 0.15s;
         }
 
-        .messages-area {
+        .btn-close:hover {
+          background: #F1F5F9;
+          color: #0F172A;
+        }
+
+        .messages-container {
           flex: 1;
           overflow-y: auto;
-          padding: 1.25rem;
+          padding: 1.5rem;
           display: flex;
           flex-direction: column;
           gap: 1rem;
+          background: #F8FAFC;
         }
 
-        .msg-bubble {
-          max-width: 85%;
-          padding: 0.85rem 1rem;
+        .message-bubble {
+          max-width: 86%;
+          padding: 0.85rem 1.15rem;
           border-radius: 14px;
-          font-size: 0.88rem;
-          line-height: 1.45;
+          font-size: 0.92rem;
+          line-height: 1.55;
+          word-break: break-word;
         }
 
-        .msg-bubble.ai {
-          align-self: flex-start;
-          background: #12141C;
-          border: 1px solid #1E2230;
-          color: #F8FAFC;
-        }
-
-        .msg-bubble.user {
+        .message-bubble.user {
           align-self: flex-end;
-          background: #2563EB;
+          background: #0038FF;
           color: #FFFFFF;
+          font-weight: 500;
+          border-bottom-right-radius: 4px;
+          box-shadow: 0 2px 8px rgba(0, 56, 255, 0.2);
         }
 
-        .typing-indicator {
-          font-size: 0.78rem;
-          color: #94A3B8;
-          font-style: italic;
+        .message-bubble.ai {
+          align-self: flex-start;
+          background: #FFFFFF;
+          color: #0F172A;
+          border: 1.5px solid #E2E8F0;
+          border-bottom-left-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .loading-bubble {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.5rem;
+          color: #64748B;
+          font-size: 0.85rem;
+          font-weight: 600;
+          padding: 0.6rem 1rem;
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 12px;
+          align-self: flex-start;
         }
 
-        .drawer-input-form {
-          padding: 1rem;
-          border-top: 1px solid #1A1D27;
-          background: #090A0F;
+        .drawer-footer {
+          padding: 1rem 1.25rem;
+          border-top: 1.5px solid #F1F5F9;
+          background: #FFFFFF;
+        }
+
+        .input-form {
           display: flex;
-          gap: 0.5rem;
+          align-items: center;
+          gap: 0.6rem;
+          background: #F8FAFC;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 12px;
+          padding: 0.4rem 0.6rem 0.4rem 0.9rem;
+          transition: border-color 0.2s;
+        }
+
+        .input-form:focus-within {
+          border-color: #0038FF;
+          background: #FFFFFF;
         }
 
         .drawer-input {
           flex: 1;
-          background: #12141C;
-          border: 1px solid #1E2230;
-          border-radius: 10px;
-          padding: 0.7rem 0.85rem;
-          color: #FFFFFF;
-          font-size: 0.88rem;
-          outline: none;
-        }
-
-        .drawer-input:focus {
-          border-color: #38BDF8;
-        }
-
-        .btn-drawer-send {
-          background: #2563EB;
+          background: transparent;
           border: none;
+          outline: none;
+          font-size: 0.92rem;
+          color: #0F172A;
+          font-family: inherit;
+        }
+
+        .drawer-input::placeholder {
+          color: #94A3B8;
+        }
+
+        .btn-send {
+          background: #0038FF;
           color: #FFFFFF;
-          width: 42px;
-          height: 42px;
-          border-radius: 10px;
+          border: none;
+          width: 34px;
+          height: 34px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
+          transition: background 0.15s;
+          flex-shrink: 0;
+        }
+
+        .btn-send:hover:not(:disabled) {
+          background: #0028CC;
+        }
+
+        .btn-send:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
       `}</style>
 
-      <div className="drawer-panel" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header">
-          <div className="header-title-box">
-            <div className="ai-avatar">
+          <div className="header-title-wrap">
+            <div className="ai-badge-icon">
               <Sparkles size={18} />
             </div>
             <div>
-              <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#FFFFFF', fontWeight: 700 }}>
-                IA Cidadã do Mandato
-              </h4>
-              <span style={{ fontSize: '0.72rem', color: '#10B981', fontWeight: 600 }}>● Online e disponível</span>
+              <h3 className="header-title">Inteligência GabinetAK</h3>
+              <p className="header-subtitle">Powered by Gemini 3.5 Flash · Respostas em Tempo Real</p>
             </div>
           </div>
-          <button className="btn-drawer-close" onClick={onClose}>
-            <X size={15} />
+          <button className="btn-close" onClick={onClose} aria-label="Fechar">
+            <X size={20} />
           </button>
         </div>
 
-        <div className="messages-area">
-          {messages.map((m, idx) => (
-            <div key={idx} className={`msg-bubble ${m.sender}`}>
-              {m.text}
+        <div className="messages-container">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`message-bubble ${msg.sender}`}>
+              {msg.text}
             </div>
           ))}
+
           {loading && (
-            <div className="typing-indicator">
-              <Sparkles size={13} color="#38BDF8" />
-              Buscando dados no portal do mandato...
+            <div className="loading-bubble">
+              <Loader2 size={16} className="animate-spin" />
+              <span>Analisando dados do mandato com IA...</span>
             </div>
           )}
+
+          <div ref={messagesEndRef} />
         </div>
 
-        <form className="drawer-input-form" onSubmit={handleSend}>
-          <input 
-            type="text" 
-            className="drawer-input" 
-            placeholder="Pergunte sobre leis, obras ou gastos..."
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-          />
-          <button type="submit" className="btn-drawer-send">
-            <Send size={16} />
-          </button>
-        </form>
+        <div className="drawer-footer">
+          <form className="input-form" onSubmit={handleSend}>
+            <input 
+              type="text"
+              className="drawer-input"
+              placeholder="Pergunte sobre leis, emendas, obras ou gastos..."
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              disabled={loading}
+            />
+            <button type="submit" className="btn-send" disabled={!inputVal.trim() || loading}>
+              <Send size={15} />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
 }
-
