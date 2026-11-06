@@ -1,4 +1,4 @@
-﻿/* ===== GABINETAK GESTÃ’O 360 ï¿½ Design System LiquidGlass ===== */
+/* ===== GABINETAK GESTÃ’O 360 ï¿½ Design System LiquidGlass ===== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -58,9 +58,11 @@ body {
   font-family: 'Inter', sans-serif;
   background: var(--bg-base);
   color: var(--text-primary);
-  display: flex;
+  display: block;
   width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
   background-image: 
     radial-gradient(circle at 15% 50%, rgba(122, 0, 255, 0.08) 0%, transparent 50%),

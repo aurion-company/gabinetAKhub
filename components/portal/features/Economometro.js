@@ -68,7 +68,7 @@ export default function Economometro() {
           color: #94A3B8;
         }
 
-        /* CONVERSÃO EM BENEFÍCIO REAL */
+        /* CONVERS�O EM BENEF�CIO REAL */
         .benefits-card {
           background: #151924;
           border: 1px solid #2563EB;
@@ -108,10 +108,10 @@ export default function Economometro() {
       <div className="eco-header">
         <h3 className="eco-title">
           <PiggyBank color="#10B981" size={24} />
-          Nota Fiscal do Mandato • Economômetro
+          Nota Fiscal do Mandato " Econom�metro
         </h3>
         <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 700 }}>
-          ● Atualizado Nov/2026
+          � Atualizado Nov/2026
         </span>
       </div>
 
@@ -120,13 +120,13 @@ export default function Economometro() {
           <span className="eco-val" style={{ color: '#10B981' }}>R$ 412.000</span>
           <span className="eco-lbl">Economizados em Cota Parlamentar no Ano</span>
           <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
-            Renúncia a privilégios e uso de passagens econômicas.
+            Ren�ncia a privil�gios e uso de passagens econ�micas.
           </span>
         </div>
 
         <div className="eco-card-big">
           <span className="eco-val" style={{ color: '#38BDF8' }}>78%</span>
-          <span className="eco-lbl">Abaixo do Teto Médio do Parlamento</span>
+          <span className="eco-lbl">Abaixo do Teto M�dio do Parlamento</span>
           <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
             Entre os gabinetes mais enxutos do legislativo.
           </span>
@@ -134,13 +134,13 @@ export default function Economometro() {
       </div>
 
       <div className="benefits-card">
-        <h4 className="benefits-title">O que essa economia representa na prática para a população?</h4>
+        <h4 className="benefits-title">O que essa economia representa na pr�tica para a popula��o?</h4>
 
         <div className="benefit-row">
           <div className="benefit-icon">
             <HeartPulse size={16} color="#38BDF8" />
           </div>
-          <span>Equivalente a <strong>2.800 consultas médicas</strong> na rede básica.</span>
+          <span>Equivalente a <strong>2.800 consultas m�dicas</strong> na rede b�sica.</span>
         </div>
 
         <div className="benefit-row">

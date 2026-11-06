@@ -24,41 +24,41 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
 
   const cityCards = [
     {
-      cidade: 'Ceilândia',
-      badge: '● Relatório de Cidade • Hoje',
-      titulo: 'R$ 1,2 mi em recapeamento asfáltico',
-      resumo: 'Obras na Avenida Hélio Prates em fase final após ofício nº 402/2026.',
+      cidade: 'Ceil�ndia',
+      badge: '� Relat�rio de Cidade " Hoje',
+      titulo: 'R$ 1,2 mi em recapeamento asf�ltico',
+      resumo: 'Obras na Avenida H�lio Prates em fase final ap�s of�cio n� 402/2026.',
       statusTag: '94% Executado',
       corBadge: '#10B981',
       kpiNum: '18',
-      kpiLabel: 'Ofícios Ativos'
+      kpiLabel: 'Of�cios Ativos'
     },
     {
       cidade: 'Taguatinga',
-      badge: '● Relatório de Cidade • 5 Nov',
-      titulo: 'Reforma da UPA e reforço pediátrico',
-      resumo: 'Destinação de R$ 650 mil para novos leitos e compra de equipamentos de triagem.',
-      statusTag: 'Em Execução',
+      badge: '� Relat�rio de Cidade " 5 Nov',
+      titulo: 'Reforma da UPA e refor�o pedi�trico',
+      resumo: 'Destina��o de R$ 650 mil para novos leitos e compra de equipamentos de triagem.',
+      statusTag: 'Em Execu��o',
       corBadge: '#3B82F6',
       kpiNum: 'R$ 650k',
       kpiLabel: 'Destinados'
     },
     {
       cidade: 'Samambaia',
-      badge: '● Relatório de Cidade • 4 Nov',
-      titulo: 'Iluminação em LED na QS 406',
-      resumo: 'Troca de 120 postes atendendo a pedido com mais de 80 apoios comunitários.',
-      statusTag: 'Concluído',
+      badge: '� Relat�rio de Cidade " 4 Nov',
+      titulo: 'Ilumina��o em LED na QS 406',
+      resumo: 'Troca de 120 postes atendendo a pedido com mais de 80 apoios comunit�rios.',
+      statusTag: 'Conclu�do',
       corBadge: '#F59E0B',
       kpiNum: '120',
       kpiLabel: 'Pontos de Luz'
     },
     {
       cidade: 'Plano Piloto',
-      badge: '● Relatório de Cidade • 3 Nov',
-      titulo: 'Fiscalização de transporte coletivo',
-      resumo: 'Vistoria surpresa nas linhas da W3 Sul com apresentação de requerimento na Câmara.',
-      statusTag: 'Em Tramitação',
+      badge: '� Relat�rio de Cidade " 3 Nov',
+      titulo: 'Fiscaliza��o de transporte coletivo',
+      resumo: 'Vistoria surpresa nas linhas da W3 Sul com apresenta��o de requerimento na C�mara.',
+      statusTag: 'Em Tramita��o',
       corBadge: '#8B5CF6',
       kpiNum: '6',
       kpiLabel: 'Linhas Cobradas'
@@ -71,29 +71,29 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
       rank: '01',
       categoria: 'Infraestrutura',
       categoriaCor: '#EF4444',
-      titulo: 'Cratera aberta em frente à Escola Classe 15 de Ceilândia Norte',
-      bairro: 'Ceilândia • QNM 18',
-      tempo: 'Há 2 horas',
-      status: 'Ofício Gerado'
+      titulo: 'Cratera aberta em frente � Escola Classe 15 de Ceil�ndia Norte',
+      bairro: 'Ceil�ndia " QNM 18',
+      tempo: 'H� 2 horas',
+      status: 'Of�cio Gerado'
     },
     {
       id: 2,
       rank: '02',
-      categoria: 'Saúde',
+      categoria: 'Sa�de',
       categoriaCor: '#3B82F6',
-      titulo: 'Falta de médicos clínicos no plantão noturno da UPA de Taguatinga',
+      titulo: 'Falta de m�dicos cl�nicos no plant�o noturno da UPA de Taguatinga',
       bairro: 'Taguatinga Sul',
-      tempo: 'Há 4 horas',
+      tempo: 'H� 4 horas',
       status: 'Em Triagem'
     },
     {
       id: 3,
       rank: '03',
-      categoria: 'Segurança',
+      categoria: 'Seguran�a',
       categoriaCor: '#F59E0B',
-      titulo: 'Parada de ônibus escura e sem policiamento na entrada de Samambaia',
-      bairro: 'Samambaia Sul • 1ª Entrada',
-      tempo: 'Há 6 horas',
+      titulo: 'Parada de �nibus escura e sem policiamento na entrada de Samambaia',
+      bairro: 'Samambaia Sul " 1� Entrada',
+      tempo: 'H� 6 horas',
       status: 'Encaminhado PM'
     },
     {
@@ -101,15 +101,15 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
       rank: '04',
       categoria: 'Mobilidade',
       categoriaCor: '#10B981',
-      titulo: 'Semáforo queimado no cruzamento central da Av. Araucárias',
-      bairro: 'Águas Claras',
-      tempo: 'Há 8 horas',
+      titulo: 'Sem�foro queimado no cruzamento central da Av. Arauc�rias',
+      bairro: '�guas Claras',
+      tempo: 'H� 8 horas',
       status: 'Resolvido pelo Detran'
     },
     {
       id: 5,
       rank: '05',
-      categoria: 'Educação',
+      categoria: 'Educa��o',
       categoriaCor: '#8B5CF6',
       titulo: 'Reforma da quadra poliesportiva do CED 02 do Gama',
       bairro: 'Gama Setor Sul',
@@ -119,10 +119,10 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
   ];
 
   const feedTempoReal = [
-    { hora: '14:20', texto: 'Ofício nº 489 protocolado na Novacap cobrando recapeamento na QNM 18.' },
-    { hora: '13:45', texto: 'Nova demanda registrada por morador de Águas Claras com foto.' },
-    { hora: '11:15', texto: 'Reunião com lideranças de Samambaia sobre segurança nas escolas.' },
-    { hora: '10:02', texto: 'Empenho de R$ 300.000 liberado para iluminação pública.' },
+    { hora: '14:20', texto: 'Of�cio n� 489 protocolado na Novacap cobrando recapeamento na QNM 18.' },
+    { hora: '13:45', texto: 'Nova demanda registrada por morador de �guas Claras com foto.' },
+    { hora: '11:15', texto: 'Reuni�o com lideran�as de Samambaia sobre seguran�a nas escolas.' },
+    { hora: '10:02', texto: 'Empenho de R$ 300.000 liberado para ilumina��o p�blica.' },
     { hora: '08:30', texto: 'Vistoria presencial da equipe na UPA de Taguatinga.' },
   ];
 
@@ -169,7 +169,7 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
           100% { transform: scale(0.95); opacity: 0.8; }
         }
 
-        /* GRID SUPERIOR DE RELATÓRIOS */
+        /* GRID SUPERIOR DE RELAT�RIOS */
         .city-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -284,7 +284,7 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
           line-height: 1.4;
         }
 
-        /* SEÇÃO DIVIDIDA 65% / 35% */
+        /* SE��O DIVIDIDA 65% / 35% */
         .radar-split-section {
           display: grid;
           grid-template-columns: 1.9fr 1.1fr;
@@ -457,11 +457,11 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
         }
       `}</style>
 
-      {/* CABEÇALHO DA SEÇÃO */}
+      {/* CABE�ALHO DA SE��O */}
       <div className="section-header">
         <h2 className="section-title">
           <span className="live-dot" />
-          Radar de Ações nas Cidades
+          Radar de A��es nas Cidades
         </h2>
         <span style={{ fontSize: '0.85rem', color: '#6B7280' }}>
           Filtrado por: <strong style={{ color: '#111827' }}>{selectedCity}</strong>
@@ -499,12 +499,12 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
         ))}
       </div>
 
-      {/* SEÇÃO DIVIDIDA */}
+      {/* SE��O DIVIDIDA */}
       <div className="radar-split-section">
         {/* ESQUERDA: DEMANDAS MAIS VOTADAS */}
         <div className="split-card">
           <div className="split-header">
-            <h3 className="split-title">🔥 Demandas Mais Apoiadas da População</h3>
+            <h3 className="split-title">=% Demandas Mais Apoiadas da Popula��o</h3>
             <span style={{ fontSize: '0.78rem', color: '#9CA3AF' }}>Atualizado a cada 15 min</span>
           </div>
 
@@ -519,22 +519,22 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
                       style={{ background: d.categoriaCor }} 
                     />
                     <strong style={{ color: '#1E293B' }}>{d.categoria}</strong>
-                    <span>•</span>
+                    <span>"</span>
                     <span>{d.bairro}</span>
-                    <span>•</span>
+                    <span>"</span>
                     <span>{d.tempo}</span>
                   </div>
                   <h4 className="demand-title">{d.titulo}</h4>
                   <div className="demand-sub">
                     <span style={{ color: '#059669', fontWeight: 600 }}>
-                      ✓ {d.status}
+                       {d.status}
                     </span>
                     <button 
                       className={`btn-upvote ${userVoted[d.id] ? 'voted' : ''}`}
                       onClick={() => handleUpvote(d.id)}
                     >
                       <ThumbsUp size={13} />
-                      {userVoted[d.id] ? 'Apoiado' : '+1 Eu Também Sofro'} ({upvotes[d.id]})
+                      {userVoted[d.id] ? 'Apoiado' : '+1 Eu Tamb�m Sofro'} ({upvotes[d.id]})
                     </button>
                   </div>
                 </div>
@@ -546,9 +546,9 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
         {/* DIREITA: TEMPO REAL DO GABINETE */}
         <div className="split-card">
           <div className="split-header">
-            <h3 className="split-title">⚡ Gabinete em Tempo Real</h3>
+            <h3 className="split-title">� Gabinete em Tempo Real</h3>
             <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 600 }}>
-              ● Ao Vivo
+              � Ao Vivo
             </span>
           </div>
 
@@ -577,7 +577,7 @@ export default function PortalRadar({ selectedCity, onOpenDemandModal }) {
             }}
             onClick={onOpenDemandModal}
           >
-            + Reportar Problema na Minha Região
+            + Reportar Problema na Minha Regi�o
           </button>
         </div>
       </div>

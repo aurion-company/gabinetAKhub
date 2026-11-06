@@ -13,46 +13,46 @@ export default function TinderLegislativo() {
     {
       id: 1,
       numero: 'PL 412/2026',
-      titulo: 'Fim da taxa de iluminação pública para ruas sem postes de LED',
-      categoria: 'Tributação & Infraestrutura',
-      resumo: 'Isenta moradores de bairros que não contam com iluminação pública adequada de pagar a taxa de luz na fatura mensal até que o serviço seja restabelecido.',
+      titulo: 'Fim da taxa de ilumina��o p�blica para ruas sem postes de LED',
+      categoria: 'Tributa��o & Infraestrutura',
+      resumo: 'Isenta moradores de bairros que n�o contam com ilumina��o p�blica adequada de pagar a taxa de luz na fatura mensal at� que o servi�o seja restabelecido.',
       votoDeputado: 'A Favor',
-      deputadoJustificativa: 'Não é justo o cidadão pagar por um serviço que a prefeitura não entrega na porta da casa dele.',
+      deputadoJustificativa: 'N�o � justo o cidad�o pagar por um servi�o que a prefeitura n�o entrega na porta da casa dele.',
       popularAprovacao: 88,
       traducaoSimples: {
-        pratica: 'Se sua rua for escura e sem poste em frente, você não paga a contribuição de iluminação.',
-        beneficiados: 'Mais de 45 mil famílias de regiões periféricas e áreas rurais.',
-        custo: 'Economia média de R$ 28/mês na conta de luz da família.'
+        pratica: 'Se sua rua for escura e sem poste em frente, voc� n�o paga a contribui��o de ilumina��o.',
+        beneficiados: 'Mais de 45 mil fam�lias de regi�es perif�ricas e �reas rurais.',
+        custo: 'Economia m�dia de R$ 28/m�s na conta de luz da fam�lia.'
       }
     },
     {
       id: 2,
       numero: 'PL 589/2026',
-      titulo: 'Botão do Pânico e câmeras com reconhecimento em escolas públicas',
-      categoria: 'Segurança & Educação',
-      resumo: 'Obriga a instalação de sistema de alarme direto com a Polícia Militar e câmeras de monitoramento nos portões de todas as escolas públicas.',
+      titulo: 'Bot�o do P�nico e c�meras com reconhecimento em escolas p�blicas',
+      categoria: 'Seguran�a & Educa��o',
+      resumo: 'Obriga a instala��o de sistema de alarme direto com a Pol�cia Militar e c�meras de monitoramento nos port�es de todas as escolas p�blicas.',
       votoDeputado: 'A Favor',
-      deputadoJustificativa: 'A segurança dos nossos filhos e professores nas escolas é prioridade inegociável.',
+      deputadoJustificativa: 'A seguran�a dos nossos filhos e professores nas escolas � prioridade inegoci�vel.',
       popularAprovacao: 94,
       traducaoSimples: {
-        pratica: 'Qualquer ocorrência na escola aciona a viatura da PM em menos de 3 minutos.',
-        beneficiados: 'Alunos, pais e comunidade escolar de mais de 600 escolas públicas.',
-        custo: 'Recursos já previstos no Fundo de Segurança Pública.'
+        pratica: 'Qualquer ocorr�ncia na escola aciona a viatura da PM em menos de 3 minutos.',
+        beneficiados: 'Alunos, pais e comunidade escolar de mais de 600 escolas p�blicas.',
+        custo: 'Recursos j� previstos no Fundo de Seguran�a P�blica.'
       }
     },
     {
       id: 3,
       numero: 'PL 620/2026',
       titulo: 'Aumento de 30% na verba de publicidade institucional do governo',
-      categoria: 'Orçamento & Transparência',
+      categoria: 'Or�amento & Transpar�ncia',
       resumo: 'Proposta do Executivo para expandir o limite de gastos de propaganda e marketing em anos eleitorais.',
       votoDeputado: 'Contra',
-      deputadoJustificativa: 'Em vez de gastar milhões com propaganda do governo, esse dinheiro tem que ir para remédio nas UPAs.',
+      deputadoJustificativa: 'Em vez de gastar milh�es com propaganda do governo, esse dinheiro tem que ir para rem�dio nas UPAs.',
       popularAprovacao: 12,
       traducaoSimples: {
-        pratica: 'O governo gastaria mais dinheiro público em comerciais de TV e redes sociais.',
-        beneficiados: 'Agências de propaganda e imagem de governantes.',
-        custo: 'R$ 60 milhões a menos nos cofres públicos da saúde e asfalto.'
+        pratica: 'O governo gastaria mais dinheiro p�blico em comerciais de TV e redes sociais.',
+        beneficiados: 'Ag�ncias de propaganda e imagem de governantes.',
+        custo: 'R$ 60 milh�es a menos nos cofres p�blicos da sa�de e asfalto.'
       }
     }
   ];
@@ -126,7 +126,7 @@ export default function TinderLegislativo() {
           margin: 0.35rem 0 0 0;
         }
 
-        /* CARD DE VOTAÇÃO */
+        /* CARD DE VOTA��O */
         .bill-card {
           background: #12141C;
           border: 1px solid #1E2230;
@@ -176,7 +176,7 @@ export default function TinderLegislativo() {
           margin: 0;
         }
 
-        /* BOTÃO TRADUTOR DE JURIDIQUÊS COM IA */
+        /* BOT�O TRADUTOR DE JURIDIQU�S COM IA */
         .btn-translate-ia {
           background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
           border: 1px solid rgba(14, 165, 233, 0.3);
@@ -220,7 +220,7 @@ export default function TinderLegislativo() {
           min-width: 140px;
         }
 
-        /* BOTÕES DE VOTO SWIPE */
+        /* BOT�ES DE VOTO SWIPE */
         .vote-actions-row {
           display: flex;
           gap: 1rem;
@@ -264,7 +264,7 @@ export default function TinderLegislativo() {
           color: #FFFFFF;
         }
 
-        /* RESULTADO / COMPARAÇÃO COM O DEPUTADO */
+        /* RESULTADO / COMPARA��O COM O DEPUTADO */
         .vote-result-box {
           background: #0C0E14;
           border: 1px solid #1E2230;
@@ -311,11 +311,11 @@ export default function TinderLegislativo() {
       <div className="tinder-header">
         <span className="tinder-badge">
           <Scale size={13} />
-          Você é o Deputado
+          Voc� � o Deputado
         </span>
-        <h2 className="tinder-title">Como Você Votaria Hoje?</h2>
+        <h2 className="tinder-title">Como Voc� Votaria Hoje?</h2>
         <p className="tinder-desc">
-          Vote nos projetos de lei em pauta e compare com a posição oficial do parlamentar.
+          Vote nos projetos de lei em pauta e compare com a posi��o oficial do parlamentar.
         </p>
       </div>
 
@@ -328,19 +328,19 @@ export default function TinderLegislativo() {
         <h3 className="bill-title">{currentBill.titulo}</h3>
         <p className="bill-summary">{currentBill.resumo}</p>
 
-        {/* TRADUTOR DE JURIDIQUÊS */}
+        {/* TRADUTOR DE JURIDIQU�S */}
         {!explanation ? (
           <button 
             className="btn-translate-ia"
             onClick={handleTranslateIA}
           >
             <Sparkles size={14} />
-            {translating ? 'Traduzindo texto jurídico...' : '✨ Explicar como isso afeta meu bolso'}
+            {translating ? 'Traduzindo texto jur�dico...' : '( Explicar como isso afeta meu bolso'}
           </button>
         ) : (
           <div className="ia-explanation-box">
             <div className="ia-topic">
-              <strong>Na prática:</strong>
+              <strong>Na pr�tica:</strong>
               <span>{explanation.pratica}</span>
             </div>
             <div className="ia-topic">
@@ -354,7 +354,7 @@ export default function TinderLegislativo() {
           </div>
         )}
 
-        {/* BOTÕES DE VOTO */}
+        {/* BOT�ES DE VOTO */}
         {!showResult ? (
           <div className="vote-actions-row">
             <button 
@@ -383,7 +383,7 @@ export default function TinderLegislativo() {
             </div>
 
             <div className="result-row">
-              <span>População da cidade:</span>
+              <span>Popula��o da cidade:</span>
               <strong style={{ color: '#38BDF8' }}>
                 {currentBill.popularAprovacao}% votaram A Favor
               </strong>
@@ -391,7 +391,7 @@ export default function TinderLegislativo() {
 
             <div className="deputado-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>Posição Oficial do Deputado:</span>
+                <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>Posi��o Oficial do Deputado:</span>
                 <strong style={{ color: currentBill.votoDeputado === 'A Favor' ? '#10B981' : '#EF4444', fontSize: '0.88rem' }}>
                   {currentBill.votoDeputado}
                 </strong>
@@ -402,7 +402,7 @@ export default function TinderLegislativo() {
             </div>
 
             <button className="btn-next-bill" onClick={handleNext}>
-              Próximo Projeto de Lei
+              Pr�ximo Projeto de Lei
               <ChevronRight size={16} />
             </button>
           </div>
