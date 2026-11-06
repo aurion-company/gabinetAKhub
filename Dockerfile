@@ -7,20 +7,18 @@ RUN apk add --no-cache libc6-compat git openssl
 WORKDIR /app
 
 # Invalida o cache para garantir que sempre baixe a última versão do master
-ARG CACHEBUST=20261106_v6
+ARG CACHEBUST=20261106_v8
 
 # Copia arquivos do contexto local se existirem
 COPY . .
 
-# Se package.json não existir no contexto de build do Coolify ou se precisarmos atualizar, clona diretamente do GitHub
-RUN if [ ! -f "package.json" ] || [ ! -d "components/portal" ]; then \
-      echo "==> Baixando a versão mais recente do GabinetAK HUB do GitHub..." && \
-      rm -rf /tmp/repo && \
-      git clone --depth 1 -b master https://github.com/aurion-company/gabinetAKhub.git /tmp/repo && \
-      cp -r /tmp/repo/. /app/ && \
-      rm -rf /tmp/repo && \
-      echo "==> Repositório atualizado com sucesso!"; \
-    fi
+# Garante que o repositório completo e atualizado do GitHub esteja presente no build
+RUN echo "==> Verificando e atualizando código fonte do GabinetAK HUB..." && \
+    rm -rf /tmp/repo && \
+    git clone --depth 1 -b master https://github.com/aurion-company/gabinetAKhub.git /tmp/repo && \
+    cp -rf /tmp/repo/. /app/ && \
+    rm -rf /tmp/repo && \
+    echo "==> Repositório sincronizado com sucesso!"
 
 ENV NEXT_TELEMETRY_DISABLED=1
 

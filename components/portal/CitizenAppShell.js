@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Plus, 
   Map, 
@@ -24,7 +24,9 @@ import {
   BarChart3,
   Flame,
   Moon,
-  MessageCircle
+  MessageCircle,
+  User,
+  Clock
 } from 'lucide-react';
 import PortalHome from './PortalHome';
 import PortalRadar from './PortalRadar';
@@ -43,6 +45,7 @@ export default function CitizenAppShell() {
   const [currentTab, setCurrentTab] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState('Todas as Cidades');
+  const [chatHistory, setChatHistory] = useState([]);
   
   // Modais e Drawers
   const [isNewDemandOpen, setIsNewDemandOpen] = useState(false);
@@ -51,9 +54,33 @@ export default function CitizenAppShell() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [initialAIQuery, setInitialAIQuery] = useState('');
 
-  // Itens exatamente no estilo visual encorpado e marcante do HubPolítico (Print de referência)
+  const [citizenUser, setCitizenUser] = useState(null);
+
+  // Carrega usuário cidadão cadastrado e histórico de conversas (Print 2)
+  useEffect(() => {
+    try {
+      const storedCitizen = localStorage.getItem('gabinetak_citizen_user');
+      if (storedCitizen) {
+        setCitizenUser(JSON.parse(storedCitizen));
+      }
+      const saved = localStorage.getItem('gabinetak_user_conversations');
+      if (saved) {
+        setChatHistory(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.warn('Erro ao carregar histórico local:', e);
+    }
+  }, [isAIDrawerOpen]);
+
+  const handleCitizenLogout = () => {
+    try {
+      localStorage.removeItem('gabinetak_citizen_user');
+      setCitizenUser(null);
+    } catch (e) {}
+  };
+
+  // Itens em UMA LINHA SÓ (Print 1) com tipografia bold e labels limpos
   const menuItems = [
-    { id: 'home', label: 'Nova conversa', icon: Plus, isAction: true },
     { id: 'radar', label: 'Mapa de votos & demandas', icon: Map },
     { id: 'relatorio', label: 'Apuração & Diário', icon: BarChart3 },
     { id: 'inteligencia', label: 'Inteligência do Mandato', icon: Sparkles },
@@ -68,6 +95,16 @@ export default function CitizenAppShell() {
   const handleOpenAIWithPrompt = (prompt) => {
     setInitialAIQuery(prompt);
     setIsAIDrawerOpen(true);
+    
+    // Salva no histórico se for pergunta real
+    if (prompt && prompt !== 'Nova conversa') {
+      try {
+        const item = { id: Date.now(), title: prompt.slice(0, 42), time: 'Hoje' };
+        const updated = [item, ...chatHistory.filter(c => c.title !== item.title)].slice(0, 10);
+        setChatHistory(updated);
+        localStorage.setItem('gabinetak_user_conversations', JSON.stringify(updated));
+      } catch (e) {}
+    }
   };
 
   return (
@@ -95,10 +132,10 @@ export default function CitizenAppShell() {
           box-sizing: border-box;
         }
 
-        /* SIDEBAR BRANCA LIMPA FIXA (ESTILO EXATO DO PRINT HUBPOLÍTICO) */
+        /* SIDEBAR BRANCA LIMPA FIXA (260px PARA FONTE EM UMA LINHA SÓ) */
         .citizen-sidebar {
-          width: 240px;
-          min-width: 240px;
+          width: 260px;
+          min-width: 260px;
           background: #FFFFFF;
           border-right: 1px solid #E5E7EB;
           display: flex;
@@ -123,7 +160,7 @@ export default function CitizenAppShell() {
         }
 
         .sidebar-brand {
-          padding: 1.35rem 1.25rem 1.1rem 1.25rem;
+          padding: 1.25rem 1.25rem 1rem 1.25rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -186,7 +223,6 @@ export default function CitizenAppShell() {
           line-height: 1;
         }
 
-        /* ITENS DO MENU COM TIPOGRAFIA MAIS BOLD (PRINT HUBPOLÍTICO) */
         .sidebar-nav {
           flex: 1;
           overflow-y: auto;
@@ -196,53 +232,205 @@ export default function CitizenAppShell() {
           gap: 0.25rem;
         }
 
+        /* BOTÃO NOVA CONVERSA NO TOPO */
+        .btn-new-conversation {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          padding: 0.65rem 0.85rem;
+          border-radius: 8px;
+          background: #EEF2FF;
+          color: #0038FF;
+          font-size: 0.9rem;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          margin-bottom: 0.75rem;
+          transition: background 0.15s;
+          white-space: nowrap;
+        }
+
+        .btn-new-conversation:hover {
+          background: #E0E7FF;
+        }
+
+        /* CARD DE HISTÓRICO DE CONVERSAS (PRINT 2) */
+        .chat-history-card {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 12px;
+          padding: 0.75rem 0.85rem;
+          margin-bottom: 0.85rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .chat-pill-header {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          background: #EEF2FF;
+          color: #0038FF;
+          padding: 0.35rem 0.75rem;
+          border-radius: 8px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          width: fit-content;
+        }
+
+        .chat-history-section-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.2rem 0.1rem;
+        }
+
+        .chat-history-title {
+          font-size: 0.86rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+        }
+
+        .link-history-more {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #64748B;
+          text-decoration: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.2rem;
+        }
+
+        .link-history-more:hover {
+          color: #0038FF;
+        }
+
+        .history-empty-text {
+          font-size: 0.82rem;
+          color: #64748B;
+          text-align: center;
+          padding: 1.25rem 0.5rem;
+          margin: 0;
+          font-weight: 500;
+        }
+
+        .history-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+          max-height: 140px;
+          overflow-y: auto;
+        }
+
+        .history-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.45rem 0.5rem;
+          border-radius: 6px;
+          background: transparent;
+          border: none;
+          color: #334155;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          text-align: left;
+          width: 100%;
+          transition: background 0.15s;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .history-item:hover {
+          background: #F8FAFC;
+          color: #0038FF;
+        }
+
+        .history-footer-link {
+          border-top: 1px solid #F1F5F9;
+          padding-top: 0.5rem;
+          text-align: center;
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: #64748B;
+          cursor: pointer;
+          transition: color 0.15s;
+        }
+
+        .history-footer-link:hover {
+          color: #0F172A;
+        }
+
+        /* ITENS DA BARRA LATERAL EM UMA LINHA SÓ (PRINT 1) */
         .sidebar-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0.65rem 0.85rem;
+          padding: 0.52rem 0.72rem;
           border-radius: 8px;
           color: #0F172A;
-          font-size: 0.9rem;
-          font-weight: 600;
+          font-size: 0.84rem;
+          font-weight: 700;
           background: transparent;
           border: none;
           cursor: pointer;
           transition: all 0.15s ease;
           text-align: left;
           width: 100%;
-          letter-spacing: -0.01em;
+          letter-spacing: -0.015em;
+          white-space: nowrap;
+          box-sizing: border-box;
         }
 
         .sidebar-item:hover {
           background: #F1F5F9;
           color: #000000;
-          font-weight: 700;
+          font-weight: 800;
         }
 
         .sidebar-item.active {
           background: #EEF2FF;
           color: #0038FF;
-          font-weight: 700;
+          font-weight: 800;
         }
 
         .sidebar-item-content {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.65rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .sidebar-item-content span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 0.84rem;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          color: #0F172A;
         }
 
         .item-shortcut {
-          font-size: 0.7rem;
+          font-size: 0.68rem;
           font-weight: 600;
           color: #64748B;
           background: #F1F5F9;
-          padding: 0.15rem 0.4rem;
+          padding: 0.15rem 0.35rem;
           border-radius: 4px;
           border: 1px solid #E2E8F0;
+          flex-shrink: 0;
         }
 
-        /* RODAPÉ DA SIDEBAR MAIS BOLD (PRINT HUBPOLÍTICO) */
+        /* RODAPÉ DA SIDEBAR */
         .sidebar-footer {
           padding: 1.1rem;
           border-top: 1px solid #E5E7EB;
@@ -265,6 +453,7 @@ export default function CitizenAppShell() {
           letter-spacing: -0.01em;
           transition: background 0.2s;
           box-shadow: 0 2px 8px rgba(0, 56, 255, 0.2);
+          white-space: nowrap;
         }
 
         .btn-sidebar-primary:hover {
@@ -283,6 +472,7 @@ export default function CitizenAppShell() {
           text-align: center;
           letter-spacing: -0.01em;
           transition: all 0.2s;
+          white-space: nowrap;
         }
 
         .btn-sidebar-secondary:hover {
@@ -313,11 +503,11 @@ export default function CitizenAppShell() {
           color: #000000;
         }
 
-        /* ÁREA PRINCIPAL LIMPA BRANCA (100% LARGURA) */
+        /* ÁREA PRINCIPAL LIMPA BRANCA (CANVAS 100% LARGURA) */
         .citizen-main {
           flex: 1;
-          width: calc(100vw - 240px);
-          margin-left: 240px;
+          width: calc(100vw - 260px);
+          margin-left: 260px;
           display: flex;
           flex-direction: column;
           min-height: 100vh;
@@ -407,6 +597,9 @@ export default function CitizenAppShell() {
           letter-spacing: -0.01em;
           transition: background 0.2s;
           box-shadow: 0 2px 10px rgba(0, 56, 255, 0.25);
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
         }
 
         .btn-top-primary:hover {
@@ -436,7 +629,7 @@ export default function CitizenAppShell() {
         .btn-floating-feedback {
           position: fixed;
           bottom: 20px;
-          left: 260px;
+          left: 280px;
           background: #FFFFFF;
           border: 1.5px solid #E2E8F0;
           color: #1E293B;
@@ -487,7 +680,7 @@ export default function CitizenAppShell() {
         onClick={() => setSidebarOpen(false)}
       />
 
-      {/* SIDEBAR FIXA LIMPA (PRINT HUBPOLÍTICO) */}
+      {/* SIDEBAR FIXA LIMPA (260px - EM UMA LINHA SÓ) */}
       <aside className={`citizen-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <a href="/" className="brand-logo-wrap">
@@ -508,6 +701,64 @@ export default function CitizenAppShell() {
         </div>
 
         <nav className="sidebar-nav">
+          {/* BOTÃO NOVA CONVERSA */}
+          <button 
+            className="btn-new-conversation"
+            onClick={() => {
+              setCurrentTab('home');
+              handleOpenAIWithPrompt('');
+              setSidebarOpen(false);
+            }}
+          >
+            <Plus size={18} strokeWidth={2.5} />
+            <span>Nova conversa</span>
+          </button>
+
+          {/* PAINEL DE HISTÓRICO DE CONVERSAS (PRINT 2 - EXCLUSIVO PARA USUÁRIOS CADASTRADOS) */}
+          {citizenUser && (
+            <div className="chat-history-card">
+              <div className="chat-pill-header">
+                <MessageCircle size={15} />
+                <span>Chat</span>
+              </div>
+
+              <div className="chat-history-section-header">
+                <span className="chat-history-title">Conversas</span>
+                <span 
+                  className="link-history-more"
+                  onClick={() => handleOpenAIWithPrompt('Histórico completo de consultas')}
+                >
+                  Ver mais &gt;
+                </span>
+              </div>
+
+              {chatHistory.length === 0 ? (
+                <p className="history-empty-text">Nenhuma conversa ainda</p>
+              ) : (
+                <div className="history-list">
+                  {chatHistory.map((chat) => (
+                    <button 
+                      key={chat.id} 
+                      className="history-item"
+                      onClick={() => handleOpenAIWithPrompt(chat.title)}
+                    >
+                      <MessageSquare size={13} color="#0038FF" />
+                      <span>{chat.title}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div 
+                className="history-footer-link"
+                onClick={() => handleOpenAIWithPrompt('Ver todas as conversas anteriores')}
+              >
+                Ver todas as conversas
+              </div>
+            </div>
+          )}
+
+          {/* ITENS DO MENU EM UMA LINHA SÓ (PRINT 1) */}
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -526,7 +777,7 @@ export default function CitizenAppShell() {
               >
                 <div className="sidebar-item-content">
                   <Icon 
-                    size={18} 
+                    size={17} 
                     strokeWidth={isActive ? 2.5 : 2.2} 
                     color={isActive ? '#0038FF' : '#1E293B'} 
                   />
@@ -555,10 +806,22 @@ export default function CitizenAppShell() {
             Consultar Protocolo
           </button>
 
+          {/* RODAPÉ DO PRINT 1: Entrar à esquerda, Alternar tema à direita */}
           <div className="sidebar-footer-links">
-            <a href="/acessar" className="link-entrar">
-              Entrar
-            </a>
+            {citizenUser ? (
+              <button 
+                onClick={handleCitizenLogout}
+                className="link-entrar"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                title="Sair da conta"
+              >
+                Sair ({citizenUser.name.split(' ')[0]})
+              </button>
+            ) : (
+              <a href="/acessar" className="link-entrar">
+                Entrar
+              </a>
+            )}
             <button 
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}
               title="Alternar Tema"
@@ -588,14 +851,22 @@ export default function CitizenAppShell() {
               className="btn-top-outline"
               onClick={() => setCurrentTab('eixos')}
             >
-              Conheça o Mandato
+              Conheça o GabinetAK
             </button>
-            <button 
-              className="btn-top-primary"
-              onClick={() => setIsNewDemandOpen(true)}
-            >
-              Enviar Demanda
-            </button>
+            {citizenUser ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', background: '#F1F5F9', padding: '0.5rem 1rem', borderRadius: '9999px', border: '1px solid #E2E8F0' }}>
+                  Olá, {citizenUser.name.split(' ')[0]}
+                </span>
+              </div>
+            ) : (
+              <a 
+                href="/cadastro" 
+                className="btn-top-primary"
+              >
+                Criar conta
+              </a>
+            )}
           </div>
         </header>
 

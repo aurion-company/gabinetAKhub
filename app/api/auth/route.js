@@ -80,6 +80,20 @@ export async function POST(request) {
       };
     }
 
+    const DEFAULT_PASSWORDS = [
+      'Gabinete@2026',
+      'gabinete@2026',
+      'Gabinete2026',
+      'gabinete2026',
+      'ak@2026',
+      'mudar123',
+      'Mudar@123',
+      'admin123',
+      '123456',
+      'GabineteAK@2026'
+    ];
+    const isDefaultPassword = DEFAULT_PASSWORDS.includes(password);
+
     // Gerar JWT de Sessão
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role, cabinetId: user.cabinetId },
@@ -89,6 +103,7 @@ export async function POST(request) {
 
     const response = NextResponse.json({
       success: true,
+      mustChangePassword: isDefaultPassword,
       user: {
         id: user.id,
         name: user.name,

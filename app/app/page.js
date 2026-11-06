@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
@@ -884,6 +884,9 @@ export default function DashboardPage() {
                   </div>
 
                   <div style={{ paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <a href="/" style={{ textAlign: 'left', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38bdf8', padding: '0.5rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
+                      <Home size={16} /> Ver Portal do Cidadão (Site)
+                    </a>
                     <button style={{ textAlign: 'left', background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '0.5rem', cursor: 'pointer', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => { setActivePage('meu_perfil'); setIsUserMenuOpen(false); }}>
                       <User size={16} /> Meu Perfil
                     </button>
