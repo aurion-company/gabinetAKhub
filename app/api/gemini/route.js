@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
+import { searchTavily } from '@/lib/ai-services';
 
 const GEMINI_MODELS = [
   'gemini-3.5-flash',
@@ -10,7 +11,7 @@ const GEMINI_MODELS = [
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { prompt, task, isPublic = true } = body;
+    const { prompt, task, isPublic = true, withWebSearch = false } = body;
 
     // Se a chamada não for pública, valida sessão de usuário administrativo
     if (!isPublic) {
@@ -26,6 +27,25 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Chave Gemini AI não configurada no ambiente (GEMINI_API_KEY)' }, { status: 500 });
     }
 
+    // Busca web em tempo real via Tavily AI para enriquecer perguntas sobre fatos recentes, notícias ou eleições
+    let webContext = '';
+    const shouldSearchWeb = withWebSearch || 
+      /notícia|eleição|eleiç|turno|presidente|governador|votação|voto|obra|últim/i.test(prompt);
+
+    if (shouldSearchWeb && process.env.TAVILY_API_KEY) {
+      try {
+        const searchResults = await searchTavily(prompt, 3);
+        if (searchResults && searchResults.results?.length > 0) {
+          const snippets = searchResults.results
+            .map((r, i) => `[Fonte ${i + 1}: ${r.title}] ${r.content}`)
+            .join('\n\n');
+          webContext = `\n\n--- DADOS DA PESQUISA WEB EM TEMPO REAL (TAVILY AI) ---\n${snippets}\n------------------------------------------------------\nUse os dados acima para complementar sua resposta com fatos reais e recentes.`;
+        }
+      } catch (e) {
+        console.warn('Busca web Tavily silenciosamente ignorada:', e.message);
+      }
+    }
+
     const systemPrompt = `Você é o Assistente Oficial de Inteligência Parlamentar e Políticas Públicas do GabinetAK HUB.
 Sua missão é atender cidadãos e a equipe do mandato com transparência, precisão, postura ética, técnica e apartidária.
 Contexto: Mandato parlamentar com foco em Cidades (Ceilândia, Taguatinga, Samambaia, Plano Piloto, Guará e todo o DF), Saúde, Infraestrutura, Educação e Transparência de Recursos Públicos.
@@ -33,7 +53,7 @@ Diretrizes:
 - Responda em tom profissional, acolhedor, transparente e direto.
 - Se for dúvida sobre emendas, obras ou fiscalização, explique as etapas do mandato (ofício, destinação de emenda, acompanhamento e entrega).
 - Mantenha respostas concisas, bem formatadas (tópicos quando útil) e sem rodeios.
-- Tarefa específica: ${task || 'Consulta e Análise Cidadã'}.`;
+- Tarefa específica: ${task || 'Consulta e Análise Cidadã'}.${webContext}`;
 
     const fullPrompt = `${systemPrompt}\n\nPergunta/Solicitação: ${prompt}`;
 
