@@ -13,9 +13,9 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:g1nUITUd8Hx8amEQ2nE4SArh2rmgKbmgXJ7ADabhRsj8tGIXqRqBG7G1nPMLYCuU@oz8gjcyuqbpqekr8cwvqol1r:5432/postgres}
       - JWT_SECRET=${JWT_SECRET:-gabinetak_hub_jwt_secret_2026_hetzner}
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6JSps4GCUiCSZ8CHgkDSlt57QY-i3mMEvi8sExq9y8a5Q}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
