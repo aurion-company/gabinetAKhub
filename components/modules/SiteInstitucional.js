@@ -75,7 +75,7 @@ export default function SiteInstitucional({ onLogin }) {
       }
 
       if (onLogin) onLogin();
-      else router.push('/app');
+      else router.push('/painel');
 
     } catch (err) {
       setError(err.message || 'Erro ao conectar com o servidor.');
@@ -124,7 +124,7 @@ export default function SiteInstitucional({ onLogin }) {
       setTimeout(() => {
         setShowChangePasswordModal(false);
         if (onLogin) onLogin();
-        else router.push('/app');
+        else router.push('/painel');
       }, 1200);
 
     } catch (err) {

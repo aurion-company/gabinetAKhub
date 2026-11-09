@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, Plus, ChevronDown, Download, Upload, Trash2, Link as LinkIcon, QrCode, Phone, UserCheck, Merge, AlertTriangle, FileText, Settings, Smartphone } from 'lucide-react';
 
 export default function GestaoCadastros() {

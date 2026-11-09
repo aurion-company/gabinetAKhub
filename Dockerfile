@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat git openssl
 WORKDIR /app
 
 # Invalida o cache para garantir que sempre baixe a última versão do master
-ARG CACHEBUST=20261106_v8
+ARG CACHEBUST=20261109_v1
 
 # Copia arquivos do contexto local se existirem
 COPY . .
