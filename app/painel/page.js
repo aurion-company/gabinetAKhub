@@ -42,14 +42,43 @@ const CampanhasSMS = dynamic(() => import('../../components/modules/CampanhasSMS
 const AutomacaoN8N = dynamic(() => import('../../components/modules/AutomacaoN8N'), { ssr: false });
 
 import { 
-  Menu, ChevronLeft, ChevronRight, Home, Users, ClipboardList, Kanban, Inbox, CalendarDays, CheckSquare, FileText,
+  Menu, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Home, Users, ClipboardList, Kanban, Inbox, CalendarDays, CheckSquare, FileText,
   MessageCircle, Target, Mail, Megaphone, FileSignature, Map, MapPin, Sparkles, Bell,
   Network, LineChart, Zap, HandCoins, Scale, Landmark, ShieldCheck, Wrench, Key, Settings, Crown, Search,
   LayoutDashboard, Coins, PenTool, LayoutTemplate, BoxSelect, UsersRound, Fingerprint, PieChart, Focus, Briefcase, FileSearch, HelpCircle, FileClock, Info, LayoutList, CheckCircle2, TrendingUp, UserCheck, Share2, Smartphone, Rss, BookOpen, ScrollText, Banknote, Vote, Goal, Tags, Contact, FileBox, Mails, FileBadge2, Cpu, Activity, BarChart3, Medal, QrCode, PenLine, Link, UserCog, LogOut, User, Camera, X, Pin, Calendar, Phone, Cake, Lock
 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const [activePage, setActivePage] = useState('home');
+  const [activePage, setActivePage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pageParam = urlParams.get('page');
+      if (pageParam && pageParam !== 'logout') return pageParam;
+      const saved = localStorage.getItem('GabinetAK_active_page');
+      if (saved && saved !== 'logout') return saved;
+    }
+    return 'home';
+  });
+
+  const [collapsedCategories, setCollapsedCategories] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('GabinetAK_collapsed_cats');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {};
+  });
+
+  const toggleCategory = (catName) => {
+    setCollapsedCategories(prev => {
+      const next = { ...prev, [catName]: !prev[catName] };
+      try {
+        localStorage.setItem('GabinetAK_collapsed_cats', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
   const [mounted, setMounted] = useState(false);
   const [isAuthVerified, setIsAuthVerified] = useState(false);
 
@@ -98,11 +127,15 @@ export default function DashboardPage() {
         handleLogout();
         return;
       }
-      if (pageParam) {
-        setActivePage(pageParam);
-      } else if (saved && saved !== 'logout') {
-        setActivePage(saved);
-      }
+      const targetPage = (pageParam && pageParam !== 'logout') ? pageParam : (saved && saved !== 'logout' ? saved : 'home');
+      setActivePage(targetPage);
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('page') !== targetPage) {
+          url.searchParams.set('page', targetPage);
+          window.history.replaceState(null, '', url.pathname + url.search);
+        }
+      } catch (e) {}
     }
   }, []);
 
@@ -121,6 +154,21 @@ export default function DashboardPage() {
           window.history.replaceState(null, '', url.pathname + url.search);
         }
       } catch (e) {}
+
+      // Sempre garantir que a categoria da página ativa esteja aberta
+      const parentCat = menuCategories.find(c => c.items.some(i => i.id === activePage));
+      if (parentCat) {
+        setCollapsedCategories(prev => {
+          if (prev[parentCat.category]) {
+            const next = { ...prev, [parentCat.category]: false };
+            try {
+              localStorage.setItem('GabinetAK_collapsed_cats', JSON.stringify(next));
+            } catch (e) {}
+            return next;
+          }
+          return prev;
+        });
+      }
     }
   }, [activePage, mounted]);
 
@@ -272,51 +320,47 @@ export default function DashboardPage() {
   }, [activePage]);
 
   // ESTRUTURA DOS 25+ MDULOS ORGANIZADOS POR CATEGORIAS (ALINHADO COM MD + EXTRAS)
+  // ESTRUTURA ORGANIZADA POR TEMAS COM CATEGORIAS RETRÁTEIS E VISÃO EM ÁRVORE
   const menuCategories = [
     {
-      category: 'Atalhos Principais',
-      items: [
-        { id: 'home', label: 'Home', minPlan: 'basic', icon: <Home size={18} /> },
-        { id: 'agenda_wa', label: 'Agenda', minPlan: 'basic', icon: <CalendarDays size={18} />, badge: '3' },
-        { id: 'demandas', label: 'Demandas', minPlan: 'basic', icon: <ClipboardList size={18} /> },
-        { id: 'rel_ranking', label: 'Rede de Indicações', minPlan: 'political', icon: <Network size={18} /> },
-        { id: 'cadastros', label: 'Cadastros', minPlan: 'basic', icon: <Users size={18} /> },
-      ]
-    },
-    {
-      category: 'Painel',
+      category: 'Gestão & Tarefas',
       items: [
         { id: 'dashboard', label: 'Dashboard', minPlan: 'basic', icon: <LayoutDashboard size={18} /> },
+        { id: 'demandas', label: 'Demandas', minPlan: 'basic', icon: <ClipboardList size={18} />, badge: '1' },
+        { id: 'kanban', label: 'Kanban', minPlan: 'basic', icon: <Kanban size={18} /> },
+        { id: 'prod_tarefas', label: 'Tarefas', minPlan: 'basic', icon: <CheckSquare size={18} /> },
+        { id: 'agenda_wa', label: 'Agenda', minPlan: 'basic', icon: <CalendarDays size={18} />, badge: '3' },
       ]
     },
     {
-      category: 'Cadastro',
+      category: 'Visão Geral & Cadastros',
       items: [
+        { id: 'home', label: 'Home', minPlan: 'basic', icon: <Home size={18} /> },
+        { id: 'cadastros', label: 'Cadastros', minPlan: 'basic', icon: <Users size={18} /> },
         { id: 'grupos_tags', label: 'Grupos (tags)', minPlan: 'basic', icon: <Tags size={18} /> },
+        { id: 'rel_ranking', label: 'Rede de Indicações', minPlan: 'political', icon: <Network size={18} /> },
       ]
     },
     {
-      category: 'Geomapeamento & Atendimento',
-      items: [
-        { id: 'map_eleitor', label: 'Mapeamento de Eleitor', minPlan: 'political', icon: <MapPin size={18} /> },
-        { id: 'geomapeamento', label: 'Geomapeamento', minPlan: 'pro', icon: <Map size={18} /> },
-        { id: 'forms', label: 'Formulários', minPlan: 'basic', icon: <FileSignature size={18} /> },
-        { id: 'leads', label: 'Leads', minPlan: 'basic', icon: <Target size={18} /> },
-        { id: 'kanban', label: 'Kanban Dinâmico', minPlan: 'basic', icon: <Kanban size={18} /> },
-      ]
-    },
-    {
-      category: 'Demandas',
+      category: 'Atendimento & CRM',
       items: [
         { id: 'crm_atendimento', label: 'Central Atendimento', minPlan: 'political', icon: <Contact size={18} /> },
         { id: 'crm_suporte', label: 'Suporte 18h', minPlan: 'political', icon: <HelpCircle size={18} /> },
         { id: 'crm_assuntos', label: 'Assuntos', minPlan: 'political', icon: <Info size={18} /> },
+        { id: 'leads', label: 'Leads', minPlan: 'basic', icon: <Target size={18} /> },
       ]
     },
     {
-      category: 'Produtividade & Legislativo',
+      category: 'Geomapeamento & Território',
       items: [
-        { id: 'prod_tarefas', label: 'Tarefas', minPlan: 'basic', icon: <CheckSquare size={18} /> },
+        { id: 'map_eleitor', label: 'Mapeamento de Eleitor', minPlan: 'political', icon: <MapPin size={18} /> },
+        { id: 'geomapeamento', label: 'Geomapeamento', minPlan: 'pro', icon: <Map size={18} /> },
+        { id: 'forms', label: 'Formulários', minPlan: 'basic', icon: <FileSignature size={18} /> },
+      ]
+    },
+    {
+      category: 'Legislativo & Mandato',
+      items: [
         { id: 'leg_pl', label: 'Projetos de Lei', minPlan: 'political', icon: <BookOpen size={18} /> },
         { id: 'leg_emendas', label: 'Emendas', minPlan: 'political', icon: <ScrollText size={18} /> },
         { id: 'leg_verbas', label: 'Verbas Indenizatórias', minPlan: 'political', icon: <Banknote size={18} /> },
@@ -324,9 +368,10 @@ export default function DashboardPage() {
       ]
     },
     {
-      category: 'Whatsapp',
+      category: 'WhatsApp & Comunicação',
       items: [
-        { id: 'whatsapp', label: 'Whatsapp', minPlan: 'political', icon: <Smartphone size={18} /> },
+        { id: 'whatsapp', label: 'WhatsApp', minPlan: 'political', icon: <Smartphone size={18} /> },
+        { id: 'wa_oficial', label: 'WhatsApp Oficial', minPlan: 'political', icon: <MessageCircle size={18} /> },
         { id: 'wa_eleitoral', label: 'Disparo WhatsApp Eleitoral', minPlan: 'political', icon: <Smartphone size={18} /> },
         { id: 'wa_campanha', label: 'WhatsApp para Campanha', minPlan: 'political', icon: <Megaphone size={18} /> },
         { id: 'wa_massa', label: 'WhatsApp Envios (Massa)', minPlan: 'political', icon: <Rss size={18} /> },
@@ -335,38 +380,27 @@ export default function DashboardPage() {
       ]
     },
     {
-      category: 'Whatsapp Oficial',
-      items: [
-        { id: 'wa_oficial', label: 'Whatsapp Oficial', minPlan: 'political', icon: <MessageCircle size={18} /> },
-      ]
-    },
-    {
-      category: 'SMS',
-      items: [
-        { id: 'sms_envio', label: 'Campanhas SMS', minPlan: 'pro', icon: <Mail size={18} /> },
-        { id: 'sms_mensagens', label: 'Mensagens SMS', minPlan: 'pro', icon: <MessageCircle size={18} /> },
-      ]
-    },
-    {
-      category: 'Documentos',
-      items: [
-        { id: 'doc_tipos', label: 'Tipos de Documentos', minPlan: 'basic', icon: <FileBox size={18} /> },
-        { id: 'doc_templates', label: 'Templates de Documentos', minPlan: 'basic', icon: <LayoutTemplate size={18} /> },
-        { id: 'doc_lista', label: 'Documentos', minPlan: 'basic', icon: <FileText size={18} /> },
-        { id: 'doc_oficios', label: 'Ofícios', minPlan: 'basic', icon: <FileSignature size={18} /> },
-        { id: 'doc_memorandos', label: 'Memorandos', minPlan: 'basic', icon: <FileText size={18} /> },
-        { id: 'doc_recebidos', label: 'Documentos recebidos', minPlan: 'basic', icon: <Inbox size={18} /> },
-        { id: 'doc_etiquetas', label: 'Etiquetas', minPlan: 'basic', icon: <Mails size={18} /> },
-      ]
-    },
-    {
-      category: 'E-mail',
+      category: 'E-mail & SMS',
       items: [
         { id: 'email_envio', label: 'Campanhas de E-mail', minPlan: 'basic', icon: <Mail size={18} /> },
         { id: 'email_mensagens', label: 'Mensagens de E-mails', minPlan: 'basic', icon: <MessageCircle size={18} /> },
         { id: 'email_templates', label: 'Templates de E-mail', minPlan: 'basic', icon: <LayoutTemplate size={18} /> },
         { id: 'ia_mkt', label: 'Studio E-mail com IA', minPlan: 'pro', icon: <Sparkles size={18} /> },
         { id: 'email_provedores', label: 'Provedores de E-mail', minPlan: 'basic', icon: <Settings size={18} /> },
+        { id: 'sms_envio', label: 'Campanhas SMS', minPlan: 'pro', icon: <Mail size={18} /> },
+        { id: 'sms_mensagens', label: 'Mensagens SMS', minPlan: 'pro', icon: <MessageCircle size={18} /> },
+      ]
+    },
+    {
+      category: 'Documentos & Ofícios',
+      items: [
+        { id: 'doc_lista', label: 'Documentos', minPlan: 'basic', icon: <FileText size={18} /> },
+        { id: 'doc_oficios', label: 'Ofícios', minPlan: 'basic', icon: <FileSignature size={18} /> },
+        { id: 'doc_memorandos', label: 'Memorandos', minPlan: 'basic', icon: <FileText size={18} /> },
+        { id: 'doc_recebidos', label: 'Documentos recebidos', minPlan: 'basic', icon: <Inbox size={18} /> },
+        { id: 'doc_templates', label: 'Templates de Documentos', minPlan: 'basic', icon: <LayoutTemplate size={18} /> },
+        { id: 'doc_tipos', label: 'Tipos de Documentos', minPlan: 'basic', icon: <FileBox size={18} /> },
+        { id: 'doc_etiquetas', label: 'Etiquetas', minPlan: 'basic', icon: <Mails size={18} /> },
       ]
     },
     {
@@ -395,7 +429,7 @@ export default function DashboardPage() {
       ]
     },
     {
-      category: 'Relatórios',
+      category: 'Relatórios & BI',
       items: [
         { id: 'rel_demandas', label: 'Gráficos Demandas', minPlan: 'pro', icon: <BarChart3 size={18} /> },
         { id: 'rel_relatorio_demandas', label: 'Relatório de Demandas', minPlan: 'pro', icon: <FileText size={18} /> },
@@ -420,10 +454,11 @@ export default function DashboardPage() {
         { id: 'ferr_pdflab', label: 'PDF Lab', minPlan: 'basic', icon: <FileText size={18} /> },
         { id: 'ferr_assinador', label: 'Assinador Digital', minPlan: 'pro', icon: <PenLine size={18} /> },
         { id: 'ferr_links', label: 'Link Curto', minPlan: 'basic', icon: <Link size={18} /> },
+        { id: 'ferr_qr', label: 'Gerador QR Code', minPlan: 'basic', icon: <QrCode size={18} /> },
       ]
     },
     {
-      category: 'Ajustes',
+      category: 'Ajustes & Sistema',
       items: [
         { id: 'ajustes_config', label: 'Configurações', minPlan: 'basic', icon: <Settings size={18} /> },
         { id: 'preferencias', label: 'Módulos & Preferências', minPlan: 'basic', icon: <Settings size={18} /> },
@@ -725,6 +760,96 @@ export default function DashboardPage() {
         {/* LISTA DE CATEGORIAS E MÓDULOS */}
         <nav className="sidebar-nav">
           <style dangerouslySetInnerHTML={{__html: `
+            .sidebar-category-header {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: rgba(255, 255, 255, 0.03);
+              border: 1px solid rgba(255, 255, 255, 0.07);
+              border-radius: 8px;
+              padding: 0.5rem 0.75rem;
+              margin: 0.35rem 0.65rem 0.25rem 0.65rem;
+              cursor: pointer;
+              user-select: none;
+              transition: all 0.2s ease;
+            }
+            .sidebar-category-header:hover {
+              background: rgba(255, 255, 255, 0.06);
+              border-color: rgba(255, 255, 255, 0.12);
+            }
+            .sidebar-category-title {
+              font-size: 0.72rem;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.06em;
+              color: #cbd5e1;
+              display: flex;
+              align-items: center;
+              gap: 0.4rem;
+            }
+            .sidebar-category-chevron {
+              color: #64748b;
+              display: flex;
+              align-items: center;
+              transition: transform 0.2s ease;
+            }
+            .sidebar-tree-container {
+              margin-left: 1.25rem;
+              margin-right: 0.65rem;
+              padding-left: 0.65rem;
+              padding-top: 0.25rem;
+              padding-bottom: 0.25rem;
+              border-left: 1px solid rgba(255, 255, 255, 0.12);
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+            }
+            .sidebar-tree-item {
+              display: flex;
+              align-items: center;
+              gap: 0.65rem;
+              padding: 0.52rem 0.75rem;
+              border-radius: 8px;
+              text-decoration: none;
+              cursor: pointer;
+              transition: all 0.15s ease;
+              font-size: 0.85rem;
+              font-weight: 500;
+              color: #94a3b8;
+              background: transparent;
+              border: 1px solid transparent;
+              position: relative;
+            }
+            .sidebar-tree-item:hover {
+              background: rgba(255, 255, 255, 0.04);
+              color: #f1f5f9;
+              border-color: rgba(255, 255, 255, 0.06);
+            }
+            .sidebar-tree-item.active {
+              background: rgba(217, 119, 6, 0.13) !important;
+              border: 1px solid rgba(245, 158, 11, 0.35) !important;
+              color: #fbbf24 !important;
+              font-weight: 600 !important;
+              box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
+            }
+            .sidebar-tree-item.active svg {
+              color: #fbbf24 !important;
+            }
+            .sidebar-badge {
+              background: #1e2433;
+              border: 1px solid rgba(255, 255, 255, 0.12);
+              color: #f8fafc;
+              font-size: 0.7rem;
+              font-weight: 700;
+              padding: 0.1rem 0.5rem;
+              border-radius: 99px;
+              margin-left: auto;
+            }
+            .sidebar-tree-item.active .sidebar-badge {
+              background: rgba(245, 158, 11, 0.2);
+              border-color: rgba(245, 158, 11, 0.4);
+              color: #fbbf24;
+            }
             .nav-item-container:hover .pin-btn { opacity: 1 !important; }
             .nav-item-container .pin-btn.is-pinned { opacity: 1 !important; }
           `}} />
@@ -743,65 +868,90 @@ export default function DashboardPage() {
               );
               if (filteredItems.length === 0) return null;
 
+              const isSearching = searchTerm.trim().length > 0;
+              const isCollapsed = !isSearching && Boolean(collapsedCategories[cat.category]);
+
               return (
-                <div key={idx + (cat.isPinnedGroup ? '-pin' : '')} className="nav-group">
+                <div key={idx + (cat.isPinnedGroup ? '-pin' : '')} className="nav-group" style={{ padding: '0.15rem 0' }}>
                   {!sidebarCollapsed && (
-                    <div className="nav-group-title" style={cat.isPinnedGroup ? { color: 'var(--accent)' } : {}}>
-                      {cat.isPinnedGroup && <Pin size={12} style={{ display: 'inline', marginRight: '5px' }} />}
-                      {cat.category}
+                    <div 
+                      className="sidebar-category-header"
+                      onClick={() => toggleCategory(cat.category)}
+                      style={cat.isPinnedGroup ? { borderColor: 'rgba(245, 158, 11, 0.35)', background: 'rgba(245, 158, 11, 0.05)' } : {}}
+                      title="Clique para expandir/recolher"
+                    >
+                      <div className="sidebar-category-title" style={cat.isPinnedGroup ? { color: '#fbbf24' } : {}}>
+                        {cat.isPinnedGroup && <Pin size={12} style={{ display: 'inline', marginRight: '4px' }} />}
+                        <span>{cat.category}</span>
+                      </div>
+                      <div className="sidebar-category-chevron">
+                        {isCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+                      </div>
                     </div>
                   )}
-                  {filteredItems.map((mod) => {
-                    const isLockedByPlan = (planLevels[userPlan] || 1) < (planLevels[mod.minPlan] || 1);
-                    const isLocked = disabledModules.includes(mod.id) || isLockedByPlan;
-                    const isActive = activePage === mod.id;
-                    const isPinned = pinnedItems.includes(mod.id);
+                  {(!isCollapsed || sidebarCollapsed) && (
+                    <div className={sidebarCollapsed ? "nav-collapsed-items" : "sidebar-tree-container"}>
+                      {filteredItems.map((mod) => {
+                        const isLockedByPlan = (planLevels[userPlan] || 1) < (planLevels[mod.minPlan] || 1);
+                        const isLocked = disabledModules.includes(mod.id) || isLockedByPlan;
+                        const isActive = activePage === mod.id;
+                        const isPinned = pinnedItems.includes(mod.id);
 
-                    return (
-                      <div className="nav-item-container" key={mod.id + (cat.isPinnedGroup ? '-pinned' : '')} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                        <div
-                          className={`nav-item ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
-                          onClick={() => handleNavClick(mod)}
-                          title={sidebarCollapsed ? mod.label : undefined}
-                          style={{ flex: 1 }}
-                        >
-                          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{mod.icon}</span>
-                          {!sidebarCollapsed && (
-                            <span className="nav-label" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {mod.label}
-                            </span>
-                          )}
-                          {!sidebarCollapsed && mod.badge && (
-                            <span className="nav-badge">{mod.badge}</span>
-                          )}
-                          {!sidebarCollapsed && isLocked && (
-                            <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>🔒</span>
-                          )}
-                        </div>
-                        {!sidebarCollapsed && !isLocked && (
-                          <button 
-                            className={`pin-btn ${isPinned ? 'is-pinned' : ''}`}
-                            onClick={(e) => togglePin(e, mod.id)}
-                            title={isPinned ? "Desafixar" : "Fixar no topo"}
-                            style={{
-                              position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
-                              background: 'transparent', border: 'none',
-                              color: isPinned ? 'var(--accent)' : 'var(--text-muted)',
-                              cursor: 'pointer', opacity: 0, transition: 'opacity 0.2s',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'
-                            }}
+                        return (
+                          <div 
+                            className="nav-item-container" 
+                            key={mod.id + (cat.isPinnedGroup ? '-pinned' : '')} 
+                            style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}
                           >
-                            <Pin size={14} fill={isPinned ? 'var(--accent)' : 'none'} />
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
+                            <div
+                              className={`sidebar-tree-item ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
+                              onClick={() => handleNavClick(mod)}
+                              title={sidebarCollapsed ? mod.label : undefined}
+                              style={{ 
+                                flex: 1, 
+                                ...(sidebarCollapsed ? { justifyContent: 'center', padding: '0.65rem' } : {}) 
+                              }}
+                            >
+                              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                {mod.icon}
+                              </span>
+                              {!sidebarCollapsed && (
+                                <span className="nav-label" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  {mod.label}
+                                </span>
+                              )}
+                              {!sidebarCollapsed && mod.badge && (
+                                <span className="sidebar-badge">{mod.badge}</span>
+                              )}
+                              {!sidebarCollapsed && isLocked && (
+                                <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>🔒</span>
+                              )}
+                            </div>
+                            {!sidebarCollapsed && !isLocked && (
+                              <button 
+                                className={`pin-btn ${isPinned ? 'is-pinned' : ''}`}
+                                onClick={(e) => togglePin(e, mod.id)}
+                                title={isPinned ? "Desafixar" : "Fixar no topo"}
+                                style={{
+                                  position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+                                  background: 'transparent', border: 'none',
+                                  color: isPinned ? '#fbbf24' : 'var(--text-muted)',
+                                  cursor: 'pointer', opacity: isPinned ? 1 : 0, transition: 'opacity 0.2s',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px'
+                                }}
+                              >
+                                <Pin size={13} fill={isPinned ? '#fbbf24' : 'none'} />
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             });
-          })()}
-        </nav>
+          })()}</nav>
       </aside>
 
       {/* ÁREA PRINCIPAL DA APLICAÇÃO */}
