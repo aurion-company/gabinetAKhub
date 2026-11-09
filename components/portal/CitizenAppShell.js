@@ -684,10 +684,13 @@ export default function CitizenAppShell() {
       <aside className={`citizen-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <a href="/" className="brand-logo-wrap">
-            <div className="brand-icon-box">
+            <div className="brand-icon-box" style={{ width: 32, height: 32, minWidth: 32, minHeight: 32, maxWidth: 32, maxHeight: 32, overflow: 'hidden', flexShrink: 0 }}>
               <img 
                 src="/logo/icon.svg" 
                 alt="GabinetAK" 
+                width="32"
+                height="32"
+                style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px', objectFit: 'cover', display: 'block' }}
                 className="brand-icon-img"
               />
             </div>

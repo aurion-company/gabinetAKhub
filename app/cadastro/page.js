@@ -393,8 +393,15 @@ export default function CadastroCidadaoPage() {
 
       <div className="register-card">
         <div className="brand-header">
-          <div className="brand-icon-box">
-            <img src="/logo/icon.svg" alt="GabinetAK" className="brand-icon-img" />
+          <div className="brand-icon-box" style={{ width: 32, height: 32, minWidth: 32, minHeight: 32, maxWidth: 32, maxHeight: 32, overflow: 'hidden', flexShrink: 0 }}>
+            <img 
+              src="/logo/icon.svg" 
+              alt="GabinetAK" 
+              width="32" 
+              height="32" 
+              style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px', objectFit: 'cover', display: 'block' }}
+              className="brand-icon-img" 
+            />
           </div>
           <span className="brand-name">
             gabinet<span className="brand-accent">ak</span>

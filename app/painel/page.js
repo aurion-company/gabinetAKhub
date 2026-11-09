@@ -728,10 +728,13 @@ export default function DashboardPage() {
         
         {/* BRANDING HEADER */}
         <div className="sidebar-header">
-          <a href="#" className="logo" onClick={(e) => { e.preventDefault(); setActivePage('home'); }}>
+          <a href="#" className="logo" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} style={{ display: 'flex', alignItems: 'center', height: '44px', overflow: 'hidden' }}>
             <img 
               src={sidebarCollapsed ? "/logo/icon.svg" : "/logo/horizontal.svg"} 
               alt="GabinetAK HUB" 
+              width={sidebarCollapsed ? "32" : "160"}
+              height="40"
+              style={{ height: '40px', width: 'auto', maxWidth: sidebarCollapsed ? '32px' : '170px', objectFit: 'contain', display: 'block' }}
               className="logo-svg"
             />
           </a>
