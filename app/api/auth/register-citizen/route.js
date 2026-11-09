@@ -111,3 +111,4 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Erro interno ao processar cadastro' }, { status: 500 });
   }
 }
+

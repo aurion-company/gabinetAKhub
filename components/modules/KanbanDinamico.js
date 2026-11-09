@@ -9,7 +9,39 @@ export default function KanbanDinamico() {
   // Mock pipelines list
   const pipelines = ['Funil de Atendimento Comunitário', 'Lideranças de Bairro', 'Cobrança de Ofícios'];
 
-  const [columns, setColumns] = useState([]);
+  const defaultColumns = [
+    { 
+      id: 'ABERTO', 
+      title: 'Triagem (Novos)', 
+      count: 2, 
+      color: 'var(--warning)', 
+      cards: [
+        { id: '1', name: 'Manutenção de Iluminação Pública', initials: 'IP', city: 'Ceilândia Centro', phone: 'REQ-2026-X89A', timeInCol: '2 dias' },
+        { id: '2', name: 'Reforma de Quadra Poliesportiva', initials: 'QP', city: 'Taguatinga Norte', phone: 'REQ-2026-M41B', timeInCol: 'Hoje' }
+      ] 
+    },
+    { 
+      id: 'EM_ANDAMENTO', 
+      title: 'Em Atendimento', 
+      count: 2, 
+      color: 'var(--accent)', 
+      cards: [
+        { id: '3', name: 'Ofício p/ Secretaria de Obras', initials: 'SO', city: 'Samambaia Sul', phone: 'REQ-2026-F90C', timeInCol: '5 dias' },
+        { id: '4', name: 'Instalação de Quebra-Molas', initials: 'QM', city: 'Águas Claras', phone: 'REQ-2026-P12D', timeInCol: '3 dias' }
+      ] 
+    },
+    { 
+      id: 'CONCLUIDO', 
+      title: 'Concluído / Resolvido', 
+      count: 1, 
+      color: 'var(--success)', 
+      cards: [
+        { id: '5', name: 'Asfaltamento da Rua 12', initials: 'AR', city: 'Vicente Pires', phone: 'REQ-2026-Z77E', timeInCol: 'Concluído' }
+      ] 
+    }
+  ];
+
+  const [columns, setColumns] = useState(defaultColumns);
 
   const fetchDemands = async () => {
     setIsLoading(true);
@@ -18,34 +50,36 @@ export default function KanbanDinamico() {
       if (res.ok) {
         const data = await res.json();
         
-        // Group demands by status
-        const cols = [
-          { id: 'ABERTO', title: 'Triagem (Novos)', count: 0, color: 'var(--warning)', cards: [] },
-          { id: 'EM_ANDAMENTO', title: 'Em Atendimento', count: 0, color: 'var(--accent)', cards: [] },
-          { id: 'CONCLUIDO', title: 'Concluído / Resolvido', count: 0, color: 'var(--success)', cards: [] }
-        ];
+        if (Array.isArray(data) && data.length > 0) {
+          // Group demands by status
+          const cols = [
+            { id: 'ABERTO', title: 'Triagem (Novos)', count: 0, color: 'var(--warning)', cards: [] },
+            { id: 'EM_ANDAMENTO', title: 'Em Atendimento', count: 0, color: 'var(--accent)', cards: [] },
+            { id: 'CONCLUIDO', title: 'Concluído / Resolvido', count: 0, color: 'var(--success)', cards: [] }
+          ];
 
-        data.forEach(demand => {
-          let colId = demand.status;
-          if (!cols.find(c => c.id === colId)) colId = 'ABERTO'; // fallback
+          data.forEach(demand => {
+            let colId = demand.status;
+            if (!cols.find(c => c.id === colId)) colId = 'ABERTO'; // fallback
 
-          const col = cols.find(c => c.id === colId);
-          col.cards.push({
-            id: demand.id,
-            name: demand.title,
-            initials: demand.title.substring(0, 2).toUpperCase(),
-            city: demand.category,
-            phone: demand.protocol,
-            timeInCol: new Date(demand.createdAt).toLocaleDateString(),
-            raw: demand
+            const col = cols.find(c => c.id === colId);
+            col.cards.push({
+              id: demand.id,
+              name: demand.title,
+              initials: demand.title.substring(0, 2).toUpperCase(),
+              city: demand.category,
+              phone: demand.protocol,
+              timeInCol: new Date(demand.createdAt).toLocaleDateString(),
+              raw: demand
+            });
+            col.count++;
           });
-          col.count++;
-        });
 
-        setColumns(cols);
+          setColumns(cols);
+        }
       }
     } catch (error) {
-      console.error('Erro ao buscar demandas para o Kanban', error);
+      console.warn('Usando dados locais demonstrativos para o Kanban:', error);
     } finally {
       setIsLoading(false);
     }

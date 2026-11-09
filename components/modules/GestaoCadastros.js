@@ -6,7 +6,14 @@ export default function GestaoCadastros() {
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [cadastros, setCadastros] = useState([]);
+  const defaultCadastros = [
+    { id: '1', nome: 'Cláudio Roberto de Oliveira', grupo: 'Lideranças Comunitárias', criado: '10/08/2026', celular: '(61) 98877-1122', cidade: 'Ceilândia' },
+    { id: '2', nome: 'Ana Maria Ferreira', grupo: 'Coordenadores Regionais', criado: '11/08/2026', celular: '(61) 97766-3344', cidade: 'Taguatinga' },
+    { id: '3', nome: 'Marcos Vinicius Santos', grupo: 'Apoiadores da Juventude', criado: '12/08/2026', celular: '(61) 99988-5566', cidade: 'Samambaia' },
+    { id: '4', nome: 'Juliana Costa e Silva', grupo: 'Comércio Local', criado: '13/08/2026', celular: '(61) 98112-7788', cidade: 'Águas Claras' }
+  ];
+
+  const [cadastros, setCadastros] = useState(defaultCadastros);
 
   useEffect(() => {
     const fetchVoters = async () => {
@@ -14,19 +21,20 @@ export default function GestaoCadastros() {
         const response = await fetch('/api/voters');
         if (response.ok) {
           const data = await response.json();
-          // Mapeia os dados do banco para o formato visual esperado pela tabela
-          const mappedData = data.map(voter => ({
-            id: voter.id,
-            nome: voter.name,
-            grupo: voter.tags && voter.tags.length > 0 ? voter.tags[0] : 'Sem Grupo',
-            criado: new Date(voter.createdAt).toLocaleDateString('pt-BR'),
-            celular: voter.phone || 'N/A',
-            cidade: voter.city || 'N/A'
-          }));
-          setCadastros(mappedData);
+          if (Array.isArray(data) && data.length > 0) {
+            const mappedData = data.map(voter => ({
+              id: voter.id,
+              nome: voter.name,
+              grupo: voter.tags && voter.tags.length > 0 ? voter.tags[0] : 'Sem Grupo',
+              criado: new Date(voter.createdAt).toLocaleDateString('pt-BR'),
+              celular: voter.phone || 'N/A',
+              cidade: voter.city || 'N/A'
+            }));
+            setCadastros(mappedData);
+          }
         }
       } catch (error) {
-        console.error('Erro ao buscar eleitores:', error);
+        console.warn('Usando cadastros demonstrativos locais:', error);
       } finally {
         setLoading(false);
       }

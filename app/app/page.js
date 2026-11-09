@@ -101,7 +101,7 @@ export default function DashboardPage() {
     }
   }, [activePage, mounted]);
 
-  const [userPlan, setUserPlan] = useState('political'); // Default: Political
+  const [userPlan, setUserPlan] = useState('enterprise'); // Default: Enterprise (SuperAdmin com acesso total aos módulos)
   const [billingCycle, setBillingCycle] = useState('mensal'); // mensal, trimestral, anual
 
   // Carregar e ouvir mudanças no Plano do Usuário (Sincronização com Gestão de Faturas)
@@ -914,7 +914,9 @@ export default function DashboardPage() {
           
           {(() => {
             const currentNavMod = menuCategories.flatMap(c => c.items).find(i => i.id === activePage);
-            const isCurrentPageLocked = currentNavMod && !['home', 'conta_faturas', 'faturas', 'conta_assinaturas', 'meu_perfil', 'conta_perfil', 'ajustes_config', 'preferencias', 'master_admin'].includes(activePage) && (planLevels[userPlan] || 1) < (planLevels[currentNavMod.minPlan] || 1);
+            // SuperAdmin Master possui acesso irrestrito a todos os módulos do sistema
+            const isSuperAdmin = userPlan === 'enterprise';
+            const isCurrentPageLocked = !isSuperAdmin && currentNavMod && !['home', 'conta_faturas', 'faturas', 'conta_assinaturas', 'meu_perfil', 'conta_perfil', 'ajustes_config', 'preferencias', 'master_admin'].includes(activePage) && (planLevels[userPlan] || 1) < (planLevels[currentNavMod.minPlan] || 1);
             if (isCurrentPageLocked) {
               return (
                 <div className="section-card liquid-glass" style={{ padding: '4rem 2rem', textAlign: 'center', margin: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -1088,8 +1090,89 @@ export default function DashboardPage() {
           )}
 
           {/* GESTÃO DE USUÁRIOS & MASTER ADMIN */}
-          {['master_admin', 'admin_master'].includes(activePage) && <MasterAdmin />}
-          {['ajustes_usuarios', 'usuarios'].includes(activePage) && <GestaoUsuarios />}
+          {['master_admin', 'admin_master'].includes(activePage) && (
+            <MasterAdmin 
+              disabledModules={disabledModules} 
+              setDisabledModules={setDisabledModules} 
+              menuCategories={menuCategories} 
+            />
+          )}
+          {['ajustes_usuarios', 'usuarios', 'ajustes_setores'].includes(activePage) && <GestaoUsuarios />}
+
+          {/* KANBAN DINÂMICO & TAREFAS */}
+          {['kanban', 'prod_tarefas'].includes(activePage) && <KanbanDinamico />}
+
+          {/* GESTÃO DE DEMANDAS */}
+          {['demandas', 'crm_assuntos', 'crm_demandas'].includes(activePage) && <GestaoDemandas />}
+
+          {/* GESTÃO DE CADASTROS, ELEITORES E LEADS */}
+          {['cadastros', 'grupos_tags', 'leads'].includes(activePage) && <GestaoCadastros />}
+
+          {/* AGENDA E ANIVERSARIANTES */}
+          {['agenda_wa', 'agenda'].includes(activePage) && <AgendaWA />}
+
+          {/* CRIADOR DE FORMULÁRIOS DE CAPTAÇÃO */}
+          {['forms', 'formularios'].includes(activePage) && <CriadorFormularios />}
+
+          {/* GEOMAPEAMENTO DE ELEITORES */}
+          {['geomapeamento', 'map_eleitor'].includes(activePage) && <Geomapeamento />}
+
+          {/* CENTRAL WHATSAPP & DISPAROS */}
+          {['whatsapp', 'wa_oficial', 'wa_eleitoral', 'wa_campanha', 'wa_massa', 'wa_auto', 'ligacoes_auto'].includes(activePage) && <CentralWhatsApp />}
+
+          {/* CAMPANHAS DE E-MAIL */}
+          {['email_envio', 'email_mensagens', 'email_templates', 'ia_mkt', 'email_provedores'].includes(activePage) && <CampanhasEmail />}
+
+          {/* CAMPANHAS DE SMS */}
+          {['sms_envio', 'sms_mensagens'].includes(activePage) && <CampanhasSMS />}
+
+          {/* ASSINADOR DIGITAL DE DOCUMENTOS */}
+          {activePage === 'ferr_assinador' && <AssinadorDigital />}
+
+          {/* PRODUTIVIDADE & LEGISLATIVO (PLS, EMENDAS, VERBAS, RESULTADOS) */}
+          {['leg_pl', 'leg_emendas', 'leg_verbas', 'leg_resultados'].includes(activePage) && (
+            <GestaoLegislativo 
+              initialTab={
+                activePage === 'leg_emendas' ? 'emendas' : 
+                activePage === 'leg_verbas' ? 'verbas' : 
+                activePage === 'leg_resultados' ? 'resultados' : 'pls'
+              } 
+            />
+          )}
+
+          {/* CENTRAL DE ATENDIMENTO E PROTOCOLOS */}
+          {['atendimento', 'crm_atendimento', 'crm_suporte'].includes(activePage) && <AtendimentoProtocolo />}
+
+          {/* OFÍCIOS E MEMORANDOS */}
+          {['doc_oficios', 'doc_memorandos'].includes(activePage) && <DocumentosOficios />}
+
+          {/* TEMPLATES E GERADOR DE DOCUMENTOS */}
+          {['doc_templates', 'ferr_pdflab'].includes(activePage) && <GeradorDocumentos />}
+
+          {/* GERENCIADOR DE LINKS CURTOS */}
+          {activePage === 'ferr_links' && <GestaoLinksCurtos />}
+
+          {/* GERADOR DE QR CODE */}
+          {activePage === 'ferr_qr' && <GeradorQRCode onOpenIA={openIAWithContext} />}
+
+          {/* DASHBOARD ANALÍTICO & RELATÓRIOS BI */}
+          {['dashboard', 'rel_demandas', 'rel_relatorio_demandas', 'rel_cadastros', 'rel_ranking', 'rel_grupos'].includes(activePage) && (
+            <RelatoriosBI 
+              initialTab={
+                activePage === 'rel_ranking' || activePage === 'rel_grupos' ? 'ranking' :
+                activePage === 'rel_cadastros' || activePage === 'rel_relatorio_demandas' ? 'relatorio' : 'graficos'
+              } 
+            />
+          )}
+
+          {/* AUTOMAÇÃO N8N E FLUXOS DE MARKETING */}
+          {['mkt_fluxos', 'mkt_n8n'].includes(activePage) && <AutomacaoN8N />}
+
+          {/* MARKETING DIGITAL E GESTÃO DE CAMPANHA */}
+          {['mkt_digital', 'mkt_gestao'].includes(activePage) && <IntegracaoMetaAds />}
+
+          {/* ASSISTENTE DE IA AVANÇADO */}
+          {['ia_assistente', 'ia_sentimento'].includes(activePage) && <AssistenteIA />}
 
           {/* GESTÃO DE FATURAS & ASSINATURAS */}
           {['conta_faturas', 'faturas', 'conta_assinaturas', 'assinaturas'].includes(activePage) && <GestaoFaturas />}

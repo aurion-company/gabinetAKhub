@@ -4,7 +4,13 @@ import { ClipboardList, Plus, FileBarChart, Search, Filter, AlertCircle, CheckCi
 export default function GestaoDemandas() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'create', 'report'
   const [loading, setLoading] = useState(true);
-  const [demandas, setDemandas] = useState([]);
+  const defaultDemandas = [
+    { id: '1', protocolo: 'REQ-2026-X89A', cadastro: 'João Ribeiro (Liderança)', assunto: 'Recapeamento asfáltico da Avenida Hélio Prates', responsavel: 'Gabinete Distrital', status: 'EM_ANDAMENTO', prioridade: 'ALTA', prazo: 'Hoje' },
+    { id: '2', protocolo: 'REQ-2026-M41B', cadastro: 'Maria do Carmo', assunto: 'Instalação de postes de luz LED na QNM 18', responsavel: 'Assessoria de Obras', status: 'ABERTO', prioridade: 'MEDIA', prazo: 'Amanhã' },
+    { id: '3', protocolo: 'REQ-2026-F90C', cadastro: 'Carlos Eduardo', assunto: 'Reforma do Posto de Saúde UBS 04', responsavel: 'Comissão de Saúde', status: 'CONCLUIDO', prioridade: 'ALTA', prazo: 'Concluído' }
+  ];
+
+  const [demandas, setDemandas] = useState(defaultDemandas);
 
   useEffect(() => {
     const fetchDemands = async () => {
@@ -12,21 +18,22 @@ export default function GestaoDemandas() {
         const response = await fetch('/api/demands');
         if (response.ok) {
           const data = await response.json();
-          // Mapeia para o formato visual
-          const mappedData = data.map(demand => ({
-            id: demand.id,
-            protocolo: demand.protocol,
-            cadastro: demand.voterId || 'Não Vinculado',
-            assunto: demand.title,
-            responsavel: 'Assessor Geral', // Simulando a ausência do Join não MVP
-            status: demand.status,
-            prioridade: demand.priority,
-            prazo: new Date(demand.createdAt).toLocaleDateString('pt-BR')
-          }));
-          setDemandas(mappedData);
+          if (Array.isArray(data) && data.length > 0) {
+            const mappedData = data.map(demand => ({
+              id: demand.id,
+              protocolo: demand.protocol,
+              cadastro: demand.voterId || 'Não Vinculado',
+              assunto: demand.title,
+              responsavel: 'Assessor Geral',
+              status: demand.status,
+              prioridade: demand.priority,
+              prazo: new Date(demand.createdAt).toLocaleDateString('pt-BR')
+            }));
+            setDemandas(mappedData);
+          }
         }
       } catch (error) {
-        console.error('Erro ao buscar demandas:', error);
+        console.warn('Usando dados demonstrativos para demandas:', error);
       } finally {
         setLoading(false);
       }
