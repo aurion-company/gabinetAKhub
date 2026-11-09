@@ -15,3 +15,4 @@ export async function GET(request) {
     return NextResponse.json({ authenticated: false, error: 'Sessão inválida ou expirada' }, { status: 401 });
   }
 }
+
